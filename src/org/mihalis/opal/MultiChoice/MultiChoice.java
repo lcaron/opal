@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
 
-package org.mihalis.swordfish.MultiChoice;
+package org.mihalis.opal.MultiChoice;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.mihalis.swordfish.utils.SimpleSelectionAdapter;
+import org.mihalis.opal.utils.SimpleSelectionAdapter;
 
 /**
  * The MultiChoice class represents a selectable user interface object that

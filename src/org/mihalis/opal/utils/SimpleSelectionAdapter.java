@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
 
-package org.mihalis.swordfish.utils;
+package org.mihalis.opal.utils;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;

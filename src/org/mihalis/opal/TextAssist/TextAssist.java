@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation (Snippet 320)
  *     Laurent CARON (laurent.caron@gmail.com) - Make a widget from the snippet
  *******************************************************************************/
-package org.mihalis.swordfish.TextAssist;
+package org.mihalis.opal.TextAssist;
 
 import java.util.List;
 
@@ -247,6 +247,7 @@ public class TextAssist extends Composite {
 	 * @return the contentProvider
 	 */
 	public TextAssistContentProvider getContentProvider() {
+		checkWidget();
 		return this.contentProvider;
 	}
 
@@ -254,6 +255,7 @@ public class TextAssist extends Composite {
 	 * @param contentProvider the contentProvider to set
 	 */
 	public void setContentProvider(final TextAssistContentProvider contentProvider) {
+		checkWidget();
 		this.contentProvider = contentProvider;
 	}
 
@@ -261,6 +263,7 @@ public class TextAssist extends Composite {
 	 * @return the numberOfLines
 	 */
 	public int getNumberOfLines() {
+		checkWidget();
 		return this.numberOfLines;
 	}
 
@@ -268,6 +271,7 @@ public class TextAssist extends Composite {
 	 * @param numberOfLines the numberOfLines to set
 	 */
 	public void setNumberOfLines(final int numberOfLines) {
+		checkWidget();
 		this.numberOfLines = numberOfLines;
 	}
 
@@ -275,6 +279,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#addModifyListener(org.eclipse.swt.events.ModifyListener)
 	 */
 	public void addModifyListener(final ModifyListener listener) {
+		checkWidget();
 		this.text.addModifyListener(listener);
 	}
 
@@ -282,6 +287,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#addSelectionListener(org.eclipse.swt.events.SelectionListener)
 	 */
 	public void addSelectionListener(final SelectionListener listener) {
+		checkWidget();
 		this.text.addSelectionListener(listener);
 	}
 
@@ -289,6 +295,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#addVerifyListener(org.eclipse.swt.events.VerifyListener)
 	 */
 	public void addVerifyListener(final VerifyListener listener) {
+		checkWidget();
 		this.text.addVerifyListener(listener);
 	}
 
@@ -296,6 +303,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#append(java.lang.String)
 	 */
 	public void append(final String string) {
+		checkWidget();
 		this.text.append(string);
 	}
 
@@ -303,6 +311,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#clearSelection()
 	 */
 	public void clearSelection() {
+		checkWidget();
 		this.text.clearSelection();
 	}
 
@@ -311,6 +320,7 @@ public class TextAssist extends Composite {
 	 */
 	@Override
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
+		checkWidget();
 		return this.text.computeSize(wHint, hHint, changed);
 	}
 
@@ -319,6 +329,7 @@ public class TextAssist extends Composite {
 	 */
 	@Override
 	public Rectangle computeTrim(final int x, final int y, final int width, final int height) {
+		checkWidget();
 		return super.computeTrim(x, y, width, height);
 	}
 
@@ -326,6 +337,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#copy()
 	 */
 	public void copy() {
+		checkWidget();
 		this.text.copy();
 	}
 
@@ -333,6 +345,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#cut()
 	 */
 	public void cut() {
+		checkWidget();
 		this.text.cut();
 	}
 
@@ -340,6 +353,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getCaretLineNumber()
 	 */
 	public int getCaretLineNumber() {
+		checkWidget();
 		return this.text.getCaretLineNumber();
 	}
 
@@ -347,6 +361,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getCaretLocation()
 	 */
 	public Point getCaretLocation() {
+		checkWidget();
 		return this.text.getCaretLocation();
 	}
 
@@ -354,6 +369,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getCaretPosition()
 	 */
 	public int getCaretPosition() {
+		checkWidget();
 		return this.text.getCaretPosition();
 	}
 
@@ -361,6 +377,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getCharCount()
 	 */
 	public int getCharCount() {
+		checkWidget();
 		return this.text.getCharCount();
 	}
 
@@ -368,6 +385,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getDoubleClickEnabled()
 	 */
 	public boolean getDoubleClickEnabled() {
+		checkWidget();
 		return this.text.getDoubleClickEnabled();
 	}
 
@@ -375,6 +393,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getEchoChar()
 	 */
 	public char getEchoChar() {
+		checkWidget();
 		return this.text.getEchoChar();
 	}
 
@@ -382,6 +401,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getEditable()
 	 */
 	public boolean getEditable() {
+		checkWidget();
 		return this.text.getEditable();
 	}
 
@@ -389,6 +409,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getLineCount()
 	 */
 	public int getLineCount() {
+		checkWidget();
 		return this.text.getLineCount();
 	}
 
@@ -396,6 +417,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getLineDelimiter()
 	 */
 	public String getLineDelimiter() {
+		checkWidget();
 		return this.text.getLineDelimiter();
 	}
 
@@ -403,6 +425,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getLineHeight()
 	 */
 	public int getLineHeight() {
+		checkWidget();
 		return this.text.getLineHeight();
 	}
 
@@ -410,6 +433,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getMessage()
 	 */
 	public String getMessage() {
+		checkWidget();
 		return this.text.getMessage();
 	}
 
@@ -417,6 +441,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getOrientation()
 	 */
 	public int getOrientation() {
+		checkWidget();
 		return this.text.getOrientation();
 	}
 
@@ -424,6 +449,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getSelection()
 	 */
 	public Point getSelection() {
+		checkWidget();
 		return this.text.getSelection();
 	}
 
@@ -431,6 +457,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getSelectionCount()
 	 */
 	public int getSelectionCount() {
+		checkWidget();
 		return this.text.getSelectionCount();
 	}
 
@@ -438,6 +465,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getSelectionText()
 	 */
 	public String getSelectionText() {
+		checkWidget();
 		return this.text.getSelectionText();
 	}
 
@@ -445,6 +473,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getTabs()
 	 */
 	public int getTabs() {
+		checkWidget();
 		return this.text.getTabs();
 	}
 
@@ -452,6 +481,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getText()
 	 */
 	public String getText() {
+		checkWidget();
 		return this.text.getText();
 	}
 
@@ -459,6 +489,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getText(int, int)
 	 */
 	public String getText(final int start, final int end) {
+		checkWidget();
 		return this.text.getText(start, end);
 	}
 
@@ -466,6 +497,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getTextLimit()
 	 */
 	public int getTextLimit() {
+		checkWidget();
 		return this.text.getTextLimit();
 	}
 
@@ -473,6 +505,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getTopIndex()
 	 */
 	public int getTopIndex() {
+		checkWidget();
 		return this.text.getTopIndex();
 	}
 
@@ -480,6 +513,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#getTopPixel()
 	 */
 	public int getTopPixel() {
+		checkWidget();
 		return this.text.getTopPixel();
 	}
 
@@ -487,6 +521,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#insert(java.lang.String)
 	 */
 	public void insert(final String string) {
+		checkWidget();
 		this.text.insert(string);
 	}
 
@@ -494,6 +529,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#paste()
 	 */
 	public void paste() {
+		checkWidget();
 		this.text.paste();
 	}
 
@@ -501,6 +537,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#removeModifyListener(org.eclipse.swt.events.ModifyListener)
 	 */
 	public void removeModifyListener(final ModifyListener listener) {
+		checkWidget();
 		this.text.removeModifyListener(listener);
 	}
 
@@ -508,6 +545,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#removeSelectionListener(org.eclipse.swt.events.SelectionListener)
 	 */
 	public void removeSelectionListener(final SelectionListener listener) {
+		checkWidget();
 		this.text.removeSelectionListener(listener);
 	}
 
@@ -515,6 +553,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#removeVerifyListener(org.eclipse.swt.events.VerifyListener)
 	 */
 	public void removeVerifyListener(final VerifyListener listener) {
+		checkWidget();
 		this.text.removeVerifyListener(listener);
 	}
 
@@ -522,6 +561,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#selectAll()
 	 */
 	public void selectAll() {
+		checkWidget();
 		this.text.selectAll();
 	}
 
@@ -529,6 +569,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setDoubleClickEnabled(boolean)
 	 */
 	public void setDoubleClickEnabled(final boolean doubleClick) {
+		checkWidget();
 		this.text.setDoubleClickEnabled(doubleClick);
 	}
 
@@ -536,6 +577,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setEchoChar(char)
 	 */
 	public void setEchoChar(final char echo) {
+		checkWidget();
 		this.text.setEchoChar(echo);
 	}
 
@@ -543,6 +585,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setEditable(boolean)
 	 */
 	public void setEditable(final boolean editable) {
+		checkWidget();
 		this.text.setEditable(editable);
 	}
 
@@ -551,6 +594,7 @@ public class TextAssist extends Composite {
 	 */
 	@Override
 	public void setFont(final Font font) {
+		checkWidget();
 		this.text.setFont(font);
 		this.table.setFont(font);
 	}
@@ -559,6 +603,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setMessage(java.lang.String)
 	 */
 	public void setMessage(final String string) {
+		checkWidget();
 		this.text.setMessage(string);
 	}
 
@@ -566,6 +611,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setOrientation(int)
 	 */
 	public void setOrientation(final int orientation) {
+		checkWidget();
 		this.text.setOrientation(orientation);
 	}
 
@@ -574,6 +620,7 @@ public class TextAssist extends Composite {
 	 */
 	@Override
 	public void setRedraw(final boolean redraw) {
+		checkWidget();
 		this.text.setRedraw(redraw);
 	}
 
@@ -581,6 +628,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setSelection(int, int)
 	 */
 	public void setSelection(final int start, final int end) {
+		checkWidget();
 		this.text.setSelection(start, end);
 	}
 
@@ -588,6 +636,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setSelection(int)
 	 */
 	public void setSelection(final int start) {
+		checkWidget();
 		this.text.setSelection(start);
 	}
 
@@ -595,6 +644,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setSelection(org.eclipse.swt.graphics.Point)
 	 */
 	public void setSelection(final Point selection) {
+		checkWidget();
 		this.text.setSelection(selection);
 	}
 
@@ -602,6 +652,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setTabs(int)
 	 */
 	public void setTabs(final int tabs) {
+		checkWidget();
 		this.text.setTabs(tabs);
 	}
 
@@ -609,6 +660,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setText(java.lang.String)
 	 */
 	public void setText(final String text) {
+		checkWidget();
 		this.text.setText(text);
 	}
 
@@ -616,6 +668,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setTextLimit(int)
 	 */
 	public void setTextLimit(final int textLimit) {
+		checkWidget();
 		this.text.setTextLimit(textLimit);
 	}
 
@@ -623,6 +676,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#setTopIndex(int)
 	 */
 	public void setTopIndex(final int topIndex) {
+		checkWidget();
 		this.text.setTopIndex(topIndex);
 	}
 
@@ -630,6 +684,7 @@ public class TextAssist extends Composite {
 	 * @see org.eclipse.swt.widgets.Text#showSelection()
 	 */
 	public void showSelection() {
+		checkWidget();
 		this.text.showSelection();
 	}
 

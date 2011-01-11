@@ -8,7 +8,7 @@
  * Contributors:
  *     Laurent CARON (laurent.caron@gmail.com)
  *******************************************************************************/
-package org.mihalis.swordfish.TextAssist;
+package org.mihalis.opal.TextAssist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.mihalis.opal.TextAssist.TextAssist;
+import org.mihalis.opal.TextAssist.TextAssistContentProvider;
 
 /**
  * A simple snippet for the TextAssist Widget

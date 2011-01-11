@@ -8,7 +8,7 @@
  * Contributors:
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
-package org.mihalis.swordfish.MultiChoice;
+package org.mihalis.opal.MultiChoice;
 
 /**
  * This is a POJO that represents a country

@@ -8,7 +8,7 @@
  * Contributors:
  *     Laurent CARON (laurent.caron@gmail.com)
  *******************************************************************************/
-package org.mihalis.swordfish.MultiChoice;
+package org.mihalis.opal.MultiChoice;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +23,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.mihalis.swordfish.utils.SimpleSelectionAdapter;
+import org.mihalis.opal.MultiChoice.MultiChoice;
+import org.mihalis.opal.MultiChoice.MultiChoiceSelectionListener;
+import org.mihalis.opal.utils.SimpleSelectionAdapter;
 
 /**
  * A simple snippet for the MultiChoice Widget

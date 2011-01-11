@@ -8,7 +8,7 @@
  * Contributors:
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
-package org.mihalis.swordfish.TextAssist;
+package org.mihalis.opal.TextAssist;
 
 import java.util.List;
 

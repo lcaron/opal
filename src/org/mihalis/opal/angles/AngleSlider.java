@@ -35,6 +35,10 @@ import org.eclipse.swt.widgets.Listener;
  */
 public class AngleSlider extends Canvas {
 
+	private static final int WHOLE_RADIUS = 40;
+	private static final int BUTTON_RADIUS = 10;
+	private static final int STEP = 5;
+
 	private final Image backgroundImage;
 	private final Image buttonFocus;
 	private final Image buttonNoFocus;
@@ -101,9 +105,9 @@ public class AngleSlider extends Canvas {
 		float angle = this.selection / 360f;
 		angle = (float) (angle * 2 * Math.PI - 0.5 * Math.PI);
 
-		final float centerX = 20f;
-		final float centerY = 20f;
-		final float radius = 10f;
+		final float centerX = WHOLE_RADIUS / 2f;
+		final float centerY = WHOLE_RADIUS / 2f;
+		final float radius = BUTTON_RADIUS;
 		final float x = (float) (centerX - radius * Math.cos(angle));
 		final float y = (float) (centerY - radius * Math.sin(angle));
 
@@ -117,7 +121,7 @@ public class AngleSlider extends Canvas {
 			gc.setAlpha(127);
 			gc.setAntialias(SWT.ON);
 			gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-			gc.fillOval(4, 4, 33, 33);
+			gc.fillOval(4, 4, WHOLE_RADIUS - 7, WHOLE_RADIUS - 7);
 		}
 	}
 
@@ -134,8 +138,8 @@ public class AngleSlider extends Canvas {
 					AngleSlider.this.mousePressed = true;
 				}
 				if (event.type == SWT.MouseDown || event.type == SWT.MouseMove && AngleSlider.this.mousePressed) {
-					final float deltaX = event.x - 20f;
-					final float deltaY = event.y - 20f;
+					final float deltaX = event.x - WHOLE_RADIUS / 2f;
+					final float deltaY = event.y - WHOLE_RADIUS / 2f;
 					final double angle = Math.atan2(deltaX, deltaY);
 					AngleSlider.this.selection = 360 - (int) (360 * angle / (2 * Math.PI) + 360) % 360;
 
@@ -168,10 +172,10 @@ public class AngleSlider extends Canvas {
 					return;
 				}
 				if (event.keyCode == SWT.ARROW_UP || event.keyCode == SWT.ARROW_LEFT) {
-					setSelection(AngleSlider.this.selection + 5);
+					setSelection(AngleSlider.this.selection + STEP);
 				}
 				if (event.keyCode == SWT.ARROW_DOWN || event.keyCode == SWT.ARROW_RIGHT) {
-					setSelection(AngleSlider.this.selection - 5);
+					setSelection(AngleSlider.this.selection - STEP);
 				}
 			}
 		};
@@ -191,7 +195,7 @@ public class AngleSlider extends Canvas {
 	@Override
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
 		checkWidget();
-		return new Point(40, 40);
+		return new Point(WHOLE_RADIUS, WHOLE_RADIUS);
 	}
 
 	/**
@@ -224,6 +228,9 @@ public class AngleSlider extends Canvas {
 	 */
 	public void setSelection(final int selection) {
 		checkWidget();
+		if (selection < 0 || selection > 360) {
+			SWT.error(SWT.ERROR_CANNOT_SET_SELECTION);
+		}
 		this.selection = selection;
 		fireSelectionListeners(new Event());
 		redraw();

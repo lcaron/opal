@@ -64,10 +64,10 @@ public class AngleSlider extends Canvas {
 	public AngleSlider(final Composite parent, final int style) {
 		super(parent, style);
 
-		this.backgroundImage = new Image(getDisplay(), "images/angleBackground.png");
+		this.backgroundImage = new Image(getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/angleBackground.png"));
 
-		this.buttonFocus = new Image(getDisplay(), "images/angleButtonFocus.png");
-		this.buttonNoFocus = new Image(getDisplay(), "images/angleButtonFocusLost.png");
+		this.buttonFocus = new Image(getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/angleButtonFocus.png"));
+		this.buttonNoFocus = new Image(getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/angleButtonFocusLost.png"));
 
 		this.addListener(SWT.Paint, new Listener() {
 

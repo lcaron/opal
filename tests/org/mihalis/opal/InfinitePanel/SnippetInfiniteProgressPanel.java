@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON - initial API and implementation, 
- *     inspired by Romain Guy (http://www.progx.org)
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.InfinitePanel;
 
@@ -29,7 +28,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  */
 public class SnippetInfiniteProgressPanel {
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final Display display = new Display();
         final Shell shell = new Shell();
         shell.setLayout(new GridLayout(2, false));
@@ -72,7 +71,7 @@ public class SnippetInfiniteProgressPanel {
         ok.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 // Retrieve an infinite progress panel
                 final InfiniteProgressPanel panel;
                 if (!InfiniteProgressPanel.hasInfiniteProgressPanel(shell)) {
@@ -95,10 +94,10 @@ public class SnippetInfiniteProgressPanel {
                 performer.start();
             }
 
-            private void performLongTask(Shell shell) {
+            private void performLongTask(final Shell shell) {
                 try {
                     Thread.sleep(4000);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     e.printStackTrace();
                 }
                 // Stop the progress panel
@@ -106,7 +105,7 @@ public class SnippetInfiniteProgressPanel {
             }
 
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public void widgetDefaultSelected(final SelectionEvent e) {
             }
         });
 
@@ -116,12 +115,12 @@ public class SnippetInfiniteProgressPanel {
         cancel.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 shell.dispose();
             }
 
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public void widgetDefaultSelected(final SelectionEvent e) {
                 shell.dispose();
             }
         });

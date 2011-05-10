@@ -24,6 +24,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -93,6 +95,18 @@ public class InfiniteProgressPanel {
 		this.fadeOut = false;
 		this.fadeOutCounter = 0;
 		shell.setData(INFINITE_PANEL_KEY, this);
+
+		this.parent.addListener(SWT.Activate, new Listener() {
+
+			@Override
+			public void handleEvent(final Event e) {
+				if (InfiniteProgressPanel.this.panel != null && //
+						!InfiniteProgressPanel.this.panel.isDisposed() && !InfiniteProgressPanel.this.panel.isVisible()) {
+					InfiniteProgressPanel.this.panel.setVisible(true);
+					InfiniteProgressPanel.this.panel.setActive();
+				}
+			}
+		});
 	}
 
 	/**
@@ -170,6 +184,14 @@ public class InfiniteProgressPanel {
 			}
 		};
 		this.animatorThread.start();
+
+		this.panel.addListener(SWT.Deactivate, new Listener() {
+
+			@Override
+			public void handleEvent(final Event arg0) {
+				InfiniteProgressPanel.this.panel.setVisible(false);
+			}
+		});
 
 	}
 

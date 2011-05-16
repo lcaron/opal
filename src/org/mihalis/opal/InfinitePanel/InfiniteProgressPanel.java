@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instances of this class are controls located on the top of a shell. They
@@ -133,8 +134,8 @@ public class InfiniteProgressPanel {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				InfiniteProgressPanel.this.disposeColor(InfiniteProgressPanel.this.defaultColor);
-				InfiniteProgressPanel.this.disposeColor(InfiniteProgressPanel.this.selectionColor);
+				SWTGraphicUtil.getInstance().dispose(InfiniteProgressPanel.this.defaultColor);
+				SWTGraphicUtil.getInstance().dispose(InfiniteProgressPanel.this.selectionColor);
 			}
 		});
 
@@ -193,17 +194,6 @@ public class InfiniteProgressPanel {
 			}
 		});
 
-	}
-
-	/**
-	 * Dispose a given color
-	 * 
-	 * @param color
-	 */
-	private void disposeColor(final Color color) {
-		if (color != null && !color.isDisposed()) {
-			color.dispose();
-		}
 	}
 
 	/**
@@ -472,7 +462,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setDefaultColor(final Color defaultColor) {
 		this.checkIfAnimationIsRunning();
-		this.disposeColor(this.defaultColor);
+		SWTGraphicUtil.getInstance().dispose(this.defaultColor);
 		this.defaultColor = defaultColor;
 	}
 
@@ -531,7 +521,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setSelectionColor(final Color selectionColor) {
 		this.checkIfAnimationIsRunning();
-		this.disposeColor(this.selectionColor);
+		SWTGraphicUtil.getInstance().dispose(this.selectionColor);
 		this.selectionColor = selectionColor;
 	}
 
@@ -571,7 +561,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setTextColor(final Color textColor) {
 		this.checkIfAnimationIsRunning();
-		this.disposeColor(this.textColor);
+		SWTGraphicUtil.getInstance().dispose(this.textColor);
 		this.textColor = textColor;
 	}
 

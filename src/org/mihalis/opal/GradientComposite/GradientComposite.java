@@ -19,12 +19,12 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.graphics.Resource;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
+import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instances of this class are controls which background's texture is a gradient
@@ -82,16 +82,11 @@ public class GradientComposite extends Composite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				this.dispose(GradientComposite.this.oldImage);
-				this.dispose(GradientComposite.this.gradientEnd);
-				this.dispose(GradientComposite.this.gradientStart);
+				SWTGraphicUtil.getInstance().dispose(GradientComposite.this.oldImage);
+				SWTGraphicUtil.getInstance().dispose(GradientComposite.this.gradientEnd);
+				SWTGraphicUtil.getInstance().dispose(GradientComposite.this.gradientStart);
 			}
 
-			private void dispose(final Resource resource) {
-				if (resource != null && !resource.isDisposed()) {
-					resource.dispose();
-				}
-			}
 		});
 
 		this.gradientEnd = new Color(this.getDisplay(), 110, 110, 110);
@@ -139,9 +134,7 @@ public class GradientComposite extends Composite {
 	 * @param gradientEnd the gradientEnd color to set
 	 */
 	public void setGradientEnd(final Color gradientEnd) {
-		if (this.gradientEnd != null && !this.gradientEnd.isDisposed()) {
-			this.gradientEnd.dispose();
-		}
+		SWTGraphicUtil.getInstance().dispose(this.gradientEnd);
 		this.gradientEnd = gradientEnd;
 	}
 
@@ -156,9 +149,7 @@ public class GradientComposite extends Composite {
 	 * @param gradientStart the gradientStart color to set
 	 */
 	public void setGradientStart(final Color gradientStart) {
-		if (this.gradientStart != null && !this.gradientStart.isDisposed()) {
-			this.gradientStart.dispose();
-		}
+		SWTGraphicUtil.getInstance().dispose(this.gradientStart);
 		this.gradientStart = gradientStart;
 	}
 }

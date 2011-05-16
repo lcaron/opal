@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
+import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instances of this class are controls which background's texture is brushed
@@ -90,9 +91,7 @@ public class BrushedMetalComposite extends Composite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				if (BrushedMetalComposite.this.oldImage != null && !BrushedMetalComposite.this.oldImage.isDisposed()) {
-					BrushedMetalComposite.this.oldImage.dispose();
-				}
+				SWTGraphicUtil.getInstance().dispose(BrushedMetalComposite.this.oldImage);
 			}
 		});
 	}
@@ -107,9 +106,7 @@ public class BrushedMetalComposite extends Composite {
 		final Image newImage = new Image(display, imageData);
 
 		this.setBackgroundImage(newImage);
-		if (this.oldImage != null) {
-			this.oldImage.dispose();
-		}
+		SWTGraphicUtil.getInstance().dispose(this.oldImage);
 		this.oldImage = newImage;
 	}
 

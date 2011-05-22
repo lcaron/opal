@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Romain Guy's (http://www.curious-creature.org) 
- *     Laurent CARON (laurent.caron at gmail dot com) - port to SWT
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
  *******************************************************************************/
 package org.mihalis.opal.GradientComposite;
 

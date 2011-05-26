@@ -14,10 +14,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Resource;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * This class is a singleton that provides useful methodes
@@ -211,6 +213,22 @@ public class SWTGraphicUtil {
 		}
 		imgData.alphaData = alphaData;
 		return new Image(source.getDevice(), imgData);
+
+	}
+
+	/**
+	 * Center a shell on the screen
+	 * 
+	 * @param shell shell to center
+	 */
+	public void centerShell(final Shell shell) {
+		final Point shellSize = shell.getSize();
+		final Point displaySize = new Point(shell.getDisplay().getBounds().width, shell.getDisplay().getBounds().height);
+
+		final int centerX = (displaySize.x - shellSize.x) / 2;
+		final int centerY = (displaySize.y - shellSize.y) / 2;
+
+		shell.setLocation(centerX, centerY);
 
 	}
 

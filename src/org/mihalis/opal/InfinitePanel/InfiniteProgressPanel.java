@@ -122,6 +122,14 @@ public class InfiniteProgressPanel {
 		this.panel.setLayout(new FillLayout());
 		this.panel.setAlpha(0);
 
+		this.panel.addListener(SWT.KeyUp, new Listener() {
+
+			@Override
+			public void handleEvent(final Event event) {
+				event.doit = false;
+			}
+		});
+
 		if (this.defaultColor == null) {
 			this.defaultColor = new Color(this.parent.getDisplay(), 200, 200, 200);
 		}

@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.mihalis.opal.utils;
 
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -22,7 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * This class is a singleton that provides useful methodes
+ * This class is a singleton that provides useful methods
  */
 public class SWTGraphicUtil {
 	private static SWTGraphicUtil instance;
@@ -230,6 +233,20 @@ public class SWTGraphicUtil {
 
 		shell.setLocation(centerX, centerY);
 
+	}
+
+	/**
+	 * Apply a very basic HTML formating to a text stored in a StyledText
+	 * widget. Supported tags are <B>, <I> and <U>
+	 * 
+	 * @param styledText styled text that contains an HTML text
+	 */
+	public void applyHTMLFormating(final StyledText styledText) {
+		try {
+			new HTMLStyledTextParser(styledText).parse();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

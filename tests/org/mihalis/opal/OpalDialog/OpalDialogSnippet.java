@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation 
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
+ *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration 
  *******************************************************************************/
 package org.mihalis.opal.OpalDialog;
 

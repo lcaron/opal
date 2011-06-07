@@ -40,4 +40,34 @@ public class StringUtil {
 		exception.printStackTrace(new PrintWriter(stringWriter));
 		return stringWriter.toString();
 	}
+
+	/**
+	 * Insert a string in a middle of another string
+	 * 
+	 * @param source source string
+	 * @param newEntry string to insert into source
+	 * @param position position to insert source
+	 * @return the new string
+	 */
+	public static String insertString(final String source, final String newEntry, final int position) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append(source.substring(0, position)).append(newEntry).append(source.substring(position));
+		return sb.toString();
+	}
+
+	/**
+	 * Remove a character in a String
+	 * 
+	 * @param source source string
+	 * @param position position of the character to remove
+	 * @return the string without the character
+	 */
+	public static String removeCharAt(final String source, final int position) {
+		final StringBuilder sb = new StringBuilder();
+		if (position == source.length()) {
+			return source;
+		}
+		sb.append(source.substring(0, position)).append(source.substring(position + 1));
+		return sb.toString();
+	}
 }

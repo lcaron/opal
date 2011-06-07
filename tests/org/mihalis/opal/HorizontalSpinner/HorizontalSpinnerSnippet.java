@@ -134,7 +134,7 @@ public class HorizontalSpinnerSnippet {
 		group.setLayout(new GridLayout(1, false));
 
 		final Label lbl1 = new Label(group, SWT.NONE);
-		lbl1.setText("Simple vertical spinner :");
+		lbl1.setText("Simple horizontal spinner :");
 		final HorizontalSpinner spinner1 = new HorizontalSpinner(group, SWT.BORDER);
 		spinner1.setMinimum(0);
 		spinner1.setMaximum(1000);
@@ -193,7 +193,7 @@ public class HorizontalSpinnerSnippet {
 					final GC gc = new GC(spinner3);
 					final Point pt = gc.textExtent(string);
 					gc.dispose();
-					toolTip.setLocation(shell.getDisplay().map(shell, null, rect.x + pt.x, rect.y + rect.height));
+					toolTip.setLocation(shell.getDisplay().map(group, null, rect.x + pt.x, rect.y + rect.height));
 					toolTip.setMessage(message);
 					toolTip.setVisible(true);
 				} else {

@@ -24,6 +24,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Resource;
 import org.eclipse.swt.graphics.Transform;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -403,6 +405,21 @@ public class SWTGraphicUtil {
 			targetColumn++;
 		}
 		return rowRGBAverages;
+	}
+
+	/**
+	 * Enable/disable all widgets of a control
+	 * 
+	 * @param control control to enable/disable
+	 * @param enable <code>true</code> to enable, <code>false</code> to disable
+	 */
+	public void enable(final Control control, final boolean enable) {
+		if (control instanceof Composite) {
+			for (final Control c : ((Composite) control).getChildren()) {
+				enable(c, enable);
+			}
+		}
+		control.setEnabled(enable);
 	}
 
 }

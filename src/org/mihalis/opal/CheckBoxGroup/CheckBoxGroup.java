@@ -81,6 +81,7 @@ public class CheckBoxGroup extends Composite {
 		final GridData gdButton = new GridData(GridData.BEGINNING, GridData.CENTER, true, false);
 		gdButton.horizontalIndent = 15;
 		this.button.setLayoutData(gdButton);
+		this.button.setSelection(true);
 		this.button.pack();
 
 		this.button.addSelectionListener(new SelectionAdapter() {
@@ -91,9 +92,9 @@ public class CheckBoxGroup extends Composite {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				if (CheckBoxGroup.this.button.getSelection()) {
-					deactivate();
-				} else {
 					activate();
+				} else {
+					deactivate();
 				}
 			}
 		});

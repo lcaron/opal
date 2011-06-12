@@ -82,6 +82,7 @@ public class CheckBoxGroup extends Composite {
 		gdButton.horizontalIndent = 15;
 		this.button.setLayoutData(gdButton);
 		this.button.setSelection(true);
+		this.button.setBackground(getBackground());
 		this.button.pack();
 
 		this.button.addSelectionListener(new SelectionAdapter() {

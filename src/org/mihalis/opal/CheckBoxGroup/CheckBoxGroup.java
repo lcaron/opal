@@ -31,7 +31,9 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instances of this class provide an etched border with a title and a checkbox.
- * If the checkbox is
+ * If the checkbox is checked, the content of the composite is enabled. If the
+ * checkbox is unchecked, the content of the composite is disabled, thus not
+ * editable.
  * <p>
  * <dl>
  * <dt><b>Styles:</b></dt>

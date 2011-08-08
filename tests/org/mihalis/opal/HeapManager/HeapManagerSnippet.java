@@ -34,6 +34,7 @@ public class HeapManagerSnippet {
 			@Override
 			public void run() {
 				for (int i = 0; i < 10000; i++) {
+					@SuppressWarnings("unused")
 					final String[] temp = new String[1000];
 				}
 				counter[0]++;

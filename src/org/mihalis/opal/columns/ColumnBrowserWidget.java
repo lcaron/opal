@@ -53,7 +53,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	private final List<Table> columns;
 	private final Composite composite;
 	private final Image columnArrow;
-	private List<SelectionListener> selectionListeners;
+	private final List<SelectionListener> selectionListeners;
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -108,6 +108,9 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 		setShowFocusedControl(true);
 		updateContent();
 		setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+		this.selectionListeners = new ArrayList<SelectionListener>();
+
 	}
 
 	/**
@@ -173,20 +176,12 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if (ColumnBrowserWidget.this.selectionListeners != null) {
-					for (final SelectionListener listener : ColumnBrowserWidget.this.selectionListeners) {
-						listener.widgetSelected(e);
-					}
-				}
+				fireSelectionListeners(e);
 			}
 
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
-				if (ColumnBrowserWidget.this.selectionListeners != null) {
-					for (final SelectionListener listener : ColumnBrowserWidget.this.selectionListeners) {
-						listener.widgetDefaultSelected(e);
-					}
-				}
+				fireSelectionListeners(e);
 			}
 		});
 
@@ -201,6 +196,34 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 		table.setMenu(super.getMenu());
 		table.setToolTipText(super.getToolTipText());
 
+	}
+
+	/**
+	 * Fire the selection listeners
+	 * 
+	 * @param selectionEvent mouse event
+	 * @return true if the selection could be changed, false otherwise
+	 */
+	private boolean fireSelectionListeners(final SelectionEvent selectionEvent) {
+		for (final SelectionListener listener : this.selectionListeners) {
+			final Event event = new Event();
+
+			event.button = 0;
+			event.display = this.getDisplay();
+			event.item = null;
+			event.widget = this;
+			event.data = null;
+			event.time = selectionEvent.time;
+			event.x = selectionEvent.x;
+			event.y = selectionEvent.y;
+
+			final SelectionEvent selEvent = new SelectionEvent(event);
+			listener.widgetSelected(selEvent);
+			if (!selEvent.doit) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -328,9 +351,6 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	 * @see SelectionEvent
 	 */
 	public void addSelectionListener(final SelectionListener listener) {
-		if (this.selectionListeners == null) {
-			this.selectionListeners = new ArrayList<SelectionListener>();
-		}
 		this.selectionListeners.add(listener);
 	}
 
@@ -409,9 +429,6 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	 * @see #addSelectionListener
 	 */
 	public void removeSelectionListener(final SelectionListener listener) {
-		if (this.selectionListeners == null) {
-			this.selectionListeners = new ArrayList<SelectionListener>();
-		}
 		this.selectionListeners.remove(listener);
 	}
 

@@ -91,7 +91,7 @@ public class ImageSelector extends Canvas {
 	 * 
 	 */
 	public ImageSelector(final Composite parent, final int style) {
-		super(parent, style | SWT.NO_BACKGROUND);
+		super(parent, style | SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
 		this.font = new Font(this.getDisplay(), "Lucida Sans", 24, SWT.NONE);
 
 		this.addDisposeListener(new DisposeListener() {
@@ -177,7 +177,7 @@ public class ImageSelector extends Canvas {
 	private void paintControl(final PaintEvent e) {
 
 		// Create the image to fill the canvas
-		final Image image = new Image(getDisplay(), getBounds());
+		final Image image = new Image(getDisplay(), getClientArea());
 
 		// Set up the offscreen gc
 		final GC gc = new GC(image);
@@ -208,7 +208,7 @@ public class ImageSelector extends Canvas {
 	 * @param gc graphical context
 	 */
 	private void drawBackground(final GC gc) {
-		final Rectangle rect = this.getBounds();
+		final Rectangle rect = getClientArea();
 
 		gc.setForeground(this.gradientStart);
 		gc.setBackground(this.gradientEnd);

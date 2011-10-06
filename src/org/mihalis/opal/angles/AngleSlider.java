@@ -62,7 +62,7 @@ public class AngleSlider extends Canvas {
 	 *                </ul>
 	 */
 	public AngleSlider(final Composite parent, final int style) {
-		super(parent, style);
+		super(parent, style | SWT.DOUBLE_BUFFERED);
 
 		this.backgroundImage = new Image(getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/angleBackground.png"));
 

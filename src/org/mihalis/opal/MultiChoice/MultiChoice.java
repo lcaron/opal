@@ -424,7 +424,7 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Remove all items of the receinver
+	 * Remove all items of the receiver
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -678,7 +678,7 @@ public class MultiChoice<T> extends Composite {
 	 *                thread that created the receiver</li>
 	 *                </ul>
 	 */
-	public void deselect(final Object value) {
+	public void deselect(final T value) {
 		checkWidget();
 		checkNullElement();
 		this.selection.remove(value);

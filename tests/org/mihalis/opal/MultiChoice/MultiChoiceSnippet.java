@@ -23,8 +23,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.mihalis.opal.MultiChoice.MultiChoice;
-import org.mihalis.opal.MultiChoice.MultiChoiceSelectionListener;
 import org.mihalis.opal.utils.SimpleSelectionAdapter;
 
 /**
@@ -101,8 +99,6 @@ public class MultiChoiceSnippet {
 					if (selection) {
 						parent.deselectAll();
 						parent.selectAll();
-						parent.deselect(27);
-
 					} else {
 						parent.deselectAll();
 					}

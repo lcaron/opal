@@ -88,9 +88,9 @@ public class AngleSlider extends Canvas {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent arg0) {
-				SWTGraphicUtil.getInstance().dispose(AngleSlider.this.backgroundImage);
-				SWTGraphicUtil.getInstance().dispose(AngleSlider.this.buttonFocus);
-				SWTGraphicUtil.getInstance().dispose(AngleSlider.this.buttonNoFocus);
+				SWTGraphicUtil.dispose(AngleSlider.this.backgroundImage);
+				SWTGraphicUtil.dispose(AngleSlider.this.buttonFocus);
+				SWTGraphicUtil.dispose(AngleSlider.this.buttonNoFocus);
 			}
 		});
 

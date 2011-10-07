@@ -91,7 +91,7 @@ public class BrushedMetalComposite extends Composite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(BrushedMetalComposite.this.oldImage);
+				SWTGraphicUtil.dispose(BrushedMetalComposite.this.oldImage);
 			}
 		});
 	}
@@ -106,7 +106,7 @@ public class BrushedMetalComposite extends Composite {
 		final Image newImage = new Image(display, imageData);
 
 		this.setBackgroundImage(newImage);
-		SWTGraphicUtil.getInstance().dispose(this.oldImage);
+		SWTGraphicUtil.dispose(this.oldImage);
 		this.oldImage = newImage;
 	}
 

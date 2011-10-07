@@ -115,7 +115,7 @@ public class BlurredPanel {
 		gc.copyArea(image, 0, 0);
 		gc.dispose();
 
-		return new Image(this.parent.getDisplay(), SWTGraphicUtil.getInstance().blur(image.getImageData(), this.radius));
+		return new Image(this.parent.getDisplay(), SWTGraphicUtil.blur(image.getImageData(), this.radius));
 
 	}
 

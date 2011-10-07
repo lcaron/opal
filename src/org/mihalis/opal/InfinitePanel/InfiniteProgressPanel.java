@@ -142,8 +142,8 @@ public class InfiniteProgressPanel {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(InfiniteProgressPanel.this.defaultColor);
-				SWTGraphicUtil.getInstance().dispose(InfiniteProgressPanel.this.selectionColor);
+				SWTGraphicUtil.dispose(InfiniteProgressPanel.this.defaultColor);
+				SWTGraphicUtil.dispose(InfiniteProgressPanel.this.selectionColor);
 			}
 		});
 
@@ -470,7 +470,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setDefaultColor(final Color defaultColor) {
 		this.checkIfAnimationIsRunning();
-		SWTGraphicUtil.getInstance().dispose(this.defaultColor);
+		SWTGraphicUtil.dispose(this.defaultColor);
 		this.defaultColor = defaultColor;
 	}
 
@@ -529,7 +529,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setSelectionColor(final Color selectionColor) {
 		this.checkIfAnimationIsRunning();
-		SWTGraphicUtil.getInstance().dispose(this.selectionColor);
+		SWTGraphicUtil.dispose(this.selectionColor);
 		this.selectionColor = selectionColor;
 	}
 
@@ -569,7 +569,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setTextColor(final Color textColor) {
 		this.checkIfAnimationIsRunning();
-		SWTGraphicUtil.getInstance().dispose(this.textColor);
+		SWTGraphicUtil.dispose(this.textColor);
 		this.textColor = textColor;
 	}
 

@@ -92,12 +92,12 @@ public class HeapManager extends Composite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(HeapManager.this.barBorderColor);
-				SWTGraphicUtil.getInstance().dispose(HeapManager.this.barInnerColor);
-				SWTGraphicUtil.getInstance().dispose(HeapManager.this.barGradientColorTopStart);
-				SWTGraphicUtil.getInstance().dispose(HeapManager.this.barGradientColorTopEnd);
-				SWTGraphicUtil.getInstance().dispose(HeapManager.this.barGradientColorMiddleStart);
-				SWTGraphicUtil.getInstance().dispose(HeapManager.this.barTextColor);
+				SWTGraphicUtil.dispose(HeapManager.this.barBorderColor);
+				SWTGraphicUtil.dispose(HeapManager.this.barInnerColor);
+				SWTGraphicUtil.dispose(HeapManager.this.barGradientColorTopStart);
+				SWTGraphicUtil.dispose(HeapManager.this.barGradientColorTopEnd);
+				SWTGraphicUtil.dispose(HeapManager.this.barGradientColorMiddleStart);
+				SWTGraphicUtil.dispose(HeapManager.this.barTextColor);
 			}
 		});
 
@@ -162,7 +162,7 @@ public class HeapManager extends Composite {
 	 */
 	private void createButton() {
 		this.button = new Button(this, SWT.PUSH);
-		this.button.setImage(SWTGraphicUtil.getInstance().createImage("images/trash.png"));
+		this.button.setImage(SWTGraphicUtil.createImage("images/trash.png"));
 		this.button.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
 		this.button.addSelectionListener(new SelectionAdapter() {
 

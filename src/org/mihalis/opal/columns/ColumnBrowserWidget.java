@@ -94,7 +94,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 		layout.pack = false;
 		this.composite.setLayout(layout);
 
-		this.columnArrow = SWTGraphicUtil.getInstance().createImage("images/columnArrow.png");
+		this.columnArrow = SWTGraphicUtil.createImage("images/columnArrow.png");
 
 		this.columns = new ArrayList<Table>();
 		for (int i = 0; i < 3; i++) {
@@ -117,7 +117,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent arg0) {
-				SWTGraphicUtil.getInstance().dispose(ColumnBrowserWidget.this.columnArrow);
+				SWTGraphicUtil.dispose(ColumnBrowserWidget.this.columnArrow);
 			}
 		});
 

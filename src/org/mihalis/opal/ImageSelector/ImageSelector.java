@@ -98,9 +98,9 @@ public class ImageSelector extends Canvas {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(ImageSelector.this.font);
-				SWTGraphicUtil.getInstance().dispose(ImageSelector.this.gradientStart);
-				SWTGraphicUtil.getInstance().dispose(ImageSelector.this.gradientEnd);
+				SWTGraphicUtil.dispose(ImageSelector.this.font);
+				SWTGraphicUtil.dispose(ImageSelector.this.gradientStart);
+				SWTGraphicUtil.dispose(ImageSelector.this.gradientEnd);
 			}
 
 		});
@@ -261,7 +261,7 @@ public class ImageSelector extends Canvas {
 
 		final int alpha = computeAlpha(item);
 
-		final Image newImage = SWTGraphicUtil.getInstance().createReflectedResizedImage(item.getImage(), size, size);
+		final Image newImage = SWTGraphicUtil.createReflectedResizedImage(item.getImage(), size, size);
 		gc.setAlpha(alpha);
 
 		final int x = centerX - newImage.getBounds().width / 2;
@@ -507,7 +507,7 @@ public class ImageSelector extends Canvas {
 	 */
 	@Override
 	public void setFont(final Font font) {
-		SWTGraphicUtil.getInstance().dispose(this.font);
+		SWTGraphicUtil.dispose(this.font);
 		this.font = font;
 		redraw();
 	}
@@ -575,7 +575,7 @@ public class ImageSelector extends Canvas {
 	 * @param gradientStart the the gradient start color to set
 	 */
 	public void setGradientStart(final Color gradientStart) {
-		SWTGraphicUtil.getInstance().dispose(this.gradientStart);
+		SWTGraphicUtil.dispose(this.gradientStart);
 		this.gradientStart = gradientStart;
 		redraw();
 	}
@@ -591,7 +591,7 @@ public class ImageSelector extends Canvas {
 	 * @param gradientEnd the the gradient end color to set
 	 */
 	public void setGradientEnd(final Color gradientEnd) {
-		SWTGraphicUtil.getInstance().dispose(this.gradientEnd);
+		SWTGraphicUtil.dispose(this.gradientEnd);
 		this.gradientEnd = gradientEnd;
 		redraw();
 	}

@@ -219,7 +219,7 @@ public class DualList extends Composite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(image);
+				SWTGraphicUtil.dispose(image);
 			}
 		});
 		return button;

@@ -155,8 +155,8 @@ class LLabel extends Canvas {
 	 * @param event dispose event
 	 */
 	private void onDispose(final Event event) {
-		SWTGraphicUtil.getInstance().dispose(this.image);
-		SWTGraphicUtil.getInstance().dispose(this.font);
+		SWTGraphicUtil.dispose(this.image);
+		SWTGraphicUtil.dispose(this.font);
 		this.text = null;
 		this.image = null;
 	}
@@ -252,7 +252,7 @@ class LLabel extends Canvas {
 	 */
 	@Override
 	public void setFont(final Font font) {
-		SWTGraphicUtil.getInstance().dispose(font);
+		SWTGraphicUtil.dispose(font);
 		this.font = font;
 	}
 

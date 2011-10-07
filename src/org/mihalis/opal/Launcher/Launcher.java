@@ -125,7 +125,7 @@ public class Launcher extends Composite {
 		for (final LauncherItem item : this.items) {
 			final LLabel label = new LLabel(this, SWT.CENTER);
 			label.setText(item.title);
-			label.setImage(SWTGraphicUtil.getInstance().createImage(item.image));
+			label.setImage(SWTGraphicUtil.createImage(item.image));
 			label.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 			final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, false);
 			gd.widthHint = 192;

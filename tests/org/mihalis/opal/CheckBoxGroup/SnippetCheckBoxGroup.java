@@ -75,7 +75,7 @@ public class SnippetCheckBoxGroup {
 
 		// Open the shell
 		shell.setSize(640, 360);
-		SWTGraphicUtil.getInstance().centerShell(shell);
+		SWTGraphicUtil.centerShell(shell);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

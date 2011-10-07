@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Shell;
  * This class is a singleton that provides useful methods
  */
 public class SWTGraphicUtil {
-	private static SWTGraphicUtil instance;
 
 	/**
 	 * Constructor
@@ -42,22 +41,11 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * @return the instance of this singleton
-	 */
-	public static SWTGraphicUtil getInstance() {
-		if (instance == null) {
-			instance = new SWTGraphicUtil();
-		}
-
-		return instance;
-	}
-
-	/**
 	 * Dispose safely any SWT resource
 	 * 
 	 * @param r the resource to dispose
 	 */
-	public void dispose(final Resource r) {
+	public static void dispose(final Resource r) {
 		if (r != null && !r.isDisposed()) {
 			r.dispose();
 		}
@@ -70,7 +58,7 @@ public class SWTGraphicUtil {
 	 * @return an image
 	 * @see org.eclipse.swt.graphics.Image
 	 */
-	public Image createImage(final String fileName) {
+	public static Image createImage(final String fileName) {
 		return new Image(Display.getCurrent(), SWTGraphicUtil.class.getClassLoader().getResourceAsStream(fileName));
 	}
 
@@ -81,7 +69,7 @@ public class SWTGraphicUtil {
 	 * @param source source to be reflected
 	 * @return the source image with a reflection
 	 */
-	public Image createReflectedImage(final Image source) {
+	public static Image createReflectedImage(final Image source) {
 		if (source == null) {
 			return null;
 		}
@@ -143,7 +131,7 @@ public class SWTGraphicUtil {
 	 * @param newHeight new height of the image
 	 * @return a scaled image of the source
 	 */
-	public Image resize(final Image source, final int newWidth, final int newHeight) {
+	public static Image resize(final Image source, final int newWidth, final int newHeight) {
 
 		if (source == null) {
 			return null;
@@ -171,7 +159,7 @@ public class SWTGraphicUtil {
 	 * @param newHeight new height of the scaled image
 	 * @return the resized and reflected image
 	 */
-	public Image createReflectedResizedImage(final Image source, final int newWidth, final int newHeight) {
+	public static Image createReflectedResizedImage(final Image source, final int newWidth, final int newHeight) {
 		if (source == null) {
 			return null;
 		}
@@ -229,7 +217,7 @@ public class SWTGraphicUtil {
 	 * 
 	 * @param shell shell to center
 	 */
-	public void centerShell(final Shell shell) {
+	public static void centerShell(final Shell shell) {
 		final Point shellSize = shell.getSize();
 		final Point displaySize = new Point(shell.getDisplay().getBounds().width, shell.getDisplay().getBounds().height);
 
@@ -246,7 +234,7 @@ public class SWTGraphicUtil {
 	 * 
 	 * @param styledText styled text that contains an HTML text
 	 */
-	public void applyHTMLFormating(final StyledText styledText) {
+	public static void applyHTMLFormating(final StyledText styledText) {
 		try {
 			new HTMLStyledTextParser(styledText).parse();
 		} catch (final IOException e) {
@@ -264,7 +252,7 @@ public class SWTGraphicUtil {
 	 * @see http://www.jasonwaltman.com/thesis/filter-blur.html
 	 * @see http://www.blackpawn.com/texts/blur/default.html
 	 */
-	public ImageData blur(final ImageData originalImageData, int radius) {
+	public static ImageData blur(final ImageData originalImageData, int radius) {
 		/*
 		 * This method will vertically blur all the pixels in a row at once.
 		 * This blurring is performed incrementally to each row.
@@ -365,7 +353,7 @@ public class SWTGraphicUtil {
 	 * Average blurs a given row of image data. Returns the blurred row as a
 	 * matrix of separated RGB values.
 	 */
-	private RGB[] blurRow(final ImageData originalImageData, final int row, final int radius) {
+	private static RGB[] blurRow(final ImageData originalImageData, final int row, final int radius) {
 		final RGB[] rowRGBAverages = new RGB[originalImageData.width]; // resulting
 																		// rgb
 																		// averages
@@ -413,7 +401,7 @@ public class SWTGraphicUtil {
 	 * @param control control to enable/disable
 	 * @param enable <code>true</code> to enable, <code>false</code> to disable
 	 */
-	public void enable(final Control control, final boolean enable) {
+	public static void enable(final Control control, final boolean enable) {
 		if (control instanceof Composite) {
 			for (final Control c : ((Composite) control).getChildren()) {
 				enable(c, enable);

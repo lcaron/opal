@@ -114,7 +114,7 @@ public class ChoiceWidget extends Composite {
 	 */
 	private void buildGreenArrow() {
 		this.image = new Label(this, SWT.NONE);
-		this.image.setImage(SWTGraphicUtil.getInstance().createImage("images/arrowGreenRight.png"));
+		this.image.setImage(SWTGraphicUtil.createImage("images/arrowGreenRight.png"));
 		this.image.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		this.image.setLayoutData(new GridData(GridData.CENTER, GridData.BEGINNING, false, false, 1, 2));
 	}
@@ -128,7 +128,7 @@ public class ChoiceWidget extends Composite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(color);
+				SWTGraphicUtil.dispose(color);
 			}
 		});
 		this.instruction = new Label(this, SWT.NONE);

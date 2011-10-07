@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.mihalis.opal.OpalDialog.Dialog;
-import org.mihalis.opal.Panels.BlurredPanel;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
@@ -44,7 +43,7 @@ public class SnippetBlurredPanel {
 		createButtons(shell);
 
 		shell.setSize(shell.computeSize(400, 400));
-		SWTGraphicUtil.getInstance().centerShell(shell);
+		SWTGraphicUtil.centerShell(shell);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

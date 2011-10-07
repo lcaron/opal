@@ -259,7 +259,7 @@ class MessageArea extends DialogArea {
 	private void createText(final boolean hasIcon, final boolean hasTitle) {
 		final StyledText label = new StyledText(this.composite, SWT.NONE);
 		label.setText("<html><body>" + this.text + "</body></html>");
-		SWTGraphicUtil.getInstance().applyHTMLFormating(label);
+		SWTGraphicUtil.applyHTMLFormating(label);
 		label.setEnabled(false);
 		label.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		final GridData gd = new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false, 1, 1);

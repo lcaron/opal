@@ -43,7 +43,7 @@ public class SnippetDarkPanel {
 		createButtons(shell);
 
 		shell.setSize(shell.computeSize(400, 400));
-		SWTGraphicUtil.getInstance().centerShell(shell);
+		SWTGraphicUtil.centerShell(shell);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

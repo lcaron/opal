@@ -83,7 +83,7 @@ abstract class DialogArea {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(font);
+				SWTGraphicUtil.dispose(font);
 			}
 		});
 		return font;
@@ -98,7 +98,7 @@ abstract class DialogArea {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(color);
+				SWTGraphicUtil.dispose(color);
 			}
 		});
 		return color;
@@ -113,7 +113,7 @@ abstract class DialogArea {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(color);
+				SWTGraphicUtil.dispose(color);
 			}
 		});
 		return color;
@@ -140,12 +140,12 @@ abstract class DialogArea {
 	 * @return the image
 	 */
 	private Image loadImage(final String fileName) {
-		final Image image = SWTGraphicUtil.getInstance().createImage(fileName);
+		final Image image = SWTGraphicUtil.createImage(fileName);
 		this.parent.shell.addDisposeListener(new DisposeListener() {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(image);
+				SWTGraphicUtil.dispose(image);
 			}
 		});
 		return image;

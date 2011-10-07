@@ -212,14 +212,14 @@ public class CheckBoxGroup extends Composite {
 	 * Activate the content
 	 */
 	public void activate() {
-		SWTGraphicUtil.getInstance().enable(this.content, true);
+		SWTGraphicUtil.enable(this.content, true);
 	}
 
 	/**
 	 * Deactivate the content
 	 */
 	public void deactivate() {
-		SWTGraphicUtil.getInstance().enable(this.content, false);
+		SWTGraphicUtil.enable(this.content, false);
 	}
 
 	/**

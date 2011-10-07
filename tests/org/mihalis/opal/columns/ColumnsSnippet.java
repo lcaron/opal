@@ -47,7 +47,7 @@ public class ColumnsSnippet {
 		shell.setSize(640, 350);
 		shell.pack();
 		shell.open();
-		SWTGraphicUtil.getInstance().centerShell(shell);
+		SWTGraphicUtil.centerShell(shell);
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

@@ -81,9 +81,9 @@ public class GradientComposite extends Composite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.getInstance().dispose(GradientComposite.this.oldImage);
-				SWTGraphicUtil.getInstance().dispose(GradientComposite.this.gradientEnd);
-				SWTGraphicUtil.getInstance().dispose(GradientComposite.this.gradientStart);
+				SWTGraphicUtil.dispose(GradientComposite.this.oldImage);
+				SWTGraphicUtil.dispose(GradientComposite.this.gradientEnd);
+				SWTGraphicUtil.dispose(GradientComposite.this.gradientStart);
 			}
 
 		});
@@ -133,7 +133,7 @@ public class GradientComposite extends Composite {
 	 * @param gradientEnd the gradientEnd color to set
 	 */
 	public void setGradientEnd(final Color gradientEnd) {
-		SWTGraphicUtil.getInstance().dispose(this.gradientEnd);
+		SWTGraphicUtil.dispose(this.gradientEnd);
 		this.gradientEnd = gradientEnd;
 	}
 
@@ -148,7 +148,7 @@ public class GradientComposite extends Composite {
 	 * @param gradientStart the gradientStart color to set
 	 */
 	public void setGradientStart(final Color gradientStart) {
-		SWTGraphicUtil.getInstance().dispose(this.gradientStart);
+		SWTGraphicUtil.dispose(this.gradientStart);
 		this.gradientStart = gradientStart;
 	}
 }

@@ -30,9 +30,15 @@ import org.eclipse.swt.widgets.Listener;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
- * The Angle class represents a selectable user interface object that can be
- * used to pick angles.
- * 
+ * Instances of this class provide a selectable user interface object that can
+ * be used to pick angles.
+ * <p>
+ * <dl>
+ * <dt><b>Styles:</b></dt>
+ * <dd>BORDER</dd>
+ * <dt><b>Events:</b></dt>
+ * <dd>(none)</dd>
+ * </dl>
  */
 public class AngleSlider extends Canvas {
 

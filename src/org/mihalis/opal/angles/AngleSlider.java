@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * The Angle class represents a selectable user interface object that can be
@@ -81,9 +82,9 @@ public class AngleSlider extends Canvas {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent arg0) {
-				AngleSlider.this.backgroundImage.dispose();
-				AngleSlider.this.buttonFocus.dispose();
-				AngleSlider.this.buttonNoFocus.dispose();
+				SWTGraphicUtil.getInstance().dispose(AngleSlider.this.backgroundImage);
+				SWTGraphicUtil.getInstance().dispose(AngleSlider.this.buttonFocus);
+				SWTGraphicUtil.getInstance().dispose(AngleSlider.this.buttonNoFocus);
 			}
 		});
 

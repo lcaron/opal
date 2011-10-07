@@ -18,6 +18,8 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -110,6 +112,14 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 		setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		this.selectionListeners = new ArrayList<SelectionListener>();
+
+		this.addDisposeListener(new DisposeListener() {
+
+			@Override
+			public void widgetDisposed(final DisposeEvent arg0) {
+				SWTGraphicUtil.getInstance().dispose(ColumnBrowserWidget.this.columnArrow);
+			}
+		});
 
 	}
 

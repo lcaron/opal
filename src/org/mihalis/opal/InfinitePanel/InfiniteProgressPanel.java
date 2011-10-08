@@ -72,7 +72,7 @@ public class InfiniteProgressPanel {
 	 *                thread that created the parent</li>
 	 *                </ul>
 	 */
-	public InfiniteProgressPanel(final Shell shell) {
+	private InfiniteProgressPanel(final Shell shell) {
 		if (shell == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -387,7 +387,11 @@ public class InfiniteProgressPanel {
 			}
 		});
 
-		return temp[0];
+		if (temp[0] == null) {
+			return new InfiniteProgressPanel(shell);
+		} else {
+			return temp[0];
+		}
 	}
 
 	/**

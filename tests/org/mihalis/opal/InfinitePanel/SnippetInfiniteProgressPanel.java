@@ -28,102 +28,98 @@ import org.eclipse.swt.widgets.Text;
  * 
  */
 public class SnippetInfiniteProgressPanel {
-    public static void main(final String[] args) {
-        final Display display = new Display();
-        final Shell shell = new Shell();
-        shell.setLayout(new GridLayout(2, false));
+	public static void main(final String[] args) {
+		final Display display = new Display();
+		final Shell shell = new Shell();
+		shell.setLayout(new GridLayout(2, false));
 
-        createRow(shell, "First Name");
-        createRow(shell, "Last Name");
-        createRow(shell, "E-mail");
-        createRow(shell, "Phone number");
+		createRow(shell, "First Name");
+		createRow(shell, "Last Name");
+		createRow(shell, "E-mail");
+		createRow(shell, "Phone number");
 
-        createButtons(shell);
+		createButtons(shell);
 
-        shell.setSize(shell.computeSize(400, 400));
+		shell.setSize(shell.computeSize(400, 400));
 
-        shell.open();
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
-        display.dispose();
-    }
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		display.dispose();
+	}
 
-    private static void createRow(final Shell shell, final String label) {
-        final Label lbl = new Label(shell, SWT.NONE);
-        lbl.setText(label);
-        lbl.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
+	private static void createRow(final Shell shell, final String label) {
+		final Label lbl = new Label(shell, SWT.NONE);
+		lbl.setText(label);
+		lbl.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 
-        final Text text = new Text(shell, SWT.SINGLE | SWT.BORDER);
-        text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-    }
+		final Text text = new Text(shell, SWT.SINGLE | SWT.BORDER);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	}
 
-    private static void createButtons(final Shell shell) {
-        final Composite composite = new Composite(shell, SWT.NONE);
-        composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-        composite.setLayout(new GridLayout(2, false));
+	private static void createButtons(final Shell shell) {
+		final Composite composite = new Composite(shell, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		composite.setLayout(new GridLayout(2, false));
 
-        final Button ok = new Button(composite, SWT.PUSH);
-        ok.setText("Ok");
-        ok.setLayoutData(new GridData(SWT.END, SWT.END, true, true));
-        ok.addSelectionListener(new SelectionListener() {
+		final Button ok = new Button(composite, SWT.PUSH);
+		ok.setText("Ok");
+		ok.setLayoutData(new GridData(SWT.END, SWT.END, true, true));
+		ok.addSelectionListener(new SelectionListener() {
 
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                // Retrieve an infinite progress panel
-                final InfiniteProgressPanel panel;
-                if (!InfiniteProgressPanel.hasInfiniteProgressPanel(shell)) {
-                    panel = new InfiniteProgressPanel(shell);
-                } else {
-                    panel = InfiniteProgressPanel.getInfiniteProgressPanelFor(shell);
-                }
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				// Retrieve an infinite progress panel
+				final InfiniteProgressPanel panel = InfiniteProgressPanel.getInfiniteProgressPanelFor(shell);
 
-                // Set up a text (optional)
-                panel.setText("Please wait...");
-                panel.setTextColor(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_RED));
-                panel.setTextFont(new Font(shell.getDisplay(), "Lucida Sans", 18, SWT.BOLD));
+				// Set up a text (optional)
+				panel.setText("Please wait...");
+				panel.setTextColor(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_RED));
+				panel.setTextFont(new Font(shell.getDisplay(), "Lucida Sans", 18, SWT.BOLD));
 
-                panel.start();
-                final Thread performer = new Thread(new Runnable() {
-                    public void run() {
-                        performLongTask(shell);
-                    }
-                }, "Performer");
-                performer.start();
-            }
+				panel.start();
+				final Thread performer = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						performLongTask(shell);
+					}
+				}, "Performer");
+				performer.start();
+			}
 
-            private void performLongTask(final Shell shell) {
-                try {
-                    Thread.sleep(4000);
-                } catch (final InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // Stop the progress panel
-                InfiniteProgressPanel.getInfiniteProgressPanelFor(shell).stop();
-            }
+			private void performLongTask(final Shell shell) {
+				try {
+					Thread.sleep(4000);
+				} catch (final InterruptedException e) {
+					e.printStackTrace();
+				}
+				// Stop the progress panel
+				InfiniteProgressPanel.getInfiniteProgressPanelFor(shell).stop();
+			}
 
-            @Override
-            public void widgetDefaultSelected(final SelectionEvent e) {
-            }
-        });
+			@Override
+			public void widgetDefaultSelected(final SelectionEvent e) {
+			}
+		});
 
-        final Button cancel = new Button(composite, SWT.PUSH);
-        cancel.setText("Cancel");
-        cancel.setLayoutData(new GridData(SWT.CENTER, SWT.END, false, true));
-        cancel.addSelectionListener(new SelectionListener() {
+		final Button cancel = new Button(composite, SWT.PUSH);
+		cancel.setText("Cancel");
+		cancel.setLayoutData(new GridData(SWT.CENTER, SWT.END, false, true));
+		cancel.addSelectionListener(new SelectionListener() {
 
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                shell.dispose();
-            }
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				shell.dispose();
+			}
 
-            @Override
-            public void widgetDefaultSelected(final SelectionEvent e) {
-                shell.dispose();
-            }
-        });
-    }
+			@Override
+			public void widgetDefaultSelected(final SelectionEvent e) {
+				shell.dispose();
+			}
+		});
+	}
 
 }

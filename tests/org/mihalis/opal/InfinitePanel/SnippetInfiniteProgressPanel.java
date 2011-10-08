@@ -84,20 +84,20 @@ public class SnippetInfiniteProgressPanel {
 				final Thread performer = new Thread(new Runnable() {
 					@Override
 					public void run() {
-						performLongTask(shell);
+						performLongTask(panel);
 					}
 				}, "Performer");
 				performer.start();
 			}
 
-			private void performLongTask(final Shell shell) {
+			private void performLongTask(final InfiniteProgressPanel panel) {
 				try {
 					Thread.sleep(4000);
 				} catch (final InterruptedException e) {
 					e.printStackTrace();
 				}
 				// Stop the progress panel
-				InfiniteProgressPanel.getInfiniteProgressPanelFor(shell).stop();
+				panel.stop();
 			}
 
 			@Override

@@ -43,7 +43,7 @@ public class SwitchButtonSnippet {
 		button2.setTextForUnselect("Unselected...");
 		button2.setText("Default switchButton with border");
 
-		// Disabled TODO ca marche pas
+		// Disabled
 		final SwitchButton button3 = new SwitchButton(shell, SWT.NONE);
 		button3.setEnabled(false);
 		button3.setText("Default switchButton disabled");

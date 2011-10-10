@@ -243,10 +243,6 @@ public class SwitchButton extends Canvas {
 		this.drawSwitchButton(buttonSize);
 		this.drawText(buttonSize);
 
-		if (!this.getEnabled()) {
-			// TODO
-		}
-
 		if (this.borderColor != null) {
 			this.drawBorder();
 		}

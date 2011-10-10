@@ -173,7 +173,7 @@ public class Dialog {
 	 * Create a dialog box that displays an error message
 	 * 
 	 * @param title title of the dialog box
-	 * @param errorMessage
+	 * @param errorMessage Error message
 	 */
 	public static void error(final String title, final String errorMessage) {
 		error(null, title, errorMessage);
@@ -184,13 +184,13 @@ public class Dialog {
 	 * 
 	 * @param shell parent shell
 	 * @param title title of the dialog box
-	 * @param errorMessage
+	 * @param errorMessage Error message
 	 */
-	public static void error(final Shell shell, final String title, final String text) {
+	public static void error(final Shell shell, final String title, final String errorMessage) {
 		final Dialog dialog = new Dialog(shell);
 		dialog.setTitle(getLabel("ApplicationError"));
 		dialog.getMessageArea().setTitle(title).//
-				setText(text).//
+				setText(errorMessage).//
 				setIcon(Display.getCurrent().getSystemImage(SWT.ICON_ERROR));
 		dialog.setButtonType(OpalDialogType.OK);
 		dialog.show();

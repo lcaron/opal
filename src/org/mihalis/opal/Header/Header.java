@@ -36,8 +36,8 @@ public class Header extends Composite {
 	private Image image;
 	private String title;
 	private String description;
-	private Font headerFont;
-	private Color headerColor;
+	private Font titleFont;
+	private Color titleColor;
 
 	private Image oldImage;
 	private Color gradientEnd;
@@ -77,12 +77,12 @@ public class Header extends Composite {
 			final FontData fd = fontData[0];
 			fd.setStyle(SWT.BOLD);
 			fd.setHeight(fd.getHeight() + 2);
-			this.headerFont = new Font(getDisplay(), fd);
+			this.titleFont = new Font(getDisplay(), fd);
 		} else {
-			this.headerFont = null;
+			this.titleFont = null;
 		}
 
-		this.headerColor = new Color(getDisplay(), 0, 88, 150);
+		this.titleColor = new Color(getDisplay(), 0, 88, 150);
 
 		this.gradientEnd = new Color(this.getDisplay(), 239, 239, 239);
 		this.gradientStart = new Color(this.getDisplay(), 255, 255, 255);
@@ -98,8 +98,8 @@ public class Header extends Composite {
 		this.addListener(SWT.Dispose, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				SWTGraphicUtil.dispose(Header.this.headerColor);
-				SWTGraphicUtil.dispose(Header.this.headerFont);
+				SWTGraphicUtil.dispose(Header.this.titleColor);
+				SWTGraphicUtil.dispose(Header.this.titleFont);
 				SWTGraphicUtil.dispose(Header.this.oldImage);
 				SWTGraphicUtil.dispose(Header.this.gradientEnd);
 				SWTGraphicUtil.dispose(Header.this.gradientStart);
@@ -151,8 +151,8 @@ public class Header extends Composite {
 	private void createTitle() {
 		final Label labelTitle = new Label(this, SWT.NONE);
 		labelTitle.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
-		labelTitle.setFont(this.headerFont);
-		labelTitle.setForeground(getHeaderColor());
+		labelTitle.setFont(this.titleFont);
+		labelTitle.setForeground(this.titleColor);
 		labelTitle.setText(this.title);
 	}
 
@@ -271,40 +271,6 @@ public class Header extends Composite {
 	}
 
 	/**
-	 * Returns the header's color.
-	 * 
-	 * @return the header's color
-	 * 
-	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
-	 *                </ul>
-	 */
-	public Color getHeaderColor() {
-		checkWidget();
-		return this.headerColor;
-	}
-
-	/**
-	 * Returns the header's font.
-	 * 
-	 * @return the header's font.
-	 * 
-	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
-	 *                </ul>
-	 */
-	public Font getHeaderFont() {
-		checkWidget();
-		return this.headerFont;
-	}
-
-	/**
 	 * Returns the receiver's image if it has one, or null if it does not.
 	 * 
 	 * @return the receiver's image if it has one, or null if it does not
@@ -353,6 +319,40 @@ public class Header extends Composite {
 	public String getTitle() {
 		checkWidget();
 		return this.title;
+	}
+
+	/**
+	 * Returns the title's color.
+	 * 
+	 * @return the title's color
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public Color getTitleColor() {
+		checkWidget();
+		return this.titleColor;
+	}
+
+	/**
+	 * Returns the title's font.
+	 * 
+	 * @return the title's font.
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public Font getTitleFont() {
+		checkWidget();
+		return this.titleFont;
 	}
 
 	/**
@@ -420,48 +420,6 @@ public class Header extends Composite {
 	}
 
 	/**
-	 * Sets the receiver's header color.
-	 * 
-	 * @param headerColor the receiver's header color
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
-	 *                disposed</li>
-	 *                </ul>
-	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
-	 *                </ul>
-	 */
-	public void setHeaderColor(final Color headerColor) {
-		checkWidget();
-		this.headerColor = headerColor;
-	}
-
-	/**
-	 * Sets the receiver's header font.
-	 * 
-	 * @param headerFont the receiver's header font
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
-	 *                disposed</li>
-	 *                </ul>
-	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
-	 *                </ul>
-	 */
-	public void setHeaderFont(final Font headerFont) {
-		checkWidget();
-		this.headerFont = headerFont;
-	}
-
-	/**
 	 * Sets the receiver's image to the argument, which may be null indicating
 	 * that no image should be displayed.
 	 * 
@@ -523,6 +481,48 @@ public class Header extends Composite {
 	public void setTitle(final String title) {
 		checkWidget();
 		this.title = title;
+	}
+
+	/**
+	 * Sets the receiver's title color.
+	 * 
+	 * @param headerColor the receiver's title color
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
+	 *                disposed</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void setTitleColor(final Color headerColor) {
+		checkWidget();
+		this.titleColor = headerColor;
+	}
+
+	/**
+	 * Sets the receiver's title font.
+	 * 
+	 * @param headerFont the receiver's title font
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
+	 *                disposed</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void setTitleFont(final Font headerFont) {
+		checkWidget();
+		this.titleFont = headerFont;
 	}
 
 }

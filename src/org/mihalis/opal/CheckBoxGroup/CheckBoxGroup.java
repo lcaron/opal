@@ -212,6 +212,7 @@ public class CheckBoxGroup extends Composite {
 	 * Activate the content
 	 */
 	public void activate() {
+		this.button.setSelection(true);
 		SWTGraphicUtil.enable(this.content, true);
 	}
 
@@ -219,6 +220,7 @@ public class CheckBoxGroup extends Composite {
 	 * Deactivate the content
 	 */
 	public void deactivate() {
+		this.button.setSelection(false);
 		SWTGraphicUtil.enable(this.content, false);
 	}
 

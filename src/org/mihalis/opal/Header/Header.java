@@ -2,6 +2,7 @@ package org.mihalis.opal.Header;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -36,6 +37,7 @@ public class Header extends Composite {
 	private String title;
 	private String description;
 	private Font headerFont;
+	private Color headerColor;
 
 	private Image oldImage;
 	private Color gradientEnd;
@@ -74,10 +76,13 @@ public class Header extends Composite {
 		if (fontData != null && fontData.length > 0) {
 			final FontData fd = fontData[0];
 			fd.setStyle(SWT.BOLD);
+			fd.setHeight(fd.getHeight() + 2);
 			this.headerFont = new Font(getDisplay(), fd);
 		} else {
 			this.headerFont = null;
 		}
+
+		this.headerColor = new Color(getDisplay(), 0, 88, 150);
 
 		this.gradientEnd = new Color(this.getDisplay(), 239, 239, 239);
 		this.gradientStart = new Color(this.getDisplay(), 255, 255, 255);
@@ -93,6 +98,7 @@ public class Header extends Composite {
 		this.addListener(SWT.Dispose, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
+				SWTGraphicUtil.dispose(Header.this.headerColor);
 				SWTGraphicUtil.dispose(Header.this.headerFont);
 				SWTGraphicUtil.dispose(Header.this.oldImage);
 				SWTGraphicUtil.dispose(Header.this.gradientEnd);
@@ -146,7 +152,7 @@ public class Header extends Composite {
 		final Label labelTitle = new Label(this, SWT.NONE);
 		labelTitle.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		labelTitle.setFont(this.headerFont);
-		labelTitle.setForeground(getForeground());
+		labelTitle.setForeground(getHeaderColor());
 		labelTitle.setText(this.title);
 	}
 
@@ -169,11 +175,12 @@ public class Header extends Composite {
 	 * Create the description
 	 */
 	private void createDescription() {
-		final Label labelDescription = new Label(this, SWT.WRAP);
+		final StyledText labelDescription = new StyledText(this, SWT.WRAP);
 		labelDescription.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		labelDescription.setFont(getFont());
 		labelDescription.setForeground(getForeground());
-		labelDescription.setText(this.description);
+		labelDescription.setText("<html><body>" + this.description + "</body></html>");
+		SWTGraphicUtil.applyHTMLFormating(labelDescription);
 	}
 
 	/**
@@ -215,7 +222,7 @@ public class Header extends Composite {
 	/**
 	 * Returns the receiver's description if it has one, or null if it does not.
 	 * 
-	 * @return the receiver's image
+	 * @return the receiver's description if it has one, or null if it does not
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -232,7 +239,7 @@ public class Header extends Composite {
 	/**
 	 * Returns the receiver's gradient end color.
 	 * 
-	 * @return the receiver's image
+	 * @return the receiver's gradient end color
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -249,7 +256,7 @@ public class Header extends Composite {
 	/**
 	 * Returns the receiver's gradient start color.
 	 * 
-	 * @return the receiver's image
+	 * @return the receiver's gradient start color
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -264,9 +271,26 @@ public class Header extends Composite {
 	}
 
 	/**
+	 * Returns the header's color.
+	 * 
+	 * @return the header's color
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public Color getHeaderColor() {
+		checkWidget();
+		return this.headerColor;
+	}
+
+	/**
 	 * Returns the header's font.
 	 * 
-	 * @return the receiver's image
+	 * @return the header's font.
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -283,7 +307,7 @@ public class Header extends Composite {
 	/**
 	 * Returns the receiver's image if it has one, or null if it does not.
 	 * 
-	 * @return the receiver's image
+	 * @return the receiver's image if it has one, or null if it does not
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -300,7 +324,7 @@ public class Header extends Composite {
 	/**
 	 * Returns the receiver's separator color.
 	 * 
-	 * @return the receiver's image
+	 * @return the receiver's separator color
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -317,7 +341,7 @@ public class Header extends Composite {
 	/**
 	 * Returns the receiver's title if it has one, or null if it does not.
 	 * 
-	 * @return the receiver's image
+	 * @return the receiver's title if it has one, or null if it does not
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -335,7 +359,7 @@ public class Header extends Composite {
 	 * Sets the receiver's description to the argument, which may be null
 	 * indicating that no description should be displayed.
 	 * 
-	 * @param image the image to display on the receiver (may be null)
+	 * @param description the description of the header (may be null)
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
@@ -356,7 +380,7 @@ public class Header extends Composite {
 	/**
 	 * Sets the receiver's gradient end color.
 	 * 
-	 * @param image the image to display on the receiver (may be null)
+	 * @param gradientEnd the receiver's gradient end color
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
@@ -377,7 +401,7 @@ public class Header extends Composite {
 	/**
 	 * Sets the receiver's gradient start color.
 	 * 
-	 * @param image the image to display on the receiver (may be null)
+	 * @param gradientStart the receiver's gradient start color
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
@@ -396,9 +420,30 @@ public class Header extends Composite {
 	}
 
 	/**
-	 * Sets the receiver's header font to the argument.
+	 * Sets the receiver's header color.
 	 * 
-	 * @param image the image to display on the receiver (may be null)
+	 * @param headerColor the receiver's header color
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
+	 *                disposed</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void setHeaderColor(final Color headerColor) {
+		checkWidget();
+		this.headerColor = headerColor;
+	}
+
+	/**
+	 * Sets the receiver's header font.
+	 * 
+	 * @param headerFont the receiver's header font
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
@@ -441,7 +486,7 @@ public class Header extends Composite {
 	/**
 	 * Sets the receiver's separator color.
 	 * 
-	 * @param image the image to display on the receiver (may be null)
+	 * @param separatorColor the receiver's separator color
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
@@ -462,7 +507,7 @@ public class Header extends Composite {
 	 * Sets the receiver's title to the argument, which may be null indicating
 	 * that no title should be displayed.
 	 * 
-	 * @param image the image to display on the receiver (may be null)
+	 * @param title the title
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been

@@ -42,7 +42,7 @@ public class HeaderSnippet {
 		final Header header = new Header(shell, SWT.NONE);
 		header.setTitle("Header title");
 		header.setImage(icon);
-		header.setDescription("Description area for the header. You can put all additional, relevant information to the description panel (or jokes, citations, ... what you want !)");
+		header.setDescription("Description area for the header. You can put all <b>additional</b>, <i>relevant information</i> to the description panel (or <u>jokes</u>, citations, ... what you want !)");
 		header.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 2, 1));
 
 		createRow(shell, "First Name");

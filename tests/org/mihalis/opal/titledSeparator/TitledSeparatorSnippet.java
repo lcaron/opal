@@ -33,7 +33,7 @@ public class TitledSeparatorSnippet {
 		final Shell shell = new Shell(display);
 		shell.setLayout(new GridLayout(1, false));
 
-		final Image icon = new Image(display, TitledSeparatorSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/TitledSeparator/user.png"));
+		final Image icon = new Image(display, TitledSeparatorSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/titledSeparator/user.png"));
 		final Font font = new Font(display, "Courier New", 18, SWT.BOLD | SWT.ITALIC);
 
 		// Default separator (no image, title aligned on the left)

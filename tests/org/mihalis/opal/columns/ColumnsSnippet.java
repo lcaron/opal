@@ -18,7 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.mihalis.opal.OpalDialog.Dialog;
+import org.mihalis.opal.opalDialog.Dialog;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**

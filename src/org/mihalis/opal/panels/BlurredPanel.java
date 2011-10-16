@@ -8,28 +8,29 @@
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation 
  *******************************************************************************/
-package org.mihalis.opal.Panels;
+package org.mihalis.opal.panels;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instances of this class are controls located on the top of a shell. They
- * display a dark panel on this shell
+ * display a blurred version of the content of the shell
  */
-public class DarkPanel {
+public class BlurredPanel {
 	private final Shell parent;
-	private static final String DARK_PANEL_KEY = "org.mihalis.opal.BluredPanel.DarkPanel";
-	private int alpha;
+	private static final String BLURED_PANEL_KEY = "org.mihalis.opal.Panels.DarkPanel";
+	private int radius;
 	private Shell panel;
 	private Canvas canvas;
 
@@ -48,7 +49,7 @@ public class DarkPanel {
 	 *                thread that created the parent</li>
 	 *                </ul>
 	 */
-	public DarkPanel(final Shell shell) {
+	public BlurredPanel(final Shell shell) {
 		if (shell == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -58,15 +59,15 @@ public class DarkPanel {
 		}
 
 		this.parent = shell;
-		if (shell.getData(DARK_PANEL_KEY) != null) {
+		if (shell.getData(BLURED_PANEL_KEY) != null) {
 			throw new IllegalArgumentException("This shell has already an infinite panel attached on it !");
 		}
-		shell.setData(DARK_PANEL_KEY, this);
-		this.alpha = 100;
+		shell.setData(BLURED_PANEL_KEY, this);
+		this.radius = 2;
 	}
 
 	/**
-	 * Show the dark panel
+	 * Show the blurred panel
 	 */
 	public void show() {
 		if (this.parent.isDisposed()) {
@@ -75,7 +76,6 @@ public class DarkPanel {
 
 		this.panel = new Shell(this.parent, SWT.APPLICATION_MODAL | SWT.NO_TRIM);
 		this.panel.setLayout(new FillLayout());
-		this.panel.setAlpha(this.alpha);
 
 		this.panel.addListener(SWT.KeyUp, new Listener() {
 
@@ -106,14 +106,21 @@ public class DarkPanel {
 	 */
 	private void paintCanvas(final PaintEvent e) {
 		// Paint the panel
-		final Rectangle clientArea = ((Canvas) e.widget).getClientArea();
-		final GC gc = e.gc;
-		gc.setBackground(this.panel.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		gc.fillRectangle(clientArea);
+		e.gc.drawImage(createBlurredImage(), 0, 0);
+	}
+
+	private Image createBlurredImage() {
+		final GC gc = new GC(this.parent);
+		final Image image = new Image(this.parent.getDisplay(), this.parent.getSize().x, this.parent.getSize().y);
+		gc.copyArea(image, 0, 0);
+		gc.dispose();
+
+		return new Image(this.parent.getDisplay(), SWTGraphicUtil.blur(image.getImageData(), this.radius));
+
 	}
 
 	/**
-	 * Hide the dark panel
+	 * Hide the panel
 	 */
 	public void hide() {
 		if (this.parent.isDisposed()) {
@@ -128,17 +135,17 @@ public class DarkPanel {
 	}
 
 	/**
-	 * @return the alpha value
+	 * @return the radius of the blur effect
 	 */
-	public int getAlpha() {
-		return this.alpha;
+	public int getRadius() {
+		return this.radius;
 	}
 
 	/**
-	 * @param alpha the alpha to set
+	 * @param radius the radius to set
 	 */
-	public void setAlpha(final int alpha) {
-		this.alpha = alpha;
+	public void setRadius(final int radius) {
+		this.radius = radius;
 	}
 
 }

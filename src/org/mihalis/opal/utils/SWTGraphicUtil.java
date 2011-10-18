@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -408,6 +410,23 @@ public class SWTGraphicUtil {
 			}
 		}
 		control.setEnabled(enable);
+	}
+
+	/**
+	 * Build a font from a given control. Useful if we just want a bold label
+	 * for example
+	 * 
+	 * @param control control that handle the default font
+	 * @param style new style
+	 * @return a font with the given style
+	 */
+	public static Font buildFontFrom(final Control control, final int style) {
+		final Font temp = control.getFont();
+		final FontData[] fontData = temp.getFontData();
+		if (fontData == null || fontData.length == 0) {
+			return temp;
+		}
+		return new Font(control.getDisplay(), fontData[0].getName(), fontData[0].getHeight(), style);
 	}
 
 }

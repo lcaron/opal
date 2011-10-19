@@ -35,6 +35,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
+ * </p>
  */
 public class TitledSeparator extends Composite {
 

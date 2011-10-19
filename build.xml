@@ -22,7 +22,7 @@
 		</copy>
 		<mkdir dir="${classes.dir}/resources" />
 		<copy todir="${classes.dir}/resources">
-			<fileset dir="${src.dir}/rssources" />
+			<fileset dir="${src.dir}/resources" />
 		</copy>
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
 		</jar>

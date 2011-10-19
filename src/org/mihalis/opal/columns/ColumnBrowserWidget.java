@@ -98,18 +98,18 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 
 		this.columns = new ArrayList<Table>();
 		for (int i = 0; i < 3; i++) {
-			createTable();
+			this.createTable();
 		}
 
 		// Store root
 		this.columns.get(0).setData(new ColumnItem(this));
 
 		this.setContent(this.composite);
-		setExpandHorizontal(true);
-		setExpandVertical(true);
-		setShowFocusedControl(true);
-		updateContent();
-		setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		this.setExpandHorizontal(true);
+		this.setExpandVertical(true);
+		this.setShowFocusedControl(true);
+		this.updateContent();
+		this.setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		this.selectionListeners = new ArrayList<SelectionListener>();
 
@@ -127,7 +127,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	 * Create a column that displays data
 	 */
 	private void createTable() {
-		final Table table = new Table(this.composite, SWT.SINGLE | SWT.H_SCROLL | SWT.FULL_SELECTION);
+		final Table table = new Table(this.composite, SWT.SINGLE | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		new TableColumn(table, SWT.LEFT);
 
 		table.setLayoutData(new RowData(150, 175));
@@ -138,7 +138,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 			@Override
 			public void handleEvent(final Event event) {
 				final int width = table.getSize().x;
-				table.getColumn(0).setWidth(width);
+				table.getColumn(0).setWidth(width - 5);
 			}
 		});
 
@@ -149,7 +149,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 				if (table.getSelection() == null || table.getSelection().length != 1) {
 					return;
 				}
-				selectItem(table.getSelection()[0]);
+				ColumnBrowserWidget.this.selectItem(table.getSelection()[0]);
 			}
 		});
 
@@ -157,6 +157,13 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 			@Override
 			public void handleEvent(final Event event) {
 				switch (event.type) {
+				case SWT.MeasureItem: {
+					final Rectangle rect = ColumnBrowserWidget.this.columnArrow.getBounds();
+					event.width += rect.width;
+					event.height = Math.max(event.height, rect.height + 2);
+					break;
+				}
+
 				case SWT.PaintItem: {
 					if (!(event.item instanceof TableItem)) {
 						return;
@@ -170,8 +177,8 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 						return;
 					}
 
+					final int x = event.x + event.width;
 					final Rectangle rect = ColumnBrowserWidget.this.columnArrow.getBounds();
-					final int x = item.getBounds().width - 2 - rect.width;
 					final int offset = Math.max(0, (event.height - rect.height) / 2);
 					event.gc.drawImage(ColumnBrowserWidget.this.columnArrow, x, event.y + offset);
 					break;
@@ -186,12 +193,12 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				fireSelectionListeners(e);
+				ColumnBrowserWidget.this.fireSelectionListeners(e);
 			}
 
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
-				fireSelectionListeners(e);
+				ColumnBrowserWidget.this.fireSelectionListeners(e);
 			}
 		});
 
@@ -249,7 +256,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 			return;
 		}
 
-		final int selectedColumn = findSelectedColumn(tableItem);
+		final int selectedColumn = this.findSelectedColumn(tableItem);
 		boolean needPacking = false;
 		if (selectedColumn != this.columns.size() - 1) {
 			for (int i = selectedColumn + 1; i < this.columns.size(); i++) {
@@ -264,22 +271,30 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 				if (i >= 3) {
 					t.dispose();
 					it.remove();
+					// Don't know why, it's not working if I do not include this
+					// :(
+					this.setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 				}
 				i++;
 			}
 
-			this.columns.get(selectedColumn + 1).setData(c);
+			if (selectedColumn != this.columns.size() - 1) {
+				this.columns.get(selectedColumn + 1).setData(c);
+			} else {
+				this.createTable();
+				this.columns.get(this.columns.size() - 1).setData(c);
+			}
 			needPacking = true;
 
 		} else {
-			createTable();
+			this.createTable();
 			needPacking = true;
 			this.columns.get(this.columns.size() - 1).setData(c);
 		}
-		updateContent();
+		this.updateContent();
 		if (needPacking) {
 			this.composite.pack();
-			setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+			this.setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		}
 		this.columns.get(this.columns.size() - 1).forceFocus();
 	}
@@ -385,10 +400,10 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 			}
 			i++;
 		}
-		updateContent();
+		this.updateContent();
 		if (needPacking) {
 			this.composite.pack();
-			setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+			this.setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		}
 		this.columns.get(0).forceFocus();
 	}
@@ -463,20 +478,20 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	public void select(final ColumnItem item) {
 
 		final List<ColumnItem> items = new ArrayList<ColumnItem>();
-		findElement(item, items);
+		this.findElement(item, items);
 		Collections.reverse(items);
 		if (items.isEmpty()) {
 			return;
 		}
 
-		clear(false);
+		this.clear(false);
 		for (int i = 3; i < items.size(); i++) {
-			createTable();
+			this.createTable();
 		}
 		for (int i = 0; i < items.size() - 1; i++) {
 			this.columns.get(i + 1).setData(items.get(i));
 		}
-		updateContent();
+		this.updateContent();
 
 		for (int i = 0; i < this.columns.size() - 1; i++) {
 			final ColumnItem nextItem = (ColumnItem) this.columns.get(i + 1).getData();
@@ -488,7 +503,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 		}
 
 		this.composite.pack();
-		setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		this.setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		this.columns.get(this.columns.size() - 1).forceFocus();
 
 	}
@@ -505,7 +520,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 			return;
 		}
 		items.add(item);
-		findElement(item.getParentItem(), items);
+		this.findElement(item.getParentItem(), items);
 	}
 
 	/**

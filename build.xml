@@ -20,7 +20,10 @@
 		<copy todir="${classes.dir}/images">
 			<fileset dir="${src.dir}/images" />
 		</copy>
-
+		<mkdir dir="${classes.dir}/resources" />
+		<copy todir="${classes.dir}/resources">
+			<fileset dir="${src.dir}/rssources" />
+		</copy>
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
 		</jar>
 	</target>

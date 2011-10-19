@@ -39,7 +39,7 @@ public class Dialog {
 
 	private int minimumWidth = 300;
 	private int minimumHeight = 150;
-	private static final ResourceBundle RSC = ResourceBundle.getBundle("ressources/opal");
+	private static final ResourceBundle RSC = ResourceBundle.getBundle("resources/opal");
 
 	/**
 	 * Constructor

@@ -48,7 +48,7 @@ public class HeapManager extends Composite {
 	private Color barGradientColorTopEnd;
 	private Color barGradientColorMiddleStart;
 
-	private static final ResourceBundle RSC = ResourceBundle.getBundle("ressources/opal");
+	private static final ResourceBundle RSC = ResourceBundle.getBundle("resources/opal");
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style

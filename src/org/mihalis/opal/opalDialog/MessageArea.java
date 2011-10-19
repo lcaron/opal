@@ -32,7 +32,7 @@ import org.mihalis.opal.utils.StringUtil;
 /**
  * Instances of this class are message areas
  */
-class MessageArea extends DialogArea {
+public class MessageArea extends DialogArea {
 	// Main composite
 	private Composite composite;
 

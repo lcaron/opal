@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Listener;
 /**
  * Instances of this class are message areas
  */
-class FooterArea extends DialogArea {
+public class FooterArea extends DialogArea {
 	private Image icon;
 	private String footerText;
 

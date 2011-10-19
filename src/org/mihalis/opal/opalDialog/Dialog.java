@@ -409,10 +409,10 @@ public class Dialog {
 		case NO_BUTTON:
 			break;
 		case OK:
-			this.footerArea.setButtonLabels(getLabel("OK")).setDefaultButtonIndex(0);
+			this.footerArea.setButtonLabels(getLabel("Ok")).setDefaultButtonIndex(0);
 			break;
 		case OK_CANCEL:
-			this.footerArea.setButtonLabels(getLabel("OK"), getLabel("Cancel")).setDefaultButtonIndex(-1);
+			this.footerArea.setButtonLabels(getLabel("Ok"), getLabel("Cancel")).setDefaultButtonIndex(-1);
 			break;
 		case SELECT_CANCEL:
 			this.footerArea.setButtonLabels(getLabel("Select"), getLabel("Cancel")).setDefaultButtonIndex(-1);

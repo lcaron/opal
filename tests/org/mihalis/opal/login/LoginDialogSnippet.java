@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.mihalis.opal.titledSeparator.TitledSeparatorSnippet;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
@@ -117,7 +116,7 @@ public class LoginDialogSnippet {
 			public void widgetSelected(final SelectionEvent e) {
 
 				final LoginDialog dialog = new LoginDialog();
-				dialog.setImage(new Image(display, TitledSeparatorSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/login/image.png")));
+				dialog.setImage(new Image(display, LoginDialogSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/login/image.png")));
 				dialog.setDescription("Please login to our system...\nPlease remember that the password is the same as the login :)");
 				dialog.setAutorizedLogin("Laurent", "Albert", "Erik", "Ulrich", "Luis");
 				dialog.setLogin("Laurent");

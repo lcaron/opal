@@ -11,13 +11,12 @@
  *******************************************************************************/
 package org.mihalis.opal.opalDialog;
 
-import java.util.ResourceBundle;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.mihalis.opal.utils.ResourceManager;
 
 /**
  * Instances of this class are dialog box
@@ -39,7 +38,6 @@ public class Dialog {
 
 	private int minimumWidth = 300;
 	private int minimumHeight = 150;
-	private static final ResourceBundle RSC = ResourceBundle.getBundle("resources/opal");
 
 	/**
 	 * Constructor
@@ -102,16 +100,6 @@ public class Dialog {
 	}
 
 	/**
-	 * Get a translated label
-	 * 
-	 * @param key key to get
-	 * @return the translated value of the key
-	 */
-	public static String getLabel(final String key) {
-		return RSC.getString(key);
-	}
-
-	/**
 	 * Compute the size of the shell
 	 */
 	void pack() {
@@ -159,7 +147,7 @@ public class Dialog {
 	 */
 	public static String ask(final Shell shell, final String title, final String text, final String defaultValue) {
 		final Dialog dialog = new Dialog(shell);
-		dialog.setTitle(getLabel("Input"));
+		dialog.setTitle(ResourceManager.getLabel(ResourceManager.INPUT));
 		dialog.getMessageArea().setTitle(title).setText(text).setIcon(Display.getCurrent().getSystemImage(SWT.ICON_INFORMATION)).addTextBox(defaultValue);
 		dialog.setButtonType(OpalDialogType.OK_CANCEL);
 		if (dialog.show() == 0) {
@@ -188,7 +176,7 @@ public class Dialog {
 	 */
 	public static void error(final Shell shell, final String title, final String errorMessage) {
 		final Dialog dialog = new Dialog(shell);
-		dialog.setTitle(getLabel("ApplicationError"));
+		dialog.setTitle(ResourceManager.getLabel(ResourceManager.APPLICATION_ERROR));
 		dialog.getMessageArea().setTitle(title).//
 				setText(errorMessage).//
 				setIcon(Display.getCurrent().getSystemImage(SWT.ICON_ERROR));
@@ -215,7 +203,7 @@ public class Dialog {
 	 */
 	public static void inform(final Shell shell, final String title, final String text) {
 		final Dialog dialog = new Dialog(shell);
-		dialog.setTitle(getLabel("Information"));
+		dialog.setTitle(ResourceManager.getLabel(ResourceManager.INFORMATION));
 		dialog.getMessageArea().setTitle(title).setText(text).setIcon(Display.getCurrent().getSystemImage(SWT.ICON_INFORMATION));
 		dialog.setButtonType(OpalDialogType.CLOSE);
 		dialog.show();
@@ -274,7 +262,7 @@ public class Dialog {
 	 */
 	public static boolean isConfirmed(final Shell shell, final String title, final String text, final int timer) {
 		final Dialog dialog = new Dialog(shell);
-		dialog.setTitle(getLabel("Warning"));
+		dialog.setTitle(ResourceManager.getLabel(ResourceManager.WARNING));
 		dialog.getMessageArea().setTitle(title).setText(text).setIcon(Display.getCurrent().getSystemImage(SWT.ICON_WARNING));
 
 		dialog.getFooterArea().setTimer(timer).setTimerIndexButton(0);
@@ -307,7 +295,7 @@ public class Dialog {
 	 */
 	public static int radioChoice(final Shell shell, final String title, final String text, final int defaultSelection, final String... values) {
 		final Dialog dialog = new Dialog(shell);
-		dialog.setTitle(getLabel("Choice"));
+		dialog.setTitle(ResourceManager.getLabel(ResourceManager.CHOICE));
 		dialog.getMessageArea().setTitle(title).setText(text).setIcon(Display.getCurrent().getSystemImage(SWT.ICON_QUESTION)).addRadioButtons(defaultSelection, values);
 		dialog.setButtonType(OpalDialogType.SELECT_CANCEL);
 		if (dialog.show() == 0) {
@@ -324,7 +312,7 @@ public class Dialog {
 	 */
 	public static void showException(final Throwable exception) {
 		final Dialog dialog = new Dialog();
-		dialog.setTitle(getLabel("Exception"));
+		dialog.setTitle(ResourceManager.getLabel(ResourceManager.EXCEPTION));
 
 		final String msg = exception.getMessage();
 		final String className = exception.getClass().getName();
@@ -366,7 +354,7 @@ public class Dialog {
 	 */
 	public static int choice(final Shell shell, final String title, final String text, final int defaultSelection, final ChoiceItem... items) {
 		final Dialog dialog = new Dialog(shell);
-		dialog.setTitle(getLabel("Choice"));
+		dialog.setTitle(ResourceManager.getLabel(ResourceManager.CHOICE));
 		dialog.getMessageArea().setTitle(title).setText(text).setIcon(Display.getCurrent().getSystemImage(SWT.ICON_QUESTION)).addChoice(defaultSelection, items);
 		dialog.setButtonType(OpalDialogType.NONE);
 		dialog.show();
@@ -404,21 +392,21 @@ public class Dialog {
 
 		switch (buttonType) {
 		case CLOSE:
-			this.footerArea.setButtonLabels(getLabel("Close")).setDefaultButtonIndex(0);
+			this.footerArea.setButtonLabels(ResourceManager.getLabel(ResourceManager.CLOSE)).setDefaultButtonIndex(0);
 			break;
 		case NO_BUTTON:
 			break;
 		case OK:
-			this.footerArea.setButtonLabels(getLabel("Ok")).setDefaultButtonIndex(0);
+			this.footerArea.setButtonLabels(ResourceManager.getLabel(ResourceManager.OK)).setDefaultButtonIndex(0);
 			break;
 		case OK_CANCEL:
-			this.footerArea.setButtonLabels(getLabel("Ok"), getLabel("Cancel")).setDefaultButtonIndex(-1);
+			this.footerArea.setButtonLabels(ResourceManager.getLabel(ResourceManager.OK), ResourceManager.getLabel(ResourceManager.CANCEL)).setDefaultButtonIndex(-1);
 			break;
 		case SELECT_CANCEL:
-			this.footerArea.setButtonLabels(getLabel("Select"), getLabel("Cancel")).setDefaultButtonIndex(-1);
+			this.footerArea.setButtonLabels(ResourceManager.getLabel(ResourceManager.SELECT), ResourceManager.getLabel(ResourceManager.CANCEL)).setDefaultButtonIndex(-1);
 			break;
 		case YES_NO:
-			this.footerArea.setButtonLabels(getLabel("Yes"), getLabel("No")).setDefaultButtonIndex(0);
+			this.footerArea.setButtonLabels(ResourceManager.getLabel(ResourceManager.YES), ResourceManager.getLabel(ResourceManager.NO)).setDefaultButtonIndex(0);
 			break;
 		default:
 			break;

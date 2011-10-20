@@ -12,7 +12,6 @@ package org.mihalis.opal.login;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -41,6 +40,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.mihalis.opal.opalDialog.Dialog;
+import org.mihalis.opal.utils.ResourceManager;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
@@ -68,7 +68,6 @@ public class LoginDialog {
 	private boolean rememberPassword;
 	private LoginDialogVerifier verifier;
 
-	private final ResourceBundle RSC = ResourceBundle.getBundle("resources/opal");
 	private Shell shell;
 	private boolean returnedValue;
 	private Button buttonOk;
@@ -117,7 +116,7 @@ public class LoginDialog {
 	 */
 	private void buildShell() {
 		this.shell = new Shell(SWT.SYSTEM_MODAL | SWT.TITLE | SWT.BORDER);
-		this.shell.setText(getLabel("login"));
+		this.shell.setText(ResourceManager.getLabel(ResourceManager.LOGIN));
 		this.shell.setLayout(new GridLayout(4, false));
 	}
 
@@ -177,8 +176,8 @@ public class LoginDialog {
 		final Font font = new Font(display, "Arial Bold", 30, SWT.NONE);
 		gc.setFont(font);
 		gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
-		final Point textSize = gc.stringExtent(getLabel("login"));
-		gc.drawString(getLabel("login"), (int) (w * .05f), (h - textSize.y) / 2, true);
+		final Point textSize = gc.stringExtent(ResourceManager.getLabel(ResourceManager.LOGIN));
+		gc.drawString(ResourceManager.getLabel(ResourceManager.LOGIN), (int) (w * .05f), (h - textSize.y) / 2, true);
 
 		font.dispose();
 		curveShape.dispose();
@@ -225,7 +224,7 @@ public class LoginDialog {
 		gridData.horizontalIndent = 35;
 		gridData.verticalIndent = 15;
 		label.setLayoutData(gridData);
-		label.setText(getLabel("name"));
+		label.setText(ResourceManager.getLabel(ResourceManager.NAME));
 
 		if (this.autorizedLogin != null && !this.autorizedLogin.isEmpty()) {
 			// Combo
@@ -271,7 +270,7 @@ public class LoginDialog {
 		final GridData gridData = new GridData(GridData.END, GridData.CENTER, false, false, 1, 1);
 		gridData.horizontalIndent = 35;
 		label.setLayoutData(gridData);
-		label.setText(getLabel("password"));
+		label.setText(ResourceManager.getLabel(ResourceManager.PASSWORD));
 
 		final Text text = new Text(this.shell, SWT.PASSWORD | SWT.BORDER);
 		text.setText(this.password == null ? "" : this.password);
@@ -306,7 +305,7 @@ public class LoginDialog {
 		final GridData gridData = new GridData(GridData.BEGINNING, GridData.CENTER, true, false, 4, 1);
 		gridData.horizontalIndent = 35;
 		checkbox.setLayoutData(gridData);
-		checkbox.setText(getLabel("rememberPassword"));
+		checkbox.setText(ResourceManager.getLabel(ResourceManager.REMEMBER_PASSWORD));
 		checkbox.setSelection(this.rememberPassword);
 
 	}
@@ -320,7 +319,7 @@ public class LoginDialog {
 		gdOk.verticalIndent = 60;
 		gdOk.minimumWidth = 80;
 		this.buttonOk.setLayoutData(gdOk);
-		this.buttonOk.setText(getLabel("Ok"));
+		this.buttonOk.setText(ResourceManager.getLabel(ResourceManager.OK));
 		this.buttonOk.setEnabled(false);
 
 		this.buttonOk.addSelectionListener(new SelectionAdapter() {
@@ -335,7 +334,7 @@ public class LoginDialog {
 					LoginDialog.this.returnedValue = true;
 					LoginDialog.this.shell.dispose();
 				} catch (final Exception e) {
-					Dialog.error(getLabel("loginFailed"), e.getMessage());
+					Dialog.error(ResourceManager.getLabel(ResourceManager.LOGIN_FAILED), e.getMessage());
 					for (final Control control : LoginDialog.this.shell.getChildren()) {
 						if (control instanceof Text || control instanceof Combo) {
 							control.setFocus();
@@ -353,7 +352,7 @@ public class LoginDialog {
 		gdCancel.widthHint = 80;
 		gdCancel.verticalIndent = 60;
 		buttonCancel.setLayoutData(gdCancel);
-		buttonCancel.setText(getLabel("Cancel"));
+		buttonCancel.setText(ResourceManager.getLabel(ResourceManager.CANCEL));
 		buttonCancel.addSelectionListener(new SelectionAdapter() {
 
 			/**
@@ -383,16 +382,6 @@ public class LoginDialog {
 				this.shell.getDisplay().sleep();
 			}
 		}
-	}
-
-	/**
-	 * Get a translated label
-	 * 
-	 * @param key key to get
-	 * @return the translated value of the key
-	 */
-	private String getLabel(final String key) {
-		return this.RSC.getString(key);
 	}
 
 	// ------------- Getters & Setters

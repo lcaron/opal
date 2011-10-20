@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.mihalis.opal.heapManager;
 
-import java.util.ResourceBundle;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.DisposeEvent;
@@ -30,6 +28,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Widget;
+import org.mihalis.opal.utils.ResourceManager;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
@@ -47,8 +46,6 @@ public class HeapManager extends Composite {
 	private Color barGradientColorTopStart;
 	private Color barGradientColorTopEnd;
 	private Color barGradientColorMiddleStart;
-
-	private static final ResourceBundle RSC = ResourceBundle.getBundle("resources/opal");
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -146,7 +143,8 @@ public class HeapManager extends Composite {
 		gc.setBackground(this.barBorderColor);
 		gc.fillGradientRectangle(clientArea.x + 1, clientArea.height / 2, (int) width, clientArea.height / 2, true);
 
-		final String message = this.heapSize + " " + RSC.getString("megabytes") + "/" + this.heapMaxSize + " " + RSC.getString("megabytes");
+		final String message = this.heapSize + " " + ResourceManager.getLabel(ResourceManager.MEGABYTES) + "/" + //
+				this.heapMaxSize + " " + ResourceManager.getLabel(ResourceManager.MEGABYTES);
 		final Point size = gc.stringExtent(message);
 
 		gc.setForeground(this.barTextColor);
@@ -175,7 +173,7 @@ public class HeapManager extends Composite {
 			}
 
 		});
-		this.button.setToolTipText(RSC.getString("performGC"));
+		this.button.setToolTipText(ResourceManager.getLabel(ResourceManager.PERFORM_GC));
 		this.button.pack();
 	}
 

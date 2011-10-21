@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
@@ -40,6 +42,21 @@ public class SWTGraphicUtil {
 	 * Constructor
 	 */
 	private SWTGraphicUtil() {
+	}
+
+	/**
+	 * Dispose safely any SWT resource when a control is disposed
+	 * 
+	 * @param r the resource to dispose
+	 */
+	public static void dispose(final Control control, final Resource r) {
+		control.addDisposeListener(new DisposeListener() {
+
+			@Override
+			public void widgetDisposed(final DisposeEvent e) {
+				dispose(r);
+			}
+		});
 	}
 
 	/**

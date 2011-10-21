@@ -175,8 +175,9 @@ public class Header extends Composite {
 	 * Create the description
 	 */
 	private void createDescription() {
-		final StyledText labelDescription = new StyledText(this, SWT.WRAP);
+		final StyledText labelDescription = new StyledText(this, SWT.WRAP | SWT.READ_ONLY);
 		labelDescription.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+		labelDescription.setEnabled(false);
 		labelDescription.setFont(getFont());
 		labelDescription.setForeground(getForeground());
 		labelDescription.setText("<html><body>" + this.description + "</body></html>");

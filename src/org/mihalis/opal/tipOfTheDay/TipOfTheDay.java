@@ -116,6 +116,19 @@ public class TipOfTheDay {
 		this.shell = new Shell(parent, SWT.SYSTEM_MODAL | SWT.TITLE | SWT.BORDER | SWT.CLOSE | SWT.RESIZE);
 		this.shell.setText(ResourceManager.getLabel(ResourceManager.TIP_OF_THE_DAY));
 		this.shell.setLayout(new GridLayout(this.style == TipStyle.HEADER ? 1 : 2, false));
+
+		this.shell.addListener(SWT.Traverse, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				switch (event.detail) {
+				case SWT.TRAVERSE_ESCAPE:
+					TipOfTheDay.this.shell.dispose();
+					event.detail = SWT.TRAVERSE_NONE;
+					event.doit = false;
+					break;
+				}
+			}
+		});
 	}
 
 	/**

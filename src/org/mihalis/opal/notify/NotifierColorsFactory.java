@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Display;
  * This class creates the colors associated to a given theme
  * 
  */
-class NotifierColorsFactory {
+public class NotifierColorsFactory {
 
 	public enum NotifierTheme {
 		YELLOW_THEME, GRAY_THEME, BLUE_THEME

@@ -131,6 +131,7 @@ public class CheckBoxGroup extends Composite {
 	 * @return true if the selection could be changed, false otherwise
 	 */
 	private boolean fireSelectionListeners(final SelectionEvent selectionEvent) {
+		selectionEvent.widget = this;
 		for (final SelectionListener listener : this.selectionListeners) {
 			listener.widgetSelected(selectionEvent);
 			if (!selectionEvent.doit) {

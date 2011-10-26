@@ -1,6 +1,9 @@
 <project name="opal" basedir="." default="jar">
 
-	<property name="src.dir" value="src" />
+	<property name="src.dir" value="src/main/java" />
+	<property name="rsc.dir" value="src/main/resources/resources" />
+	<property name="images.dir" value="src/main/resources/images" />
+	
 	<property name="build.dir" value="build" />
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
@@ -18,11 +21,11 @@
 		<mkdir dir="${jar.dir}" />
 		<mkdir dir="${classes.dir}/images" />
 		<copy todir="${classes.dir}/images">
-			<fileset dir="${src.dir}/images" />
+			<fileset dir="${images.dir}" />
 		</copy>
 		<mkdir dir="${classes.dir}/resources" />
 		<copy todir="${classes.dir}/resources">
-			<fileset dir="${src.dir}/resources" />
+			<fileset dir="${rsc.dir}" />
 		</copy>
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
 		</jar>

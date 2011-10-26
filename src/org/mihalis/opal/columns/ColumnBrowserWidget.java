@@ -376,6 +376,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	 * @see SelectionEvent
 	 */
 	public void addSelectionListener(final SelectionListener listener) {
+		checkWidget();
 		this.selectionListeners.add(listener);
 	}
 
@@ -454,6 +455,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	 * @see #addSelectionListener
 	 */
 	public void removeSelectionListener(final SelectionListener listener) {
+		checkWidget();
 		this.selectionListeners.remove(listener);
 	}
 

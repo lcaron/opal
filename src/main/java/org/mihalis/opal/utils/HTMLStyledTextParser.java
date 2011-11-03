@@ -121,7 +121,7 @@ public class HTMLStyledTextParser extends ParserCallback {
 		}
 
 		this.currentStyleRange.start = this.currentPosition;
-		this.currentStyleRange.length = this.position - this.currentPosition;
+		this.currentStyleRange.length = this.position - this.currentPosition + 1;
 		this.currentStyleRange.fontStyle = style;
 		this.currentStyleRange.underline = underline;
 		this.listOfStyles.add(this.currentStyleRange);

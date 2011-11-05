@@ -36,6 +36,13 @@ public class ResourceManager {
 	public static final String PREVIOUS_TIP = "previousTip";
 	public static final String NEXT_TIP = "nextTip";
 
+	public static final String CHOOSE = "choose";
+	public static final String PREFERENCES = "preferences";
+	public static final String VALID_URL = "validURL";
+	public static final String CHOOSE_DIRECTORY = "chooseDirectory";
+	public static final String ITALIC = "italic";
+	public static final String BOLD = "bold";
+
 	/**
 	 * Get a translated label
 	 * 

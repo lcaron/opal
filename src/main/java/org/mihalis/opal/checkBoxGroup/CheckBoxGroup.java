@@ -48,7 +48,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  */
 public class CheckBoxGroup extends Composite {
 	private Image oldImage;
-	private final Button button;
+	protected final Button button;
 	private final Composite content;
 	private final List<SelectionListener> selectionListeners;
 
@@ -174,6 +174,14 @@ public class CheckBoxGroup extends Composite {
 	}
 
 	/**
+	 * Activate the content
+	 */
+	public void activate() {
+		this.button.setSelection(true);
+		SWTGraphicUtil.enable(this.content, true);
+	}
+
+	/**
 	 * Adds the listener to the collection of listeners who will be notified
 	 * when the user changes the receiver's selection, by sending it one of the
 	 * messages defined in the <code>SelectionListener</code> interface.
@@ -210,6 +218,22 @@ public class CheckBoxGroup extends Composite {
 	}
 
 	/**
+	 * Deactivate the content
+	 */
+	public void deactivate() {
+		this.button.setSelection(false);
+		SWTGraphicUtil.enable(this.content, false);
+	}
+
+	/**
+	 * @return <code>true</code> if the content is activated, <code>false</code>
+	 *         otherwise
+	 */
+	public boolean isActivated() {
+		return this.button.getSelection();
+	}
+
+	/**
 	 * @see org.eclipse.swt.widgets.Composite#getLayout()
 	 */
 	@Override
@@ -242,6 +266,14 @@ public class CheckBoxGroup extends Composite {
 	}
 
 	/**
+	 * @see org.eclipse.swt.widgets.Composite#setFocus()
+	 */
+	@Override
+	public boolean setFocus() {
+		return this.content.setFocus();
+	}
+
+	/**
 	 * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
 	 */
 	@Override
@@ -250,6 +282,7 @@ public class CheckBoxGroup extends Composite {
 	}
 
 	// ------------------------------------ Getters and Setters
+
 	/**
 	 * @return the text of the button
 	 */
@@ -285,38 +318,6 @@ public class CheckBoxGroup extends Composite {
 	 */
 	public Composite getContent() {
 		return this.content;
-	}
-
-	/**
-	 * @see org.eclipse.swt.widgets.Composite#setFocus()
-	 */
-	@Override
-	public boolean setFocus() {
-		return this.content.setFocus();
-	}
-
-	/**
-	 * Activate the content
-	 */
-	public void activate() {
-		this.button.setSelection(true);
-		SWTGraphicUtil.enable(this.content, true);
-	}
-
-	/**
-	 * Deactivate the content
-	 */
-	public void deactivate() {
-		this.button.setSelection(false);
-		SWTGraphicUtil.enable(this.content, false);
-	}
-
-	/**
-	 * @return <code>true</code> if the content is activated, <code>false</code>
-	 *         otherwise
-	 */
-	public boolean isActivated() {
-		return this.button.getSelection();
 	}
 
 }

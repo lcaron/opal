@@ -51,7 +51,6 @@ public class DualListSnippet {
 
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 		});

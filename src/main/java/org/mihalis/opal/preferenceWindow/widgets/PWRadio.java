@@ -50,7 +50,7 @@ public class PWRadio extends PWWidget {
 	 */
 	@Override
 	public Control build(final Composite parent) {
-		buildLabel(parent);
+		buildLabel(parent, GridData.BEGINNING);
 
 		final Composite composite = new Composite(parent, SWT.NONE);
 		final GridLayout gridLayout = new GridLayout();

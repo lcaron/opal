@@ -15,6 +15,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
@@ -56,7 +57,7 @@ public class PWColorChooser extends PWWidget {
 			this.color = new Color(Display.getDefault(), rgb);
 		}
 
-		buildLabel(parent);
+		buildLabel(parent, GridData.CENTER);
 		final Button button = new Button(parent, SWT.PUSH);
 		addControl(button);
 

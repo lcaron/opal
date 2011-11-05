@@ -11,6 +11,7 @@
 package org.mihalis.opal.preferenceWindow.widgets;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -44,7 +45,7 @@ public class PWSpinner extends PWWidget {
 	 */
 	@Override
 	public Control build(final Composite parent) {
-		buildLabel(parent);
+		buildLabel(parent, GridData.CENTER);
 		final Spinner spinner = new Spinner(parent, SWT.HORIZONTAL | SWT.BORDER);
 		addControl(spinner);
 		spinner.setMinimum(this.min);

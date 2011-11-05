@@ -69,12 +69,13 @@ public abstract class PWWidget {
 	 * Build the label associated to the widget
 	 * 
 	 * @param parent parent composite
+	 * @param verticalAlignment vertical alignment
 	 */
-	protected void buildLabel(final Composite parent) {
+	protected void buildLabel(final Composite parent, final int verticalAlignment) {
 		if (getLabel() != null) {
 			final Label label = new Label(parent, SWT.NONE);
 			label.setText(getLabel());
-			final GridData labelGridData = new GridData(GridData.END, GridData.CENTER, false, false);
+			final GridData labelGridData = new GridData(GridData.END, verticalAlignment, false, false);
 			labelGridData.horizontalIndent = getIndent();
 			label.setLayoutData(labelGridData);
 			addControl(label);

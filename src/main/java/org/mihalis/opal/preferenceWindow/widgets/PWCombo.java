@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -58,7 +59,7 @@ public class PWCombo extends PWWidget {
 	 */
 	@Override
 	public Control build(final Composite parent) {
-		buildLabel(parent);
+		buildLabel(parent, GridData.CENTER);
 
 		final Combo combo = new Combo(parent, SWT.BORDER | (this.editable ? SWT.NONE : SWT.READ_ONLY));
 		addControl(combo);

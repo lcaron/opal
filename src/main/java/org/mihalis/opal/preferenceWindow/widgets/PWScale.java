@@ -11,6 +11,7 @@
 package org.mihalis.opal.preferenceWindow.widgets;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -48,7 +49,7 @@ public class PWScale extends PWWidget {
 	 */
 	@Override
 	public Control build(final Composite parent) {
-		buildLabel(parent);
+		buildLabel(parent, GridData.CENTER);
 		final Scale scale = new Scale(parent, SWT.HORIZONTAL);
 		addControl(scale);
 		scale.setIncrement(this.increment);

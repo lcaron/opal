@@ -11,6 +11,7 @@
 package org.mihalis.opal.preferenceWindow.widgets;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -42,7 +43,7 @@ public class PWTextarea extends PWWidget {
 	 */
 	@Override
 	public Control build(final Composite parent) {
-		buildLabel(parent);
+		buildLabel(parent, GridData.BEGINNING);
 
 		final Text text = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		addControl(text);

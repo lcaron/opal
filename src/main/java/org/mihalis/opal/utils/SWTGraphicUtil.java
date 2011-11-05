@@ -23,7 +23,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Resource;
@@ -31,6 +30,7 @@ import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -237,14 +237,12 @@ public class SWTGraphicUtil {
 	 * @param shell shell to center
 	 */
 	public static void centerShell(final Shell shell) {
-		final Point shellSize = shell.getSize();
-		final Point displaySize = new Point(shell.getDisplay().getBounds().width, shell.getDisplay().getBounds().height);
-
-		final int centerX = (displaySize.x - shellSize.x) / 2;
-		final int centerY = (displaySize.y - shellSize.y) / 2;
-
-		shell.setLocation(centerX, centerY);
-
+		final Monitor primary = shell.getDisplay().getPrimaryMonitor();
+		final Rectangle bounds = primary.getBounds();
+		final Rectangle rect = shell.getBounds();
+		final int x = bounds.x + (bounds.width - rect.width) / 2;
+		final int y = bounds.y + (bounds.height - rect.height) / 2;
+		shell.setLocation(x, y);
 	}
 
 	/**

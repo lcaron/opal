@@ -1102,7 +1102,7 @@ public class DualList extends Composite {
 	/**
 	 * Move the selected item to the first position
 	 */
-	private void moveSelectionToFirstPosition() {
+	protected void moveSelectionToFirstPosition() {
 		if (this.selectionTable.getSelectionCount() == 0) {
 			return;
 		}
@@ -1122,7 +1122,7 @@ public class DualList extends Composite {
 	/**
 	 * Select a given item
 	 */
-	private void selectItem() {
+	protected void selectItem() {
 		if (this.itemsTable.getSelectionCount() == 0) {
 			return;
 		}
@@ -1137,7 +1137,7 @@ public class DualList extends Composite {
 	/**
 	 * Move the selected item up
 	 */
-	private void moveUpItem() {
+	protected void moveUpItem() {
 		if (this.selectionTable.getSelectionCount() == 0) {
 			return;
 		}
@@ -1165,7 +1165,7 @@ public class DualList extends Composite {
 	/**
 	 * Deselect a given item
 	 */
-	private void deselectItem() {
+	protected void deselectItem() {
 		if (this.selectionTable.getSelectionCount() == 0) {
 			return;
 		}
@@ -1180,7 +1180,7 @@ public class DualList extends Composite {
 	/**
 	 * Move the selected item down
 	 */
-	private void moveDownItem() {
+	protected void moveDownItem() {
 		if (this.selectionTable.getSelectionCount() == 0) {
 			return;
 		}
@@ -1221,7 +1221,7 @@ public class DualList extends Composite {
 	/**
 	 * Move the selected item to the last position
 	 */
-	private void moveSelectionToLastPosition() {
+	protected void moveSelectionToLastPosition() {
 		if (this.selectionTable.getSelectionCount() == 0) {
 			return;
 		}

@@ -33,6 +33,18 @@
 		<jar destfile="${jar.dir}/${ant.project.name}-${version}.jar" basedir="${classes.dir}">
 		</jar>
 		<mkdir dir="${exportsrc.dir}"/>
+		<copy todir="${exportsrc.dir}">
+			<fileset dir=".">
+				<include name=".classpath"/>
+				<include name=".hgignore"/>
+				<include name=".project"/>
+				<include name="build.xml"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${exportsrc.dir}/src"/>
+		<copydir dest="${exportsrc.dir}/src" src="src"/>	
+		<zip destfile="${jar.dir}/${ant.project.name}-${version}-src.zip" basedir="${exportsrc.dir}"></zip>
 	</target>
 
 	<target name="clean-build" depends="clean,jar" />

@@ -74,6 +74,18 @@ public class PreferenceWindow {
 	}
 
 	/**
+	 * Create a preference window (a singleton)
+	 * 
+	 * @param values a map that contains all values that will be displayed in
+	 *            widgets
+	 * @return
+	 */
+	public static PreferenceWindow create(final Map<String, Object> values) {
+		instance = new PreferenceWindow(null, values);
+		return instance;
+	}
+
+	/**
 	 * @return an instance of the preference window
 	 */
 	public static PreferenceWindow getInstance() {

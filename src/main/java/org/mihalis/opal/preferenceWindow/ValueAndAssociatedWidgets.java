@@ -50,13 +50,6 @@ class ValueAndAssociatedWidgets {
 	}
 
 	/**
-	 * Clears the list of associated widgets
-	 */
-	void unlink() {
-		this.widgets.clear();
-	}
-
-	/**
 	 * @return the value stored in the instance
 	 */
 	Object getValue() {

@@ -177,8 +177,6 @@ class PWTabContainer extends Composite {
 			c.dispose();
 		}
 
-		PreferenceWindow.getInstance().unlinkWidgets();
-
 		this.tabs.get(index).build(this.container);
 		this.container.layout();
 

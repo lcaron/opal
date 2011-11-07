@@ -123,16 +123,6 @@ public class PreferenceWindow {
 	}
 
 	/**
-	 * Unlink widgets linked to the property
-	 */
-	public void unlinkWidgets() {
-		for (final ValueAndAssociatedWidgets value : this.values.values()) {
-			value.unlink();
-		}
-
-	}
-
-	/**
 	 * Open the preference window
 	 * 
 	 * @return <code>true</code> if the user pressed on the Ok button,

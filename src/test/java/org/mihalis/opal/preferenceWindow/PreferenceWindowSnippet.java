@@ -135,9 +135,9 @@ public class PreferenceWindowSnippet {
 	protected static void createDocumentTab(final PreferenceWindow window) {
 		final PWTab documentTab = window.addTab(new Image(Display.getCurrent(), PreferenceWindowSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/preferenceWindow/images/document.png")), "Document");
 
-		documentTab.add(new PWLabel("Let's start with Text, Separator, Combo and button"));
-		documentTab.add(new PWStringText("String :", "text").setAlignment(GridData.FILL));
-		documentTab.add(new PWIntegerText("Integer :", "int"));
+		documentTab.add(new PWLabel("Let's start with Text, Separator, Combo and button")).//
+				add(new PWStringText("String :", "text").setAlignment(GridData.FILL)).//
+				add(new PWIntegerText("Integer :", "int"));
 		documentTab.add(new PWFloatText("Float :", "float"));
 		documentTab.add(new PWURLText("URL :", "url"));
 		documentTab.add(new PWPasswordText("Password :", "password"));

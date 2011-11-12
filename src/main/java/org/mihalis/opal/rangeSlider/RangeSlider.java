@@ -833,7 +833,7 @@ public class RangeSlider extends Canvas {
 	/**
 	 * Returns the 'upper selection', which is the upper receiver's position.
 	 * 
-	 * @return the selection TODO
+	 * @return the selection
 	 * 
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been

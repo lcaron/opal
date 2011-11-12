@@ -37,7 +37,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * <dt><b>Styles:</b></dt>
  * <dd>BORDER</dd>
  * <dt><b>Events:</b></dt>
- * <dd>(none)</dd>
+ * <dd>Selection</dd>
  * </dl>
  */
 public class AngleSlider extends Canvas {

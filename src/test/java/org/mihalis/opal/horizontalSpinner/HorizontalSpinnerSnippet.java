@@ -36,10 +36,12 @@ public class HorizontalSpinnerSnippet {
 	public static void main(final String[] args) {
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
-		shell.setLayout(new GridLayout(2, true));
+		shell.setLayout(new GridLayout(4, true));
 
 		createSpinnerGroup(shell);
-		createHorizontalSpinnerGroup(shell);
+		createHorizontalSpinnerGroup(shell, "Default look", SWT.NONE);
+		createHorizontalSpinnerGroup(shell, "Buttons on the left", SWT.LEFT);
+		createHorizontalSpinnerGroup(shell, "Buttons on the right", SWT.RIGHT);
 
 		shell.pack();
 		shell.open();
@@ -129,13 +131,14 @@ public class HorizontalSpinnerSnippet {
 
 	}
 
-	private static void createHorizontalSpinnerGroup(final Shell shell) {
+	private static void createHorizontalSpinnerGroup(final Shell shell, final String title, final int style) {
 		final Group group = new Group(shell, SWT.NONE);
 		group.setLayout(new GridLayout(1, false));
+		group.setText(title);
 
 		final Label lbl1 = new Label(group, SWT.NONE);
 		lbl1.setText("Simple horizontal spinner :");
-		final HorizontalSpinner spinner1 = new HorizontalSpinner(group, SWT.BORDER);
+		final HorizontalSpinner spinner1 = new HorizontalSpinner(group, SWT.BORDER | style);
 		spinner1.setMinimum(0);
 		spinner1.setMaximum(1000);
 		spinner1.setSelection(500);
@@ -144,7 +147,7 @@ public class HorizontalSpinnerSnippet {
 
 		final Label lbl2 = new Label(group, SWT.NONE);
 		lbl2.setText("Floating point values in Spinner :");
-		final HorizontalSpinner spinner2 = new HorizontalSpinner(group, SWT.NONE);
+		final HorizontalSpinner spinner2 = new HorizontalSpinner(group, style);
 		// allow 3 decimal places
 		spinner2.setDigits(3);
 		// set the minimum value to 0.001
@@ -166,7 +169,7 @@ public class HorizontalSpinnerSnippet {
 
 		final Label lbl3 = new Label(group, SWT.NONE);
 		lbl3.setText("Validate input in a spinner widget :");
-		final HorizontalSpinner spinner3 = new HorizontalSpinner(group, SWT.BORDER);
+		final HorizontalSpinner spinner3 = new HorizontalSpinner(group, SWT.BORDER | style);
 		spinner3.setValues(0, -100, 100, 0, 1, 10);
 		spinner3.setLayoutData(new GridData(200, SWT.DEFAULT));
 		final ToolTip toolTip = new ToolTip(shell, SWT.BALLOON | SWT.ICON_WARNING);

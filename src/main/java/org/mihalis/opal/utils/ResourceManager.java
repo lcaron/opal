@@ -43,6 +43,12 @@ public class ResourceManager {
 	public static final String ITALIC = "italic";
 	public static final String BOLD = "bold";
 
+	public static final String CATEGORY_SHORT_DESCRIPTION = "category.shortDescription";
+	public static final String DESCRIPTION_SHORT_DESCRIPTION = "description.shortDescription";
+	public static final String SORT_SHORT_DESCRIPTION = "sort.shortDescription";
+	public static final String PROPERTY = "property";
+	public static final String VALUE = "value";
+
 	/**
 	 * Get a translated label
 	 * 

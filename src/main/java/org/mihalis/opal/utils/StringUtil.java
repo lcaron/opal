@@ -18,6 +18,19 @@ import java.io.StringWriter;
  * 
  */
 public class StringUtil {
+
+	/**
+	 * Returns a "safe" string representation. If source is null, return an
+	 * empty string
+	 * 
+	 * @param source source string
+	 * @return the string representation of the source (without space) if the
+	 *         source is not <code>null</code>, or an empty string otherwise
+	 */
+	public static String safeToString(final Object source) {
+		return source == null ? "" : source.toString().trim();
+	}
+
 	/**
 	 * Check if a string is empty or null
 	 * 

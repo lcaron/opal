@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * This class is a singleton that provides useful methods
@@ -45,12 +46,13 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Dispose safely any SWT resource when a control is disposed
+	 * Dispose safely any SWT resource when a widget is disposed
 	 * 
+	 * @param widget widget attached to the resource
 	 * @param r the resource to dispose
 	 */
-	public static void dispose(final Control control, final Resource r) {
-		control.addDisposeListener(new DisposeListener() {
+	public static void dispose(final Widget widget, final Resource r) {
+		widget.addDisposeListener(new DisposeListener() {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {

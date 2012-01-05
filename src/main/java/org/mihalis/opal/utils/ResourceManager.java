@@ -48,6 +48,14 @@ public class ResourceManager {
 	public static final String SORT_SHORT_DESCRIPTION = "sort.shortDescription";
 	public static final String PROPERTY = "property";
 	public static final String VALUE = "value";
+	public static final String EDIT_PROPERTY = "editProperty";
+	public static final String WIDTH = "width";
+	public static final String HEIGHT = "height";
+	public static final String TOP = "top";
+	public static final String BOTTOM = "bottom";
+	public static final String LEFT = "left";
+	public static final String RIGHT = "right";
+	public static final String ERASE_PROPERTY = "eraseProperty";
 
 	/**
 	 * Get a translated label

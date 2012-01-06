@@ -30,7 +30,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
- * Instances of this class provide a separator with a title and/or an image.
+ * Instances of this class provide a slider with 2 buttons (min value, max
+ * value).
  * <p>
  * <dl>
  * <dt><b>Styles:</b></dt>

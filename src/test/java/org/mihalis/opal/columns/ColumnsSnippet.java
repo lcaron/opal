@@ -23,7 +23,6 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * This snippet demonstrates the ColumnBrowser widget
- * 
  */
 public class ColumnsSnippet {
 

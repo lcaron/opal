@@ -254,7 +254,7 @@ public class Notifier {
 			return;
 		}
 
-		final Rectangle clientArea = Display.getDefault().getActiveShell().getMonitor().getClientArea();
+		final Rectangle clientArea = Display.getDefault().getPrimaryMonitor().getClientArea();
 		final int startX = clientArea.x + clientArea.width - shell.getSize().x;
 
 		final int stepForPosition = MAX_DURATION_FOR_OPENING / shell.getSize().y * STEP;

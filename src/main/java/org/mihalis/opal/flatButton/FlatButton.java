@@ -34,7 +34,6 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * Instances of this class represent a flat button.
  * <dl>
  * <dt><b>Styles:</b></dt>
- * <dd>(none)</dd>
  * <dd>UP, DOWN, LEFT, RIGHT, CENTER</dd>
  * <dt><b>Events:</b></dt>
  * <dd>Selection</dd>

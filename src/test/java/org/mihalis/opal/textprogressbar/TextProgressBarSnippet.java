@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation 
+ *     Luis Carlos Moreira da Costa (tcljava at gmail dot com) - initial API and implementation
+ *     Laurent CARON (laurent.caron at gmail dot com) - code review
  *******************************************************************************/
 package org.mihalis.opal.textprogressbar;
 

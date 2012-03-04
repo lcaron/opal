@@ -22,8 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
-import org.mihalis.opal.dynamictablecolumns.DynamicTable;
-import org.mihalis.opal.dynamictablecolumns.DynamicTableColumn;
 
 /**
  * 
@@ -31,15 +29,15 @@ import org.mihalis.opal.dynamictablecolumns.DynamicTableColumn;
  * 
  */
 public final class DynamicTableColumnsSnippet {
-	
+
 	private static int idCount = 1;
-	
+
 	private static String[] firstNameSet = { "Luis Carlos", "Laurent", "Getulio", "Nicholas" };
 	private static String[] lastNameSet = { "Moreira da Costa", "Caron", "Moreira da Costa", "Rocha da Costa" };
 	private static String[] birthDateSet = { "1967", "1974", "1939", "2001" };
-	
+
 	private static Shell shell;
-	
+
 	private static DynamicTable tblDyn;
 	private static DynamicTableColumn tblcId;
 	private static DynamicTableColumn tblcFirstName;
@@ -48,7 +46,10 @@ public final class DynamicTableColumnsSnippet {
 
 	private static Composite pnlButtons;
 	private static Button btnAdd;
-	
+
+	/**
+	 * @param args
+	 */
 	public static void main(final String[] args) {
 		final Display display = new Display();
 		shell = new Shell(display);
@@ -57,9 +58,9 @@ public final class DynamicTableColumnsSnippet {
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		shell.setLayout(layout);
-		
+
 		createContents();
-		
+
 		// Initial Content
 		createPerson(0);
 		createPerson(1);
@@ -67,7 +68,7 @@ public final class DynamicTableColumnsSnippet {
 		createPerson(3);
 		createPerson(3);
 		createPerson(3);
-		
+
 		shell.open();
 		shell.pack();
 		while (!shell.isDisposed()) {
@@ -91,20 +92,20 @@ public final class DynamicTableColumnsSnippet {
 			tblcId = new DynamicTableColumn(tblDyn, SWT.NONE);
 			tblcId.setText("Id");
 			tblcId.setWidth("25px");
-			
+
 			tblcFirstName = new DynamicTableColumn(tblDyn, SWT.NONE);
 			tblcFirstName.setText("First Name");
 			tblcFirstName.setWidth("50%", "100px");
-			
+
 			tblcLastName = new DynamicTableColumn(tblDyn, SWT.NONE);
 			tblcLastName.setText("Last Name");
 			tblcLastName.setWidth("50%", "100px");
-			
+
 			tblcAge = new DynamicTableColumn(tblDyn, SWT.NONE);
 			tblcAge.setText("Age");
 			tblcAge.setWidth("60px");
 		}
-		
+
 		pnlButtons = new Composite(shell, SWT.NONE);
 		pnlButtons.setLayout(new GridLayout(1, false));
 		pnlButtons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
@@ -124,9 +125,10 @@ public final class DynamicTableColumnsSnippet {
 			});
 		}
 	}
-	
+
 	/**
 	 * Create person
+	 * 
 	 * @param i int
 	 */
 	private static void createPerson(final int i) {

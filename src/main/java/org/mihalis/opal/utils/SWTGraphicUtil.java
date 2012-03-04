@@ -249,7 +249,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Apply a very basic HTML formating to a text stored in a StyledText
-	 * widget. Supported tags are <B>, <I> and <U>
+	 * widget. Supported tags are <B>, <I>, <U> and <BR/>
 	 * 
 	 * @param styledText styled text that contains an HTML text
 	 */

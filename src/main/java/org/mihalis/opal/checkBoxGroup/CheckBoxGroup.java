@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Laurent CARON
+ * Copyright (c) 2011,2012 Laurent CARON
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
+ *     Marnix van Bochove (mgvanbochove at gmail dot com) - Enhancements and bug fixes
  *******************************************************************************/
 package org.mihalis.opal.checkBoxGroup;
 
@@ -15,21 +16,20 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
@@ -46,11 +46,12 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * <dd>(none)</dd>
  * </dl>
  */
-public class CheckBoxGroup extends Composite {
-	private Image oldImage;
+public class CheckBoxGroup extends Canvas implements PaintListener {
 	protected final Button button;
 	private final Composite content;
 	private final List<SelectionListener> selectionListeners;
+
+	private boolean transparent = false;
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -82,6 +83,7 @@ public class CheckBoxGroup extends Composite {
 	 */
 	public CheckBoxGroup(final Composite parent, final int style) {
 		super(parent, style);
+
 		super.setLayout(new GridLayout());
 		this.selectionListeners = new ArrayList<SelectionListener>();
 
@@ -90,7 +92,7 @@ public class CheckBoxGroup extends Composite {
 		gdButton.horizontalIndent = 15;
 		this.button.setLayoutData(gdButton);
 		this.button.setSelection(true);
-		this.button.setBackground(this.getBackground());
+		// this.button.setBackground(this.getBackground());
 		this.button.pack();
 
 		this.button.addSelectionListener(new SelectionAdapter() {
@@ -112,16 +114,10 @@ public class CheckBoxGroup extends Composite {
 			}
 		});
 
-		this.content = new Composite(this, SWT.NONE);
+		this.content = new Composite(this, style);
 		this.content.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
-		this.addListener(SWT.Resize, new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				CheckBoxGroup.this.drawWidget();
-			}
-		});
-
+		this.addPaintListener(this);
 	}
 
 	/**
@@ -144,16 +140,8 @@ public class CheckBoxGroup extends Composite {
 	/**
 	 * Draws the widget
 	 */
-	private void drawWidget() {
-		final Display display = this.getDisplay();
+	private void drawWidget(final GC gc) {
 		final Rectangle rect = this.getClientArea();
-		final Image newImage = new Image(display, Math.max(1, rect.width), Math.max(1, rect.height));
-
-		final GC gc = new GC(newImage);
-		gc.setBackground(this.getBackground());
-
-		gc.fillRectangle(0, 0, rect.width, rect.height);
-
 		final int margin = (int) (this.button.getSize().y * 1.5);
 		final int startY = margin / 2;
 
@@ -162,15 +150,6 @@ public class CheckBoxGroup extends Composite {
 
 		gc.setForeground(this.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		gc.drawRoundRectangle(2, startY + 1, rect.width - 4, rect.height - startY - 4, 2, 2);
-
-		gc.dispose();
-
-		this.setBackgroundImage(newImage);
-		if (this.oldImage != null) {
-			this.oldImage.dispose();
-		}
-		this.oldImage = newImage;
-
 	}
 
 	/**
@@ -318,6 +297,25 @@ public class CheckBoxGroup extends Composite {
 	 */
 	public Composite getContent() {
 		return this.content;
+	}
+
+	public boolean isTransparent() {
+		return this.transparent;
+	}
+
+	public void setTransparent(final boolean transparent) {
+		this.transparent = transparent;
+		if (transparent) {
+			setBackgroundMode(SWT.INHERIT_DEFAULT);
+			this.content.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		}
+	}
+
+	@Override
+	public void paintControl(final PaintEvent paintEvent) {
+		if (paintEvent.widget == this) {
+			drawWidget(paintEvent.gc);
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Laurent CARON
+ * Copyright (c) 2012 Laurent CARON
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,9 @@
 package org.mihalis.opal.utils;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML.Tag;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.HTMLEditorKit.ParserCallback;
-import javax.swing.text.html.parser.ParserDelegator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -29,20 +23,9 @@ import org.eclipse.swt.custom.StyledText;
  * Instances of this class are used to convert HTML content of a styled text
  * into style ranges
  */
-public class HTMLStyledTextParser extends ParserCallback {
+public class HTMLStyledTextParser {
 
-	private final List<StyleRange> listOfStyles;
 	private final StyledText styledText;
-	private int position;
-	private final StringBuilder outputString;
-
-	private StyleRange currentStyleRange;
-	private TagType currentTagType;
-	private int currentPosition;
-
-	private enum TagType {
-		B, U, I
-	};
 
 	/**
 	 * Constructor
@@ -50,116 +33,7 @@ public class HTMLStyledTextParser extends ParserCallback {
 	 * @param styledText styled text to analyze
 	 */
 	HTMLStyledTextParser(final StyledText styledText) {
-		super();
 		this.styledText = styledText;
-		this.position = -1;
-		this.listOfStyles = new ArrayList<StyleRange>();
-		this.currentStyleRange = null;
-		this.currentTagType = null;
-		this.currentPosition = 0;
-		this.outputString = new StringBuilder();
-	}
-
-	/**
-	 * @see javax.swing.text.html.HTMLEditorKit.ParserCallback#handleStartTag(javax.swing.text.html.HTML.Tag,
-	 *      javax.swing.text.MutableAttributeSet, int)
-	 */
-	@Override
-	public void handleStartTag(final Tag t, final MutableAttributeSet a, final int pos) {
-		if (t == Tag.B) {
-			this.currentStyleRange = new StyleRange();
-			this.currentTagType = TagType.B;
-			this.currentPosition = this.position;
-		}
-		if (t == Tag.I) {
-			this.currentStyleRange = new StyleRange();
-			this.currentTagType = TagType.I;
-			this.currentPosition = this.position;
-		}
-		if (t == Tag.U) {
-			this.currentStyleRange = new StyleRange();
-			this.currentTagType = TagType.U;
-			this.currentPosition = this.position;
-		}
-
-	}
-
-	/**
-	 * @see javax.swing.text.html.HTMLEditorKit.ParserCallback#handleEndTag(javax.swing.text.html.HTML.Tag,
-	 *      int)
-	 */
-	@Override
-	public void handleEndTag(final Tag t, final int pos) {
-
-		if (t != Tag.B && t != Tag.I && t != Tag.U) {
-			return;
-		}
-
-		int style;
-		boolean underline;
-		if (t == Tag.B) {
-			if (TagType.B != this.currentTagType) {
-				throw new RuntimeException("Error parsing [" + this.styledText.getText() + "] : bad syntax");
-			}
-			style = SWT.BOLD;
-			underline = false;
-		} else if (t == Tag.I) {
-			if (TagType.I != this.currentTagType) {
-				throw new RuntimeException("Error parsing [" + this.styledText.getText() + "] : bad syntax");
-			}
-			style = SWT.ITALIC;
-			underline = false;
-		} else if (t == Tag.U) {
-			if (TagType.U != this.currentTagType) {
-				throw new RuntimeException("Error parsing [" + this.styledText.getText() + "] : bad syntax");
-			}
-			style = SWT.NORMAL;
-			underline = true;
-		} else {
-			style = SWT.NORMAL;
-			underline = false;
-		}
-
-		this.currentStyleRange.start = this.currentPosition;
-		this.currentStyleRange.length = this.position - this.currentPosition + 1;
-		this.currentStyleRange.fontStyle = style;
-		this.currentStyleRange.underline = underline;
-		this.listOfStyles.add(this.currentStyleRange);
-
-		this.currentStyleRange = null;
-		this.currentTagType = null;
-	}
-
-	/**
-	 * @see javax.swing.text.html.HTMLEditorKit.ParserCallback#handleError(java.lang.String,
-	 *      int)
-	 */
-	@Override
-	public void handleError(final String errorMsg, final int pos) {
-		throw new RuntimeException("Parsing error: " + errorMsg + " at " + pos);
-	}
-
-	/**
-	 * @see javax.swing.text.html.HTMLEditorKit.ParserCallback#handleText(char[],
-	 *      int)
-	 */
-	@Override
-	public void handleText(final char[] data, final int pos) {
-		this.outputString.append(data);
-		this.position += data.length;
-	}
-
-	/**
-	 * @see javax.swing.text.html.HTMLEditorKit.ParserCallback#handleSimpleTag(javax.swing.text.html.HTML.Tag,
-	 *      javax.swing.text.MutableAttributeSet, int)
-	 */
-	@Override
-	public void handleSimpleTag(final Tag t, final MutableAttributeSet a, final int pos) {
-		if (t == Tag.BR) {
-			this.outputString.append("\n");
-			this.position += t.toString().length();
-
-		}
 	}
 
 	/**
@@ -169,11 +43,137 @@ public class HTMLStyledTextParser extends ParserCallback {
 	 * @throws IOException
 	 */
 	public void parse() throws IOException {
-		final HTMLEditorKit.Parser parser = new ParserDelegator();
-		parser.parse(new StringReader(this.styledText.getText()), this, true);
-		this.styledText.setText(this.outputString.toString());
-		this.styledText.setStyleRanges(this.listOfStyles.toArray(new StyleRange[this.listOfStyles.size()]));
+		if (this.styledText == null || "".equals(this.styledText.getText().trim())) {
+			return;
+		}
+		final String text = this.styledText.getText().trim();
+		int currentPosition = 0;
+		final StringBuilder output = new StringBuilder();
+		final List<StyleRange> listOfStyles = new ArrayList<StyleRange>();
+		final LinkedList<StyleRange> stack = new LinkedList<StyleRange>();
+		final int max = text.length();
+		for (int i = 0; i < max; i++) {
+			String currentTag;
+			String currentClosingTag;
+			String currentBRTag;
+			if (i <= max - 4) {
+				currentTag = text.substring(i, i + 3).toLowerCase();
+			} else {
+				currentTag = null;
+			}
 
+			if (i <= max - 5) {
+				currentClosingTag = text.substring(i, i + 4).toLowerCase();
+			} else {
+				currentClosingTag = null;
+			}
+
+			if (i <= max - 5) {
+				currentBRTag = text.substring(i, i + 5).toLowerCase();
+			} else {
+				currentBRTag = null;
+			}
+
+			if (currentTag != null) {
+				if ("<b>".equalsIgnoreCase(currentTag)) {
+					final StyleRange currentStyleRange = new StyleRange();
+					currentStyleRange.start = currentPosition;
+					currentStyleRange.length = 0;
+					currentStyleRange.fontStyle = SWT.BOLD;
+					stack.push(currentStyleRange);
+					i += 2;
+					continue;
+				}
+				if ("<i>".equalsIgnoreCase(currentTag)) {
+					final StyleRange currentStyleRange = new StyleRange();
+					currentStyleRange.start = currentPosition;
+					currentStyleRange.length = 0;
+					currentStyleRange.fontStyle = SWT.ITALIC;
+					stack.push(currentStyleRange);
+					i += 2;
+					continue;
+				}
+				if ("<u>".equalsIgnoreCase(currentTag)) {
+					final StyleRange currentStyleRange = new StyleRange();
+					currentStyleRange.start = currentPosition;
+					currentStyleRange.length = 0;
+					currentStyleRange.fontStyle = SWT.NONE;
+					currentStyleRange.underline = true;
+					stack.push(currentStyleRange);
+					i += 2;
+					continue;
+				}
+			}
+
+			if (currentClosingTag != null) {
+				if ("</b>".equalsIgnoreCase(currentClosingTag)) {
+					final StyleRange currentStyleRange = stack.pop();
+					if ((currentStyleRange.fontStyle & SWT.BOLD) == 0) {
+						final StringBuilder sb = new StringBuilder();
+						sb.append("Error at position #").append(currentPosition).append(" - closing </b> tag found but ");
+						if ((currentStyleRange.fontStyle & SWT.ITALIC) != 0) {
+							sb.append("</i>");
+						} else {
+							sb.append("</u>");
+						}
+						sb.append(" tag expected !");
+						throw new RuntimeException(sb.toString());
+					}
+					currentStyleRange.length = currentPosition - currentStyleRange.start + 1;
+					listOfStyles.add(currentStyleRange);
+					i += 3;
+					continue;
+				}
+
+				if ("</i>".equalsIgnoreCase(currentClosingTag)) {
+					final StyleRange currentStyleRange = stack.pop();
+					if ((currentStyleRange.fontStyle & SWT.ITALIC) == 0) {
+						final StringBuilder sb = new StringBuilder();
+						sb.append("Error at position #").append(currentPosition).append(" - closing </i> tag found but ");
+						if ((currentStyleRange.fontStyle & SWT.BOLD) != 0) {
+							sb.append("</b>");
+						} else {
+							sb.append("</u>");
+						}
+						sb.append(" tag expected !");
+						throw new RuntimeException(sb.toString());
+					}
+					currentStyleRange.length = currentPosition - currentStyleRange.start + 1;
+					listOfStyles.add(currentStyleRange);
+					i += 3;
+					continue;
+				}
+
+				if ("</u>".equalsIgnoreCase(currentClosingTag)) {
+					final StyleRange currentStyleRange = stack.pop();
+					if (!currentStyleRange.underline) {
+						final StringBuilder sb = new StringBuilder();
+						sb.append("Error at position #").append(currentPosition).append(" - closing </u> tag found but ");
+						if ((currentStyleRange.fontStyle & SWT.ITALIC) != 0) {
+							sb.append("</i>");
+						} else {
+							sb.append("</b>");
+						}
+						sb.append(" tag expected !");
+						throw new RuntimeException(sb.toString());
+					}
+					currentStyleRange.length = currentPosition - currentStyleRange.start + 1;
+					listOfStyles.add(currentStyleRange);
+					i += 3;
+					continue;
+				}
+			}
+
+			if (currentBRTag != null && "<br/>".equalsIgnoreCase(currentBRTag)) {
+				currentPosition++;
+				output.append("\n");
+				i += 4;
+				continue;
+			}
+			currentPosition++;
+			output.append(text.substring(i, i + 1));
+		}
+		this.styledText.setText(output.toString());
+		this.styledText.setStyleRanges(listOfStyles.toArray(new StyleRange[listOfStyles.size()]));
 	}
-
 }

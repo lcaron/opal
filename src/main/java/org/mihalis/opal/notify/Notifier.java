@@ -196,7 +196,7 @@ public class Notifier {
 		final Color textColor = colors.textColor;
 		textLabel.setForeground(textColor);
 
-		textLabel.setText("<html><body>" + text + "</body></html>");
+		textLabel.setText(text);
 		SWTGraphicUtil.applyHTMLFormating(textLabel);
 
 		SWTGraphicUtil.dispose(shell, textFont);

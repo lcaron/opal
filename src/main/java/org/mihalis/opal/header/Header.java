@@ -180,7 +180,7 @@ public class Header extends Composite {
 		labelDescription.setEnabled(false);
 		labelDescription.setFont(getFont());
 		labelDescription.setForeground(getForeground());
-		labelDescription.setText("<html><body>" + this.description + "</body></html>");
+		labelDescription.setText(this.description);
 		SWTGraphicUtil.applyHTMLFormating(labelDescription);
 	}
 

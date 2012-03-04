@@ -232,7 +232,7 @@ public abstract class AbstractPTWidget implements PTWidget {
 		}
 
 		final PTProperty selectedProperty = (PTProperty) selection;
-		this.descriptionLabel.setText("<html><body>" + StringUtil.safeToString(selectedProperty.getDescription()) + "</body></html>");
+		this.descriptionLabel.setText(StringUtil.safeToString(selectedProperty.getDescription()));
 		SWTGraphicUtil.applyHTMLFormating(this.descriptionLabel);
 		this.descriptionLabel.update();
 	}

@@ -46,7 +46,7 @@ public class PWLabel extends PWWidget {
 		this.labelWidget = new StyledText(parent, SWT.WRAP | SWT.READ_ONLY);
 		this.labelWidget.setEnabled(false);
 		this.labelWidget.setBackground(parent.getBackground());
-		this.labelWidget.setText("<html><body>" + getLabel() + "</body></html>");
+		this.labelWidget.setText(getLabel());
 		SWTGraphicUtil.applyHTMLFormating(this.labelWidget);
 		return this.labelWidget;
 	}

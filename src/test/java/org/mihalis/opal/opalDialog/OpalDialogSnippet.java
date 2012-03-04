@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
- *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration 
+ *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
  *******************************************************************************/
 package org.mihalis.opal.opalDialog;
 
@@ -204,6 +204,20 @@ public class OpalDialogSnippet {
 			}
 		});
 
+		final Button button13 = new Button(shell, SWT.PUSH);
+		button13.setText("Large Text Example");
+		button13.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
+		button13.addSelectionListener(new SelectionAdapter() {
+
+			/**
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				displayLargeText();
+			}
+		});
+
 		// Open the shell
 		shell.pack();
 		SWTGraphicUtil.centerShell(shell);
@@ -331,6 +345,30 @@ public class OpalDialogSnippet {
 				setIcon(SWTGraphicUtil.createImage("org/mihalis/opal/OpalDialog/warning.png"));
 		dialog.show();
 
+	}
+
+	private static void displayLargeText() {
+		final StringBuilder stringBuilder = new StringBuilder();
+		for (int t = 0; t < 20; t++) {
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A <b>very</b> long tekst " + t + "");
+			stringBuilder.append("A very long tekst " + t + "<br/>");
+			stringBuilder.append("..." + "<br/>");
+		}
+
+		final Dialog dialog = new Dialog(true);
+		dialog.getMessageArea().setVerticalScrollbar(true);
+		dialog.getMessageArea().setHeight(200);
+		dialog.getMessageArea().setText(stringBuilder.toString());
+		dialog.setButtonType(OpalDialogType.OK);
+		dialog.show();
 	}
 
 }

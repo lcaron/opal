@@ -49,13 +49,32 @@ public class Dialog {
 	/**
 	 * Constructor
 	 * 
+	 * @param resizable if <code>true</code>, the window is resizable
+	 */
+	public Dialog(final boolean resizable) {
+		this(null, resizable);
+	}
+
+	/**
+	 * Constructor
+	 * 
 	 * @param parent parent shell
 	 */
 	public Dialog(final Shell parent) {
+		this(parent, false);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param parent parent shell
+	 * @param resizable if <code>true</code>, the window is resizable
+	 */
+	public Dialog(final Shell parent, final boolean resizable) {
 		if (parent == null) {
-			this.shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			this.shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | (resizable ? SWT.RESIZE : SWT.NONE));
 		} else {
-			this.shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			this.shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | (resizable ? SWT.RESIZE : SWT.NONE));
 		}
 		this.messageArea = new MessageArea(this);
 		this.footerArea = new FooterArea(this);
@@ -119,6 +138,8 @@ public class Dialog {
 		final int centerX = (displaySize.x - preferredSize.x) / 2;
 		final int centerY = (displaySize.y - preferredSize.y) / 2;
 
+		// TODO Marnix 2012-01-20: Add some code to prevent the dialog to be
+		// larger than current display
 		this.shell.setBounds(centerX, centerY, preferredSize.x, preferredSize.y);
 	}
 

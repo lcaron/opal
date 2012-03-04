@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
+import org.mihalis.opal.utils.ReadOnlyStyledText;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 import org.mihalis.opal.utils.StringUtil;
 
@@ -63,6 +64,9 @@ public class MessageArea extends DialogArea {
 	private int progressBarMinimumValue;
 	private int progressBarMaximumValue;
 	private int progressBarValue;
+
+	private boolean verticalScrollbar = false;
+	private int height = -1;
 
 	/**
 	 * Constructor
@@ -257,12 +261,16 @@ public class MessageArea extends DialogArea {
 	 * @param hasTitle if <code>true</code> a title is displayed
 	 */
 	private void createText(final boolean hasIcon, final boolean hasTitle) {
-		final StyledText label = new StyledText(this.composite, SWT.NONE);
-		label.setText("<html><body>" + this.text + "</body></html>");
+
+		final StyledText label = new ReadOnlyStyledText(this.composite, SWT.NONE | (this.verticalScrollbar ? SWT.V_SCROLL : SWT.NONE));
+		label.setText(this.text);
 		SWTGraphicUtil.applyHTMLFormating(label);
-		label.setEnabled(false);
+		label.setEditable(false);
 		label.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		final GridData gd = new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false, 1, 1);
+		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
+		if (this.height != -1) {
+			gd.heightHint = this.height;
+		}
 
 		if (hasIcon) {
 			gd.horizontalIndent = 8;
@@ -316,7 +324,7 @@ public class MessageArea extends DialogArea {
 		this.textException = new Text(this.composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		this.textException.setText(StringUtil.stackStraceAsString(this.exception));
 		this.textException.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		final GridData gd = new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1);
+		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
 		gd.minimumHeight = 300;
 		this.textException.setLayoutData(gd);
 	}
@@ -325,10 +333,10 @@ public class MessageArea extends DialogArea {
 	 * Create a text box
 	 */
 	private void createTextBox() {
-		final Text textbox = new Text(this.composite, SWT.SINGLE | SWT.BORDER);
+		final Text textbox = new Text(this.composite, SWT.MULTI | SWT.BORDER);
 		textbox.setText(this.textBoxValue);
 		textbox.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, false, 1, 1);
+		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
 		textbox.setLayoutData(gd);
 		textbox.addModifyListener(new ModifyListener() {
 
@@ -536,6 +544,34 @@ public class MessageArea extends DialogArea {
 		if (this.progressBar != null && !this.progressBar.isDisposed()) {
 			this.progressBar.setSelection(progressBarValue);
 		}
+	}
+
+	/**
+	 * @return the verticalScrollbar
+	 */
+	public boolean isVerticalScrollbar() {
+		return this.verticalScrollbar;
+	}
+
+	/**
+	 * @param verticalScrollbar the verticalScrollbar to set
+	 */
+	public void setVerticalScrollbar(final boolean verticalScrollbar) {
+		this.verticalScrollbar = verticalScrollbar;
+	}
+
+	/**
+	 * @return the height
+	 */
+	public int getHeight() {
+		return this.height;
+	}
+
+	/**
+	 * @param height the height to set
+	 */
+	public void setHeight(final int height) {
+		this.height = height;
 	}
 
 }

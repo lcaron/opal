@@ -1,0 +1,52 @@
+<project name="opal" basedir="." default="jar">
+
+	<property name="src.dir" value="src/main/java" />
+	<property name="rsc.dir" value="src/main/resources/resources" />
+	<property name="images.dir" value="src/main/resources/images" />
+	<property name="version" value="0.9" />
+
+	
+	<property name="build.dir" value="build" />
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="jar.dir" value="${build.dir}/jar" />
+	<property name="exportsrc.dir" value="${build.dir}/sources" />
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" />
+	</target>
+
+	<target name="jar" depends="clean,compile">
+		<mkdir dir="${jar.dir}" />
+		<mkdir dir="${classes.dir}/images" />
+		<copy todir="${classes.dir}/images">
+			<fileset dir="${images.dir}" />
+		</copy>
+		<mkdir dir="${classes.dir}/resources" />
+		<copy todir="${classes.dir}/resources">
+			<fileset dir="${rsc.dir}" />
+		</copy>
+		<jar destfile="${jar.dir}/${ant.project.name}-${version}.jar" basedir="${classes.dir}">
+		</jar>
+		<mkdir dir="${exportsrc.dir}"/>
+		<copy todir="${exportsrc.dir}">
+			<fileset dir=".">
+				<include name=".classpath"/>
+				<include name=".hgignore"/>
+				<include name=".project"/>
+				<include name="build.xml"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${exportsrc.dir}/src"/>
+		<copydir dest="${exportsrc.dir}/src" src="src"/>	
+		<zip destfile="${jar.dir}/${ant.project.name}-${version}-src.zip" basedir="${exportsrc.dir}"></zip>
+	</target>
+
+	<target name="clean-build" depends="clean,jar" />
+
+</project>

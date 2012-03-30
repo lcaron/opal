@@ -56,7 +56,9 @@ public class FixedSizeQueue<T> {
 	public List<T> getValues() {
 		final List<T> list = new ArrayList<T>(this.index);
 		for (int i = 0; i < this.index; i++) {
-			list.add(this.buffer[i]);
+			if (this.buffer[i] != null) {
+				list.add(this.buffer[i]);
+			}
 		}
 		return list;
 	}

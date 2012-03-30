@@ -57,6 +57,13 @@ public class ResourceManager {
 	public static final String RIGHT = "right";
 	public static final String ERASE_PROPERTY = "eraseProperty";
 
+	public static final String PHYSICAL_MEMORY = "physicalMemory";
+	public static final String HEAP_MEMORY = "heapMemory";
+	public static final String THREADS = "threads";
+	public static final String CPU_USAGE = "cpuUsage";
+	public static final String PEAK = "peak";
+	public static final String MB = "mb";
+
 	/**
 	 * Get a translated label
 	 * 

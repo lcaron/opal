@@ -61,7 +61,7 @@ public class SystemMonitor extends Canvas {
 	 * be built by <em>bitwise OR</em>'in together (that is, using the
 	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
 	 * style constants. The class description lists the style constants that are
-	 * applicable to the class. Style bits are also inherited from superclasses.
+	 * applicable to the class. Style bits are also inherited from super classes.
 	 * </p>
 	 * 
 	 * @param parent a composite control which will be the parent of the new
@@ -332,7 +332,7 @@ public class SystemMonitor extends Canvas {
 	 * be built by <em>bitwise OR</em>'in together (that is, using the
 	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
 	 * style constants. The class description lists the style constants that are
-	 * applicable to the class. Style bits are also inherited from superclasses.
+	 * applicable to the class. Style bits are also inherited from super classes.
 	 * </p>
 	 * 
 	 * @param parent a composite control which will be the parent of the new

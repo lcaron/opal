@@ -369,7 +369,7 @@ public class SystemMonitor extends Canvas {
 	/**
 	 * Add a sample
 	 * 
-	 * @param id idenfier
+	 * @param id identifier
 	 * @param sampleWrapper sample wrapper
 	 */
 	private void addSample(final String id, final SampleWrapper sampleWrapper) {

@@ -11,6 +11,7 @@
 package org.mihalis.opal.SystemMonitor;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -43,6 +44,13 @@ public class SystemMonitorSnippet {
 
 		final SystemMonitor threads = new SystemMonitor(shell, SWT.NONE, SampleIdentifier.THREADS);
 		threads.setLayoutData(createLayoutData());
+
+		final SystemMonitor custom = new SystemMonitor(shell, SWT.NONE);
+		custom.addSample("custom", new RandomSample());
+		custom.setCaption("custom", "Random value:");
+		custom.setColor("custom", new RGB(255, 255, 216));
+		custom.setFormatPattern("custom", "%{value},.0f / %{maxValue},.0f / %{percentValue}.0f%%");
+		custom.setLayoutData(createLayoutData());
 
 		shell.pack();
 		shell.open();

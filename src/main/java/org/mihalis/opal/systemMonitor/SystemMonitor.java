@@ -26,6 +26,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Canvas;
@@ -61,7 +62,8 @@ public class SystemMonitor extends Canvas {
 	 * be built by <em>bitwise OR</em>'in together (that is, using the
 	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
 	 * style constants. The class description lists the style constants that are
-	 * applicable to the class. Style bits are also inherited from super classes.
+	 * applicable to the class. Style bits are also inherited from super
+	 * classes.
 	 * </p>
 	 * 
 	 * @param parent a composite control which will be the parent of the new
@@ -332,7 +334,8 @@ public class SystemMonitor extends Canvas {
 	 * be built by <em>bitwise OR</em>'in together (that is, using the
 	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
 	 * style constants. The class description lists the style constants that are
-	 * applicable to the class. Style bits are also inherited from super classes.
+	 * applicable to the class. Style bits are also inherited from super
+	 * classes.
 	 * </p>
 	 * 
 	 * @param parent a composite control which will be the parent of the new
@@ -396,10 +399,49 @@ public class SystemMonitor extends Canvas {
 	}
 
 	/**
+	 * Set the caption for a given sample
+	 * 
+	 * @param id sample identifier
+	 * @param caption caption to set
+	 */
+	public void setCaption(final String id, final String caption) {
+		if (!this.samples.containsKey(id)) {
+			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+		}
+		this.samples.get(id).setCaption(caption);
+	}
+
+	/**
 	 * @param captionVisible if true, the caption is visible
 	 */
 	public void setCaptionVisible(final boolean captionVisible) {
 		this.captionVisible = captionVisible;
+	}
+
+	/**
+	 * Set the color for a given sample
+	 * 
+	 * @param id sample identifier
+	 * @param color color to set
+	 */
+	public void setColor(final String id, final RGB color) {
+		if (!this.samples.containsKey(id)) {
+			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+		}
+		this.samples.get(id).setColor(color);
+	}
+
+	/**
+	 * Set the pattern for a given sample
+	 * 
+	 * @param id sample identifier
+	 * @param pattern pattern to set
+	 */
+	public void setFormatPattern(final String id, final String pattern) {
+		if (!this.samples.containsKey(id)) {
+			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+		}
+		this.samples.get(id).setFormatPattern(pattern);
 	}
 
 	/**

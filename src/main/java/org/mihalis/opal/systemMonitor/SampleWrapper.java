@@ -35,7 +35,7 @@ public class SampleWrapper {
 	 * 
 	 * @param sample associated sample
 	 */
-	public SampleWrapper(final Sample sample) {
+	SampleWrapper(final Sample sample) {
 		super();
 		this.sample = sample;
 		this.color = new RGB(255, 255, 216);
@@ -145,7 +145,7 @@ public class SampleWrapper {
 	/**
 	 * @param caption the caption to set
 	 */
-	public SampleWrapper setCaption(final String caption) {
+	SampleWrapper setCaption(final String caption) {
 		this.caption = caption;
 		return this;
 	}
@@ -153,7 +153,7 @@ public class SampleWrapper {
 	/**
 	 * @param color the color to set
 	 */
-	public SampleWrapper setColor(final RGB color) {
+	SampleWrapper setColor(final RGB color) {
 		this.color = color;
 		createBorderColor();
 		return this;
@@ -162,7 +162,7 @@ public class SampleWrapper {
 	/**
 	 * @param formatPattern the format pattern to set
 	 */
-	public SampleWrapper setFormatPattern(final String formatPattern) {
+	SampleWrapper setFormatPattern(final String formatPattern) {
 		this.formatPattern = formatPattern;
 		return this;
 	}

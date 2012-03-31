@@ -58,7 +58,7 @@ public class SystemMonitor extends Canvas {
 	 * <p>
 	 * The style value is either one of the style constants defined in class
 	 * <code>SWT</code> which is applicable to instances of this class, or must
-	 * be built by <em>bitwise OR</em>'ing together (that is, using the
+	 * be built by <em>bitwise OR</em>'in together (that is, using the
 	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
 	 * style constants. The class description lists the style constants that are
 	 * applicable to the class. Style bits are also inherited from superclasses.
@@ -329,7 +329,7 @@ public class SystemMonitor extends Canvas {
 	 * <p>
 	 * The style value is either one of the style constants defined in class
 	 * <code>SWT</code> which is applicable to instances of this class, or must
-	 * be built by <em>bitwise OR</em>'ing together (that is, using the
+	 * be built by <em>bitwise OR</em>'in together (that is, using the
 	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
 	 * style constants. The class description lists the style constants that are
 	 * applicable to the class. Style bits are also inherited from superclasses.

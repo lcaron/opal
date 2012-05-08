@@ -3,7 +3,7 @@
 	<property name="src.dir" value="src/main/java" />
 	<property name="rsc.dir" value="src/main/resources/resources" />
 	<property name="images.dir" value="src/main/resources/images" />
-	<property name="version" value="0.9" />
+	<property name="version" value="0.9.1" />
 
 	
 	<property name="build.dir" value="build" />
@@ -17,7 +17,7 @@
 
 	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" source="1.6" target="1.6"/>
 	</target>
 
 	<target name="jar" depends="clean,compile">

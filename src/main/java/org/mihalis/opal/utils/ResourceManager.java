@@ -64,6 +64,9 @@ public class ResourceManager {
 	public static final String PEAK = "peak";
 	public static final String MB = "mb";
 
+	public static final String CALCULATOR_DIVIDE_BY_ZERO = "calculator.dividebyzero";
+	public static final String CALCULATOR_INVALID_VALUE = "calculator.invalid";
+
 	/**
 	 * Get a translated label
 	 * 

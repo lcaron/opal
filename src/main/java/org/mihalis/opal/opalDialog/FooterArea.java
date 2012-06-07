@@ -41,7 +41,7 @@ public class FooterArea extends DialogArea {
 	private int timer;
 	private int timerIndexButton;
 
-	private int selectedButtonIndex;
+	int selectedButtonIndex;
 
 	private String collapsedLabelText;
 	private String expandedLabelText;

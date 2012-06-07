@@ -1,13 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2011 Laurent CARON
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
+ * Copyright (c) 2011 Laurent CARON All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
- *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
+ * 
+ * Contributors: Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
  *******************************************************************************/
 package org.mihalis.opal.opalDialog;
 
@@ -23,7 +18,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 import org.mihalis.opal.utils.ReadOnlyStyledText;
@@ -71,7 +68,8 @@ public class MessageArea extends DialogArea {
 	/**
 	 * Constructor
 	 * 
-	 * @param parent dialog that is composed of this message area
+	 * @param parent
+	 *            dialog that is composed of this message area
 	 */
 	public MessageArea(final Dialog parent) {
 		super(parent);
@@ -83,8 +81,10 @@ public class MessageArea extends DialogArea {
 	/**
 	 * Add a choice
 	 * 
-	 * @param defaultSelection default selection
-	 * @param items a list of the choice item
+	 * @param defaultSelection
+	 *            default selection
+	 * @param items
+	 *            a list of the choice item
 	 * @return the current message area
 	 */
 	public MessageArea addChoice(final int defaultSelection, final ChoiceItem... items) {
@@ -97,8 +97,10 @@ public class MessageArea extends DialogArea {
 	/**
 	 * Add a choice composed of radio buttons
 	 * 
-	 * @param defaultSelection default selection
-	 * @param values values
+	 * @param defaultSelection
+	 *            default selection
+	 * @param values
+	 *            values
 	 * @return the current message area
 	 */
 	public MessageArea addRadioButtons(final int defaultSelection, final String... values) {
@@ -111,7 +113,8 @@ public class MessageArea extends DialogArea {
 	/**
 	 * Add a text box for input
 	 * 
-	 * @param value defaut value of the textbox
+	 * @param value
+	 *            defaut value of the textbox
 	 * @return the current message area
 	 */
 	public MessageArea addTextBox(final String value) {
@@ -123,9 +126,12 @@ public class MessageArea extends DialogArea {
 	/**
 	 * Add a progress bar
 	 * 
-	 * @param mininum minimum value
-	 * @param maximum maximum value
-	 * @param value default value
+	 * @param mininum
+	 *            minimum value
+	 * @param maximum
+	 *            maximum value
+	 * @param value
+	 *            default value
 	 * @return the current message area
 	 */
 	public MessageArea addProgressBar(final int mininum, final int maximum, final int value) {
@@ -222,7 +228,8 @@ public class MessageArea extends DialogArea {
 	/**
 	 * Create the icon
 	 * 
-	 * @param numberOfRows number of rows displayed
+	 * @param numberOfRows
+	 *            number of rows displayed
 	 */
 	private void createIcon(final int numberOfRows) {
 		final Label label = new Label(this.composite, SWT.NONE);
@@ -234,7 +241,8 @@ public class MessageArea extends DialogArea {
 	/**
 	 * Create the title
 	 * 
-	 * @param hasIcon if <code>true</code> an icon is displayed
+	 * @param hasIcon
+	 *            if <code>true</code> an icon is displayed
 	 */
 	private void createTitle(final boolean hasIcon) {
 		final Label label = new Label(this.composite, SWT.NONE);
@@ -257,8 +265,10 @@ public class MessageArea extends DialogArea {
 	/**
 	 * Create the text
 	 * 
-	 * @param hasIcon if <code>true</code> an icon is displayed
-	 * @param hasTitle if <code>true</code> a title is displayed
+	 * @param hasIcon
+	 *            if <code>true</code> an icon is displayed
+	 * @param hasTitle
+	 *            if <code>true</code> a title is displayed
 	 */
 	private void createText(final boolean hasIcon, final boolean hasTitle) {
 
@@ -333,7 +343,7 @@ public class MessageArea extends DialogArea {
 	 * Create a text box
 	 */
 	private void createTextBox() {
-		final Text textbox = new Text(this.composite, SWT.MULTI | SWT.BORDER);
+		final Text textbox = new Text(this.composite, SWT.BORDER);
 		textbox.setText(this.textBoxValue);
 		textbox.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
@@ -345,6 +355,29 @@ public class MessageArea extends DialogArea {
 				MessageArea.this.textBoxValue = textbox.getText();
 			}
 		});
+
+		textbox.addListener(SWT.KeyUp, new Listener() {
+
+			@Override
+			public void handleEvent(Event e) {
+				if (e.keyCode == SWT.CR) {
+					parent.shell.dispose();
+					parent.getFooterArea().selectedButtonIndex = 0;
+				}
+
+			}
+		});
+
+		textbox.getShell().addListener(SWT.Activate, new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				textbox.forceFocus();
+				textbox.setSelection(textbox.getText().length());
+				textbox.getShell().removeListener(SWT.Activate, this);
+			}
+		});
+
 	}
 
 	/**
@@ -416,7 +449,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 * @return the current message area
 	 */
 	public MessageArea setTitle(final String title) {
@@ -433,7 +467,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param icon the icon to set
+	 * @param icon
+	 *            the icon to set
 	 */
 	public MessageArea setIcon(final Image icon) {
 		this.icon = icon;
@@ -449,7 +484,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param text the text to set
+	 * @param text
+	 *            the text to set
 	 */
 	public MessageArea setText(final String text) {
 		this.text = text;
@@ -472,7 +508,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param exception the exception to set
+	 * @param exception
+	 *            the exception to set
 	 * @return
 	 */
 	public MessageArea setException(final Throwable exception) {
@@ -503,7 +540,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param progressBarMinimumValue the progress bar minimum value to set
+	 * @param progressBarMinimumValue
+	 *            the progress bar minimum value to set
 	 */
 	public void setProgressBarMinimumValue(final int progressBarMinimumValue) {
 		this.progressBarMinimumValue = progressBarMinimumValue;
@@ -520,7 +558,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param progressBarMaximumValue the progress bar minimum value to set
+	 * @param progressBarMaximumValue
+	 *            the progress bar minimum value to set
 	 */
 	public void setProgressBarMaximumValue(final int progressBarMaximumValue) {
 		this.progressBarMaximumValue = progressBarMaximumValue;
@@ -537,7 +576,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param progressBarValue the progress bar value to set
+	 * @param progressBarValue
+	 *            the progress bar value to set
 	 */
 	public void setProgressBarValue(final int progressBarValue) {
 		this.progressBarValue = progressBarValue;
@@ -554,7 +594,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param verticalScrollbar the verticalScrollbar to set
+	 * @param verticalScrollbar
+	 *            the verticalScrollbar to set
 	 */
 	public void setVerticalScrollbar(final boolean verticalScrollbar) {
 		this.verticalScrollbar = verticalScrollbar;
@@ -568,7 +609,8 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
-	 * @param height the height to set
+	 * @param height
+	 *            the height to set
 	 */
 	public void setHeight(final int height) {
 		this.height = height;

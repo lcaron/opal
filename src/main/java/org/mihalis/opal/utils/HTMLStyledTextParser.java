@@ -62,7 +62,7 @@ public class HTMLStyledTextParser {
 				currentTag = null;
 			}
 
-			if (i <= max - 5) {
+			if (i <= max - 4) {
 				currentClosingTag = text.substring(i, i + 4).toLowerCase();
 			} else {
 				currentClosingTag = null;
@@ -165,7 +165,7 @@ public class HTMLStyledTextParser {
 			}
 
 			if (currentBRTag != null && "<br/>".equalsIgnoreCase(currentBRTag)) {
-				currentPosition++;
+				//currentPosition++;
 				output.append("\n");
 				i += 4;
 				continue;

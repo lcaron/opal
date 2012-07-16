@@ -84,6 +84,9 @@ public class PreferenceWindowSnippet {
 				createTerminalTab(window);
 				createPrinterTab(window);
 				createSystemTab(window);
+
+				window.setSelectedTab(2);
+				
 				window.open();
 			}
 		});

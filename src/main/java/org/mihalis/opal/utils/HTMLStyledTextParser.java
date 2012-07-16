@@ -119,7 +119,7 @@ public class HTMLStyledTextParser {
 						sb.append(" tag expected !");
 						throw new RuntimeException(sb.toString());
 					}
-					currentStyleRange.length = currentPosition - currentStyleRange.start + 1;
+					currentStyleRange.length = currentPosition - currentStyleRange.start;
 					listOfStyles.add(currentStyleRange);
 					i += 3;
 					continue;
@@ -138,7 +138,7 @@ public class HTMLStyledTextParser {
 						sb.append(" tag expected !");
 						throw new RuntimeException(sb.toString());
 					}
-					currentStyleRange.length = currentPosition - currentStyleRange.start + 1;
+					currentStyleRange.length = currentPosition - currentStyleRange.start;
 					listOfStyles.add(currentStyleRange);
 					i += 3;
 					continue;
@@ -157,7 +157,7 @@ public class HTMLStyledTextParser {
 						sb.append(" tag expected !");
 						throw new RuntimeException(sb.toString());
 					}
-					currentStyleRange.length = currentPosition - currentStyleRange.start + 1;
+					currentStyleRange.length = currentPosition - currentStyleRange.start;
 					listOfStyles.add(currentStyleRange);
 					i += 3;
 					continue;
@@ -165,7 +165,6 @@ public class HTMLStyledTextParser {
 			}
 
 			if (currentBRTag != null && "<br/>".equalsIgnoreCase(currentBRTag)) {
-				//currentPosition++;
 				output.append("\n");
 				i += 4;
 				continue;

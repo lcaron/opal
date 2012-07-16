@@ -41,7 +41,9 @@ public class PreferenceWindow {
 	private boolean returnedValue;
 	private Shell shell;
 	private static PreferenceWindow instance;
-
+	private PWTabContainer container;
+	private int selectedTab;
+	
 	/**
 	 * Constructor
 	 * 
@@ -170,7 +172,7 @@ public class PreferenceWindow {
 		gridLayout.marginWidth = gridLayout.marginHeight = 0;
 		gridLayout.horizontalSpacing = gridLayout.verticalSpacing = 0;
 		this.shell.setLayout(gridLayout);
-		final PWTabContainer container = new PWTabContainer(this.shell, SWT.NONE, this.tabs);
+		container = new PWTabContainer(this.shell, SWT.NONE, this.tabs);
 		container.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 2, 1));
 		container.build();
 
@@ -249,6 +251,13 @@ public class PreferenceWindow {
 	}
 
 	/**
+	 * @return the selected tab
+	 */
+	public int getSelectedTab() {
+		return selectedTab;
+	}
+
+	/**
 	 * @param key
 	 * @return the value associated to the <i>key</i>
 	 */
@@ -284,5 +293,19 @@ public class PreferenceWindow {
 		}
 
 	}
+
+	/**
+	 * Set the selected tab
+	 * @param selectedTab
+	 */
+	public void setSelectedTab(int selectedTab) {
+		this.selectedTab = selectedTab;
+		if (container != null) {
+			container.redraw();
+			container.update();
+		}
+	}
+
+
 
 }

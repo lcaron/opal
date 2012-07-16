@@ -69,7 +69,7 @@ class PWTabContainer extends Composite {
 		createButtons();
 		createContentContainer();
 
-		select(0);
+		select(PreferenceWindow.getInstance().getSelectedTab());
 	}
 
 	/**
@@ -172,7 +172,7 @@ class PWTabContainer extends Composite {
 	 * 
 	 * @param index index of the selected button
 	 */
-	private void select(final int index) {
+	void select(final int index) {
 		for (final Control c : this.container.getChildren()) {
 			c.dispose();
 		}
@@ -196,4 +196,5 @@ class PWTabContainer extends Composite {
 		tempContainer.heightHint = 550;
 		this.container.setLayoutData(tempContainer);
 	}
+
 }

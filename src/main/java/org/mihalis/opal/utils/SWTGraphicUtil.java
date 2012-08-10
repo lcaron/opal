@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
@@ -30,6 +31,8 @@ import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
@@ -53,7 +56,6 @@ public class SWTGraphicUtil {
 	 */
 	public static void dispose(final Widget widget, final Resource r) {
 		widget.addDisposeListener(new DisposeListener() {
-
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
 				dispose(r);
@@ -73,6 +75,27 @@ public class SWTGraphicUtil {
 	}
 
 	/**
+	 * Create a color that is disposed automatically
+	 * @param r red component
+	 * @param g green component
+	 * @param b blue component
+	 * @return the color
+	 */
+	public static Color createDisposableColor(final int r, final int g, final int b) {
+		final Display display = Display.getCurrent();
+		final Color color = new Color(display, r, g, b);
+		display.addListener(SWT.Dispose, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				if (!color.isDisposed()) {
+					color.dispose();
+				}
+			}
+		});
+		return color;
+	}
+
+	/**
 	 * Loads an image and create a SWT Image corresponding to this file
 	 * 
 	 * @param fileName file name of the image
@@ -84,7 +107,8 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Create a reflected image of a source Inspired by Daniel Spiewak
+	 * Create a reflected image of a source 
+	 * Inspired by Daniel Spiewak
 	 * (http://www.eclipsezone.com/eclipse/forums/t91013.html)
 	 * 
 	 * @param source source to be reflected
@@ -153,7 +177,6 @@ public class SWTGraphicUtil {
 	 * @return a scaled image of the source
 	 */
 	public static Image resize(final Image source, final int newWidth, final int newHeight) {
-
 		if (source == null) {
 			return null;
 		}
@@ -234,7 +257,7 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Center a shell on the screen
+	 * Center a shell on the primary monitor
 	 * 
 	 * @param shell shell to center
 	 */
@@ -263,9 +286,9 @@ public class SWTGraphicUtil {
 
 	/**
 	 * @param originalImageData The ImageData to be average blurred.
-	 *            Transparency information will be ignored.
+	 * Transparency information will be ignored.
 	 * @param radius the number of radius pixels to consider when blurring
-	 *            image.
+	 * image.
 	 * @return A blurred copy of the image data, or null if an error occured.
 	 * @author Nicholas Rajendram
 	 * @see http://www.jasonwaltman.com/thesis/filter-blur.html
@@ -273,28 +296,22 @@ public class SWTGraphicUtil {
 	 */
 	public static ImageData blur(final ImageData originalImageData, int radius) {
 		/*
-		 * This method will vertically blur all the pixels in a row at once.
-		 * This blurring is performed incrementally to each row.
-		 * 
-		 * In order to vertically blur any given pixel, maximally (radius * 2 +
-		 * 1) pixels must be examined. Since each of these pixels exists in the
-		 * same column, they span across a series of consecutive rows. These
-		 * rows are horizontally blurred before being cached and used as input
-		 * for the vertical blur. Blurring a pixel horizontally and then
-		 * vertically is equivalent to blurring the pixel with both its
-		 * horizontal and vertical neighbours at once.
-		 * 
-		 * Pixels are blurred under the notion of a 'summing scope'. A certain
-		 * scope of pixels in a column are summed then averaged to determine a
-		 * target pixel's resulting RGB value. When the next lower target pixel
-		 * is being calculated, the topmost pixel is removed from the summing
-		 * scope (by subtracting its RGB) and a new pixel is added to the bottom
-		 * of the scope (by adding its RGB). In this sense, the summing scope is
-		 * moving downward.
+		 * This method will vertically blur all the pixels in a row at once. 
+		 * This blurring is performed incrementally to each row. In order to vertically blur any given pixel, 
+		 * maximally (radius * 2 + 1) pixels must be examined. Since each of these pixels exists in the same 
+		 * column, they span across a series of consecutive rows. 
+		 * These rows are horizontally blurred before being cached and used as input for the vertical blur. 
+		 * Blurring a pixel horizontally and then vertically is equivalent to blurring the pixel with both its 
+		 * horizontal and vertical neighbours at once. Pixels are blurred under the notion of a 'summing scope'. 
+		 * A certain scope of pixels in a column are summed then averaged to determine a target pixel's resulting 
+		 * RGB value. When the next lower target pixel is being calculated, the topmost pixel is removed from the 
+		 * summing scope (by subtracting its RGB) and a new pixel is added to the bottom of the scope (by adding its RGB). 
+		 * In this sense, the summing scope is moving downward.
 		 */
 		if (radius < 1) {
 			return originalImageData;
 		}
+
 		// prepare new image data with 24-bit direct palette to hold blurred
 		// copy of image
 		final ImageData newImageData = new ImageData(originalImageData.width, originalImageData.height, 24, new PaletteData(0xFF, 0xFF00, 0xFF0000));
@@ -303,18 +320,13 @@ public class SWTGraphicUtil {
 		}
 		// initialize cache
 		final ArrayList<RGB[]> rowCache = new ArrayList<RGB[]>();
-		final int cacheSize = radius * 2 + 1 > newImageData.height ? newImageData.height : radius * 2 + 1; // number
-																											// of
-																											// rows
-																											// of
-																											// imageData
-																											// we
-																											// cache
+		final int cacheSize = radius * 2 + 1 > newImageData.height ? newImageData.height : radius * 2 + 1; // number of rows of imageData we cache
 		int cacheStartIndex = 0; // which row of imageData the cache begins with
 		for (int row = 0; row < cacheSize; row++) {
 			// row data is horizontally blurred before caching
 			rowCache.add(rowCache.size(), blurRow(originalImageData, row, radius));
 		}
+
 		// sum red, green, and blue values separately for averaging
 		final RGB[] rowRGBSums = new RGB[newImageData.width];
 		final int[] rowRGBAverages = new int[newImageData.width];
@@ -325,6 +337,7 @@ public class SWTGraphicUtil {
 		for (int i = 0; i < newImageData.width; i++) {
 			rowRGBSums[i] = new RGB(0, 0, 0);
 		}
+
 		while (targetRow < newImageData.height) {
 			if (bottomSumBoundary < newImageData.height) {
 				do {
@@ -340,9 +353,9 @@ public class SWTGraphicUtil {
 						// grow cache
 						rowCache.add(rowCache.size(), blurRow(originalImageData, bottomSumBoundary, radius));
 					}
-				} while (bottomSumBoundary <= radius); // to initialize
-														// rowRGBSums at start
+				} while (bottomSumBoundary <= radius); // to initialize rowRGBSums at start
 			}
+
 			if (targetRow - topSumBoundary > radius) {
 				// subtract values of top row from sums as scope of summed
 				// values moves down
@@ -357,10 +370,12 @@ public class SWTGraphicUtil {
 									// scope
 				cacheStartIndex++;
 			}
+
 			// calculate each column's RGB-averaged pixel
 			for (int col = 0; col < newImageData.width; col++) {
 				rowRGBAverages[col] = newImageData.palette.getPixel(new RGB(rowRGBSums[col].red / numRows, rowRGBSums[col].green / numRows, rowRGBSums[col].blue / numRows));
 			}
+
 			// replace original pixels
 			newImageData.setPixels(0, targetRow, newImageData.width, rowRGBAverages, 0);
 			targetRow++;
@@ -373,13 +388,10 @@ public class SWTGraphicUtil {
 	 * matrix of separated RGB values.
 	 */
 	private static RGB[] blurRow(final ImageData originalImageData, final int row, final int radius) {
-		final RGB[] rowRGBAverages = new RGB[originalImageData.width]; // resulting
-																		// rgb
-																		// averages
+		final RGB[] rowRGBAverages = new RGB[originalImageData.width]; // resulting rgb averages
 		final int[] lineData = new int[originalImageData.width];
 		originalImageData.getPixels(0, row, originalImageData.width, lineData, 0);
-		int r = 0, g = 0, b = 0; // sum red, green, and blue values separately
-									// for averaging
+		int r = 0, g = 0, b = 0; // sum red, green, and blue values separately for averaging
 		int leftSumBoundary = 0; // beginning index of summed values scope
 		int targetColumn = 0; // column of RGB average to be determined
 		int rightSumBoundary = 0; // ending index of summed values scope
@@ -395,9 +407,9 @@ public class SWTGraphicUtil {
 					b += rgb.blue;
 					numCols++;
 					rightSumBoundary++;
-				} while (rightSumBoundary <= radius); // to initialize summing
-														// scope at start
+				} while (rightSumBoundary <= radius); // to initialize summing scope at start
 			}
+
 			// subtract sum of left pixel as summing scope moves right
 			if (targetColumn - leftSumBoundary > radius) {
 				rgb = originalImageData.palette.getRGB(lineData[leftSumBoundary]);
@@ -407,6 +419,7 @@ public class SWTGraphicUtil {
 				numCols--;
 				leftSumBoundary++;
 			}
+
 			// calculate RGB averages
 			rowRGBAverages[targetColumn] = new RGB(r / numCols, g / numCols, b / numCols);
 			targetColumn++;

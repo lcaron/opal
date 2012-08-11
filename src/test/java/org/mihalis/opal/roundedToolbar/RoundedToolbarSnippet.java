@@ -1,0 +1,156 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Laurent CARON.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
+ *******************************************************************************/
+package org.mihalis.opal.roundedToolbar;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.mihalis.opal.header.HeaderSnippet;
+
+/**
+ * A simple snippet for the Rounded Toolbar Widget
+ */
+public class RoundedToolbarSnippet {
+
+	private static Color grey1;
+	private static Color grey2;
+	private static Image iconBubble1b;
+	private static Image iconBubble1w;
+	private static Image iconBubble2b;
+	private static Image iconBubble2w;
+	private static Image iconBubble3b;
+	private static Image iconBubble3w;
+	private static Image emailb;
+	private static Image emailw;
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		final Display display = new Display();
+		final Shell shell = new Shell(display);
+		shell.setText("RoundedToolbar Snippet");
+
+		grey1 = new Color(display, 211, 211, 211);
+		grey2 = new Color(display, 255, 250, 250);
+
+		iconBubble1b = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble1_b.png"));
+		iconBubble1w = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble1_w.png"));
+
+		iconBubble2b = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble2_b.png"));
+		iconBubble2w = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble2_w.png"));
+
+		iconBubble3b = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble3_b.png"));
+		iconBubble3w = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble3_w.png"));
+
+		emailb = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/email_b.png"));
+		emailw = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/email_w.png"));
+
+		createFirstToolbar(shell);
+
+		createSecondToolbar(shell);
+
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		grey1.dispose();
+		grey2.dispose();
+
+		iconBubble1b.dispose();
+		iconBubble1w.dispose();
+		iconBubble2b.dispose();
+		iconBubble2w.dispose();
+		iconBubble3b.dispose();
+		iconBubble3w.dispose();
+		emailb.dispose();
+		emailw.dispose();
+
+		display.dispose();
+
+	}
+
+	private static void createFirstToolbar(final Shell shell) {
+		final RoundedToolbar roundedToolBar = new RoundedToolbar(shell, SWT.NONE);
+		roundedToolBar.setBounds(22, 21, 120, 21);
+		roundedToolBar.setMultiselection(true);
+		roundedToolBar.setBackground(grey1);
+		roundedToolBar.setCornerRadius(6);
+
+		RoundedToolItem item1 = new RoundedToolItem(roundedToolBar);
+		item1.setSelection(true);
+		item1.setTooltipText("Multiple ballons");
+		item1.setWidth(40);
+		item1.setSelectionImage(iconBubble3w);
+		item1.setImage(iconBubble3b);
+
+		RoundedToolItem item2 = new RoundedToolItem(roundedToolBar);
+		item2.setTooltipText("Simple item");
+		item2.setSelectionImage(iconBubble1w);
+		item2.setImage(iconBubble1b);
+		item2.setWidth(40);
+
+		RoundedToolItem item3 = new RoundedToolItem(roundedToolBar);
+		item3.setTooltipText("Lot of lines\r\n\r\nThis item has a line-break");
+		item3.setSelectionImage(iconBubble2w);
+		item3.setImage(iconBubble2b);
+		item3.setWidth(40);
+	}
+
+	private static void createSecondToolbar(final Shell shell) {
+		final RoundedToolbar roundedToolBar2 = new RoundedToolbar(shell, SWT.NONE);
+		roundedToolBar2.setBounds(159, 21, 200, 21);
+		roundedToolBar2.setCornerRadius(8);
+		roundedToolBar2.setBackground(grey1);
+
+		RoundedToolItem mailItem = new RoundedToolItem(roundedToolBar2);
+		mailItem.setSelectionImage(emailw);
+		mailItem.setImage(emailb);
+		mailItem.setWidth(32);
+		mailItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Bar2/Button 1");
+			}
+		});
+
+		RoundedToolItem mailItemWithText = new RoundedToolItem(roundedToolBar2);
+		mailItemWithText.setTextColorSelected(grey2);
+		mailItemWithText.setText("Mails");
+		mailItemWithText.setSelectionImage(emailw);
+		mailItemWithText.setImage(emailb);
+		mailItemWithText.setWidth(65);
+		mailItemWithText.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Bar2/Button 2");
+			}
+		});
+
+		RoundedToolItem itemJustText = new RoundedToolItem(roundedToolBar2);
+		itemJustText.setTextColorSelected(grey2);
+		itemJustText.setText("Just text");
+		itemJustText.setWidth(100);
+		itemJustText.setAlignment(SWT.RIGHT);
+		itemJustText.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Bar2/Button 3");
+			}
+		});
+
+	}
+}

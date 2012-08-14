@@ -1,7 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2012 Laurent CARON. All rights reserved. 
  * This program and the accompanying materials are made available under the terms 
- * of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+ * of the Eclipse Public License v1.0 which accompanies this distribution, 
+ * and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
@@ -133,12 +134,6 @@ public class RoundedToolItem extends Item {
 	 * <p>
 	 * <code>widgetDefaultSelected</code> is not called.
 	 * </p>
-	 * <p>
-	 * When the <code>SWT.RADIO</code> style bit is set, the <code>widgetSelected</code> method 
-	 * is also called when the receiver loses selection because another item in the same radio 
-	 * group was selected by the user. During <code>widgetSelected</code> the
-	 * application can use <code>getSelection()</code> to determine the current selected state of the receiver.
-	 * </p>
 	 * 
 	 * @param listener the listener which should be notified when the control is selected by the user,
 	 * 
@@ -262,12 +257,12 @@ public class RoundedToolItem extends Item {
 	private int computeStartingPosition(final int x) {
 		final int widthOfTextAndImage = computeSizeOfTextAndImages().x;
 		switch (alignment) {
-		case SWT.CENTER:
-			return (width - widthOfTextAndImage) / 2;
-		case SWT.RIGHT:
-			return width - widthOfTextAndImage - MARGIN;
-		default:
-			return MARGIN;
+			case SWT.CENTER:
+				return (width - widthOfTextAndImage) / 2;
+			case SWT.RIGHT:
+				return width - widthOfTextAndImage - MARGIN;
+			default:
+				return MARGIN;
 		}
 	}
 

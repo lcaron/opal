@@ -1,5 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2012 Laurent CARON. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+ * Copyright (c) 2012 Laurent CARON. All rights reserved. 
+ * This program and the accompanying materials are made available under the 
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution, 
+ * and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
@@ -78,7 +81,7 @@ public class RoundedToolbar extends Canvas {
 	 *
 	 * @see Widget#getStyle()
 	 */
-	public RoundedToolbar(Composite parent, int style) {
+	public RoundedToolbar(final Composite parent, final int style) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 		items = new ArrayList<RoundedToolItem>();
 		cornerRadius = 2;
@@ -87,8 +90,8 @@ public class RoundedToolbar extends Canvas {
 
 	private void addListeners() {
 		addListener(SWT.MouseUp, new Listener() {
-			private void applyRadioBehaviour(RoundedToolItem selectedItem) {
-				for (RoundedToolItem item : items) {
+			private void applyRadioBehaviour(final RoundedToolItem selectedItem) {
+				for (final RoundedToolItem item : items) {
 					if (!item.equals(selectedItem)) {
 						item.setSelection(false);
 						item.fireSelectionEvent();
@@ -98,8 +101,8 @@ public class RoundedToolbar extends Canvas {
 			}
 
 			@Override
-			public void handleEvent(Event event) {
-				for (RoundedToolItem item : items) {
+			public void handleEvent(final Event event) {
+				for (final RoundedToolItem item : items) {
 					if (item.getBounds().contains(event.x, event.y)) {
 						if (!multiSelection) {
 							applyRadioBehaviour(item);
@@ -116,8 +119,8 @@ public class RoundedToolbar extends Canvas {
 
 		addListener(SWT.MouseHover, new Listener() {
 			@Override
-			public void handleEvent(Event event) {
-				for (RoundedToolItem item : items) {
+			public void handleEvent(final Event event) {
+				for (final RoundedToolItem item : items) {
 					if (item.getBounds().contains(event.x, event.y)) {
 						setToolTipText(item.getTooltipText() == null ? "" : item.getTooltipText());
 						return;
@@ -128,7 +131,7 @@ public class RoundedToolbar extends Canvas {
 
 		addPaintListener(new PaintListener() {
 			@Override
-			public void paintControl(PaintEvent e) {
+			public void paintControl(final PaintEvent e) {
 				RoundedToolbar.this.paintControl(e);
 			}
 		});
@@ -138,14 +141,14 @@ public class RoundedToolbar extends Canvas {
 	 * Add an item to the toolbar
 	 * @param roundedToolItem roundedToolItem to add
 	 */
-	void addItem(RoundedToolItem roundedToolItem) {
+	void addItem(final RoundedToolItem roundedToolItem) {
 		items.add(roundedToolItem);
 	}
 
 	public Point computeMinSize() {
 		int width = 0, height = 0;
 		for (int i = 0; i < items.size(); i++) {
-			Point itemSize = items.get(i).computeDefaultSize();
+			final Point itemSize = items.get(i).computeDefaultSize();
 			width += itemSize.x;
 			height = Math.max(height, itemSize.y);
 		}
@@ -175,7 +178,7 @@ public class RoundedToolbar extends Canvas {
 	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 * </ul>
 	 */
-	public RoundedToolItem getItem(int index) {
+	public RoundedToolItem getItem(final int index) {
 		checkWidget();
 		if (index < 0 || index > items.size()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
@@ -199,9 +202,9 @@ public class RoundedToolbar extends Canvas {
 	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 * </ul>
 	 */
-	public RoundedToolItem getItem(Point point) {
+	public RoundedToolItem getItem(final Point point) {
 		checkWidget();
-		for (RoundedToolItem item : items) {
+		for (final RoundedToolItem item : items) {
 			if (item.getBounds().contains(point)) {
 				return item;
 			}
@@ -264,7 +267,7 @@ public class RoundedToolbar extends Canvas {
 	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 * </ul>
 	 */
-	public int indexOf(RoundedToolItem item) {
+	public int indexOf(final RoundedToolItem item) {
 		checkWidget();
 		return items.indexOf(item);
 	}
@@ -281,27 +284,27 @@ public class RoundedToolbar extends Canvas {
 	 * Paint the component
 	 * @param e event
 	 */
-	protected void paintControl(PaintEvent e) {
+	protected void paintControl(final PaintEvent e) {
 
-		GC gc = e.gc;
+		final GC gc = e.gc;
 		gc.setAdvanced(true);
 		gc.setAntialias(SWT.ON);
 
-		int width = getSize().x;
-		int height = getSize().y;
+		final int width = getSize().x;
+		final int height = getSize().y;
 
 		drawBorders(gc, width, height);
-		Iterator<RoundedToolItem> it = items.iterator();
+		final Iterator<RoundedToolItem> it = items.iterator();
 		int x = 0;
 		while (it.hasNext()) {
-			RoundedToolItem item = it.next();
+			final RoundedToolItem item = it.next();
 			item.drawButton(gc, x, height, !it.hasNext());
 			x += item.getWidth();
 		}
 	}
 
-	private void drawBorders(GC gc, int width, int height) {
-		AdvancedPath path = new AdvancedPath(getDisplay());
+	private void drawBorders(final GC gc, final int width, final int height) {
+		final AdvancedPath path = new AdvancedPath(getDisplay());
 		path.addRoundRectangle(0, 0, width, height, cornerRadius, cornerRadius);
 		gc.setClipping(path);
 
@@ -319,14 +322,14 @@ public class RoundedToolbar extends Canvas {
 	 * Add an item to the toolbar
 	 * @param roundedToolItem roundedToolItem to add
 	 */
-	void removeItem(RoundedToolItem roundedToolItem) {
+	void removeItem(final RoundedToolItem roundedToolItem) {
 		items.remove(roundedToolItem);
 	}
 
 	/**
 	 * @param cornerRadius new corner radius
 	 */
-	public void setCornerRadius(int cornerRadius) {
+	public void setCornerRadius(final int cornerRadius) {
 		checkWidget();
 		this.cornerRadius = cornerRadius;
 	}
@@ -334,7 +337,7 @@ public class RoundedToolbar extends Canvas {
 	/**
 	 * @param multiSelection new value of the multi selection flag
 	 */
-	public void setMultiselection(boolean multiSelection) {
+	public void setMultiselection(final boolean multiSelection) {
 		checkWidget();
 		this.multiSelection = multiSelection;
 	}

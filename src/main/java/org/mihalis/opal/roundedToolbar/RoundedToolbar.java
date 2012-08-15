@@ -90,16 +90,6 @@ public class RoundedToolbar extends Canvas {
 
 	private void addListeners() {
 		addListener(SWT.MouseUp, new Listener() {
-			private void applyRadioBehaviour(final RoundedToolItem selectedItem) {
-				for (final RoundedToolItem item : items) {
-					if (!item.equals(selectedItem)) {
-						item.setSelection(false);
-						item.fireSelectionEvent();
-					}
-				}
-
-			}
-
 			@Override
 			public void handleEvent(final Event event) {
 				for (final RoundedToolItem item : items) {
@@ -112,6 +102,15 @@ public class RoundedToolbar extends Canvas {
 						redraw();
 						update();
 						return;
+					}
+				}
+			}
+
+			private void applyRadioBehaviour(final RoundedToolItem selectedItem) {
+				for (final RoundedToolItem item : items) {
+					if (!item.equals(selectedItem)) {
+						item.setSelection(false);
+						item.fireSelectionEvent();
 					}
 				}
 			}
@@ -145,8 +144,12 @@ public class RoundedToolbar extends Canvas {
 		items.add(roundedToolItem);
 	}
 
+	/**
+	 * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
+	 */
 	@Override
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
+		checkWidget();
 		int width = 0, height = 0;
 		for (final RoundedToolItem item : items) {
 			width += item.getWidth();
@@ -243,7 +246,6 @@ public class RoundedToolbar extends Canvas {
 	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 * </ul>
 	 */
-
 	public RoundedToolItem[] getItems() {
 		checkWidget();
 		return items.toArray(new RoundedToolItem[items.size()]);
@@ -285,7 +287,6 @@ public class RoundedToolbar extends Canvas {
 	 * @param e event
 	 */
 	protected void paintControl(final PaintEvent e) {
-
 		final GC gc = e.gc;
 		gc.setAdvanced(true);
 		gc.setAntialias(SWT.ON);
@@ -323,6 +324,7 @@ public class RoundedToolbar extends Canvas {
 	 * @param roundedToolItem roundedToolItem to add
 	 */
 	void removeItem(final RoundedToolItem roundedToolItem) {
+		checkWidget();
 		items.remove(roundedToolItem);
 	}
 

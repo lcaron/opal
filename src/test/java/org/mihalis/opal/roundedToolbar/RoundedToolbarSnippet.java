@@ -11,10 +11,13 @@
 package org.mihalis.opal.roundedToolbar;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.mihalis.opal.header.HeaderSnippet;
@@ -38,10 +41,13 @@ public class RoundedToolbarSnippet {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
 		shell.setText("RoundedToolbar Snippet");
+		final GridLayout gridLayout = new GridLayout();
+		gridLayout.horizontalSpacing = 20;
+		shell.setLayout(gridLayout);
 
 		grey1 = new Color(display, 211, 211, 211);
 		grey2 = new Color(display, 255, 250, 250);
@@ -64,8 +70,9 @@ public class RoundedToolbarSnippet {
 
 		shell.open();
 		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
+			if (!display.readAndDispatch()) {
 				display.sleep();
+			}
 		}
 		grey1.dispose();
 		grey2.dispose();
@@ -85,25 +92,40 @@ public class RoundedToolbarSnippet {
 
 	private static void createFirstToolbar(final Shell shell) {
 		final RoundedToolbar roundedToolBar = new RoundedToolbar(shell, SWT.NONE);
-		roundedToolBar.setBounds(22, 21, 120, 21);
+
 		roundedToolBar.setMultiselection(true);
 		roundedToolBar.setBackground(grey1);
 		roundedToolBar.setCornerRadius(6);
 
-		RoundedToolItem item1 = new RoundedToolItem(roundedToolBar);
+		roundedToolBar.addControlListener(new ControlListener() {
+
+			@Override
+			public void controlResized(final ControlEvent e) {
+				System.out.println(roundedToolBar.getSize());
+
+			}
+
+			@Override
+			public void controlMoved(final ControlEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		final RoundedToolItem item1 = new RoundedToolItem(roundedToolBar);
 		item1.setSelection(true);
 		item1.setTooltipText("Multiple ballons");
 		item1.setWidth(40);
 		item1.setSelectionImage(iconBubble3w);
 		item1.setImage(iconBubble3b);
 
-		RoundedToolItem item2 = new RoundedToolItem(roundedToolBar);
+		final RoundedToolItem item2 = new RoundedToolItem(roundedToolBar);
 		item2.setTooltipText("Simple item");
 		item2.setSelectionImage(iconBubble1w);
 		item2.setImage(iconBubble1b);
 		item2.setWidth(40);
 
-		RoundedToolItem item3 = new RoundedToolItem(roundedToolBar);
+		final RoundedToolItem item3 = new RoundedToolItem(roundedToolBar);
 		item3.setTooltipText("Lot of lines\r\n\r\nThis item has a line-break");
 		item3.setSelectionImage(iconBubble2w);
 		item3.setImage(iconBubble2b);
@@ -112,22 +134,21 @@ public class RoundedToolbarSnippet {
 
 	private static void createSecondToolbar(final Shell shell) {
 		final RoundedToolbar roundedToolBar2 = new RoundedToolbar(shell, SWT.NONE);
-		roundedToolBar2.setBounds(159, 21, 200, 21);
 		roundedToolBar2.setCornerRadius(8);
 		roundedToolBar2.setBackground(grey1);
 
-		RoundedToolItem mailItem = new RoundedToolItem(roundedToolBar2);
+		final RoundedToolItem mailItem = new RoundedToolItem(roundedToolBar2);
 		mailItem.setSelectionImage(emailw);
 		mailItem.setImage(emailb);
 		mailItem.setWidth(32);
 		mailItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				System.out.println("Bar2/Button 1");
 			}
 		});
 
-		RoundedToolItem mailItemWithText = new RoundedToolItem(roundedToolBar2);
+		final RoundedToolItem mailItemWithText = new RoundedToolItem(roundedToolBar2);
 		mailItemWithText.setTextColorSelected(grey2);
 		mailItemWithText.setText("Mails");
 		mailItemWithText.setSelectionImage(emailw);
@@ -135,19 +156,19 @@ public class RoundedToolbarSnippet {
 		mailItemWithText.setWidth(65);
 		mailItemWithText.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				System.out.println("Bar2/Button 2");
 			}
 		});
 
-		RoundedToolItem itemJustText = new RoundedToolItem(roundedToolBar2);
+		final RoundedToolItem itemJustText = new RoundedToolItem(roundedToolBar2);
 		itemJustText.setTextColorSelected(grey2);
 		itemJustText.setText("Just text");
 		itemJustText.setWidth(100);
 		itemJustText.setAlignment(SWT.RIGHT);
 		itemJustText.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				System.out.println("Bar2/Button 3");
 			}
 		});

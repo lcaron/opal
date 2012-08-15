@@ -125,6 +125,8 @@ public class RoundedToolItem extends Item {
 		enabled = true;
 		alignment = SWT.CENTER;
 		selectionListeners = new ArrayList<SelectionListener>();
+		width = -1;
+		height = -1;
 	}
 
 	/**
@@ -162,7 +164,7 @@ public class RoundedToolItem extends Item {
 	 */
 	Point computeDefaultSize() {
 		final Point sizeOfTextAndImages = computeSizeOfTextAndImages();
-		return new Point(2 * MARGIN + sizeOfTextAndImages.x, sizeOfTextAndImages.y);
+		return new Point(2 * MARGIN + sizeOfTextAndImages.x, 2 * MARGIN + sizeOfTextAndImages.y);
 	}
 
 	private Point computeSizeOfTextAndImages() {
@@ -237,6 +239,7 @@ public class RoundedToolItem extends Item {
 		} else {
 			path.addRoundRectangleStraightRight(x, 0, width, toolbarHeight, parentToolbar.getCornerRadius(), parentToolbar.getCornerRadius());
 		}
+
 		gc.setClipping(path);
 
 		gc.setForeground(START_GRADIENT_COLOR);

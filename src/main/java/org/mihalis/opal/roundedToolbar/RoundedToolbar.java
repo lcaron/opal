@@ -145,14 +145,14 @@ public class RoundedToolbar extends Canvas {
 		items.add(roundedToolItem);
 	}
 
-	public Point computeMinSize() {
+	@Override
+	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
 		int width = 0, height = 0;
-		for (int i = 0; i < items.size(); i++) {
-			final Point itemSize = items.get(i).computeDefaultSize();
-			width += itemSize.x;
-			height = Math.max(height, itemSize.y);
+		for (final RoundedToolItem item : items) {
+			width += item.getWidth();
+			height = Math.max(height, item.getHeight());
 		}
-		return new Point(width, height);
+		return new Point(Math.max(width, wHint), Math.max(height, hHint));
 	}
 
 	/**

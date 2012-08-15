@@ -209,7 +209,17 @@ public class RoundedToolItem extends Item {
 	@Override
 	public void dispose() {
 		super.dispose();
+		selectionListeners.clear();
 		getParent().removeItem(this);
+		bounds = null;
+		disabledImage.dispose();
+		disabledImage = null;
+		selectionImage.dispose();
+		selectionImage = null;
+		textColor.dispose();
+		textColor = null;
+		textColorSelected.dispose();
+		textColorSelected = null;
 	}
 
 	void drawButton(final GC gc, final int x, final int toolbarHeight, final boolean isLast) {
@@ -229,41 +239,41 @@ public class RoundedToolItem extends Item {
 		xPosition += drawImage(x + xPosition);
 		drawText(x + xPosition);
 
-		bounds = new Rectangle(x, 0, width, toolbarHeight);
+		bounds = new Rectangle(x, 0, getWidth(), toolbarHeight);
 	}
 
 	private void drawBackground(final int x) {
 		final AdvancedPath path = new AdvancedPath(getDisplay());
-		if (isLast) {
-			path.addRoundRectangle(0, 0, getParent().getBounds().width, toolbarHeight, parentToolbar.getCornerRadius(), parentToolbar.getCornerRadius());
+		final boolean isFirst = getParent().indexOf(this) == 0;
+		if (isFirst) {
+			path.addRoundRectangleStraightRight(x, 0, getWidth(), toolbarHeight, parentToolbar.getCornerRadius(), parentToolbar.getCornerRadius());
+		} else if (isLast) {
+			path.addRoundRectangleStraightLeft(x, 0, getWidth(), toolbarHeight, parentToolbar.getCornerRadius(), parentToolbar.getCornerRadius());
 		} else {
-			path.addRoundRectangleStraightRight(x, 0, width, toolbarHeight, parentToolbar.getCornerRadius(), parentToolbar.getCornerRadius());
+			path.addRectangle(x, 0, getWidth(), toolbarHeight);
 		}
 
 		gc.setClipping(path);
 
 		gc.setForeground(START_GRADIENT_COLOR);
 		gc.setBackground(END_GRADIENT_COLOR);
-		gc.fillGradientRectangle(x, 0, width + parentToolbar.getCornerRadius(), toolbarHeight, true);
-
-		gc.setForeground(RoundedToolbar.BORDER_COLOR);
-		gc.drawRoundRectangle(0, 0, width - 1, height - 1, parentToolbar.getCornerRadius(), parentToolbar.getCornerRadius());
+		gc.fillGradientRectangle(x, 0, getWidth() + parentToolbar.getCornerRadius(), toolbarHeight, true);
 
 		gc.setClipping((Rectangle) null);
 	}
 
 	private void drawRightLine(final int x) {
 		gc.setForeground(RoundedToolbar.BORDER_COLOR);
-		gc.drawLine(x + width, 0, x + width, toolbarHeight);
+		gc.drawLine(x + getWidth(), 0, x + getWidth(), toolbarHeight);
 	}
 
 	private int computeStartingPosition(final int x) {
 		final int widthOfTextAndImage = computeSizeOfTextAndImages().x;
 		switch (alignment) {
 			case SWT.CENTER:
-				return (width - widthOfTextAndImage) / 2;
+				return (getWidth() - widthOfTextAndImage) / 2;
 			case SWT.RIGHT:
-				return width - widthOfTextAndImage - MARGIN;
+				return getWidth() - widthOfTextAndImage - MARGIN;
 			default:
 				return MARGIN;
 		}

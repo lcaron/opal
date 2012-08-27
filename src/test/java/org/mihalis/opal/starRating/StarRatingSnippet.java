@@ -13,6 +13,7 @@ package org.mihalis.opal.starRating;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -34,8 +35,13 @@ public class StarRatingSnippet {
 
 		createHorizontal(shell, true);
 		createHorizontal(shell, false);
-		createVertical(shell, true);
-		createVertical(shell, false);
+
+		final Composite composite = new Composite(shell, SWT.NONE);
+		composite.setLayout(new GridLayout(8, false));
+		composite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 2, 1));
+
+		createVertical(composite, true);
+		createVertical(composite, false);
 
 		shell.pack();
 		shell.open();
@@ -64,14 +70,14 @@ public class StarRatingSnippet {
 		}
 	}
 
-	private static void createVertical(final Shell shell, final boolean enabled) {
+	private static void createVertical(final Composite composite, final boolean enabled) {
 		for (final StarRating.SIZE size : StarRating.SIZE.values()) {
-			final Label label = new Label(shell, SWT.NONE);
+			final Label label = new Label(composite, SWT.NONE);
 			label.setText("Vertical " + (enabled ? "enabled" : "disabled") + " size=" + size.toString());
-			label.setLayoutData(new GridData(GridData.END, GridData.CENTER, false, false));
+			label.setLayoutData(new GridData(GridData.END, GridData.BEGINNING, false, false));
 
-			final StarRating sr = new StarRating(shell, SWT.VERTICAL | SWT.BORDER);
-			sr.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false));
+			final StarRating sr = new StarRating(composite, SWT.VERTICAL | SWT.BORDER);
+			sr.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
 			sr.setSizeOfStars(size);
 			sr.setEnabled(enabled);
 			sr.setMaxNumberOfStars(5 + (enabled ? 1 : 0));

@@ -810,8 +810,14 @@ public class HorizontalSpinner extends Composite {
 		if (this.getDigits() == 0) {
 			return String.valueOf(this.storedValue);
 		}
-		final String temp = String.valueOf(this.storedValue * Math.pow(10, -1 * this.getDigits()));
+		final StringBuilder unformatted = new StringBuilder(String.valueOf(this.storedValue * Math.pow(10, -1 * this.getDigits())));
+		for (int i = 0; i < digits; i++) {
+			unformatted.append("0");
+		}
+		final int position = unformatted.indexOf(".");
+		final String temp = unformatted.substring(0, position + 1 + digits);
 		return temp.replace('.', this.decimalFormatSeparator);
+
 	}
 
 	/**

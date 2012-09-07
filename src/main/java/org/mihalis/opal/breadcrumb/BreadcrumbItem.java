@@ -241,19 +241,25 @@ public class BreadcrumbItem extends Item {
 	 */
 	@Override
 	public void dispose() {
-		super.dispose();
 		getParent().removeItem(this);
-		selectionListeners.clear();
 		bounds = null;
-		disabledImage.dispose();
+		if (disabledImage != null) {
+			disabledImage.dispose();
+		}
 		disabledImage = null;
-		selectionImage.dispose();
+		if (selectionImage != null) {
+			selectionImage.dispose();
+		}
 		selectionImage = null;
-		textColor.dispose();
+		if (textColor != null) {
+			textColor.dispose();
+		}
 		textColor = null;
-		textColorSelected.dispose();
+		if (textColorSelected != null) {
+			textColorSelected.dispose();
+		}
 		textColorSelected = null;
-
+		super.dispose();
 	}
 
 	void drawButton(final GC gc, final int x, final int toolbarHeight, final boolean isLast) {

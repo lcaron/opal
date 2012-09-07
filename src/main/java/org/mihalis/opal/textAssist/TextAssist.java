@@ -18,6 +18,7 @@ import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -41,6 +42,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class TextAssist extends Composite {
 
+	private static final String SETTEXT_KEY = "org.mihalis.opal.textAssist.TextAssist.settext";
 	private final Text text;
 	private final Shell popup;
 	private final Table table;
@@ -89,7 +91,7 @@ public class TextAssist extends Composite {
 	 * @see Widget#getStyle
 	 */
 	public TextAssist(final Composite parent, final int style, final TextAssistContentProvider contentProvider) {
-		super(parent, style);
+		super(parent, SWT.NONE);
 		this.contentProvider = contentProvider;
 		this.contentProvider.setTextAssist(this);
 
@@ -138,28 +140,28 @@ public class TextAssist extends Composite {
 			@Override
 			public void handleEvent(final Event event) {
 				switch (event.keyCode) {
-				case SWT.ARROW_DOWN:
-					int index = (TextAssist.this.table.getSelectionIndex() + 1) % TextAssist.this.table.getItemCount();
-					TextAssist.this.table.setSelection(index);
-					event.doit = false;
-					break;
-				case SWT.ARROW_UP:
-					index = TextAssist.this.table.getSelectionIndex() - 1;
-					if (index < 0) {
-						index = TextAssist.this.table.getItemCount() - 1;
-					}
-					TextAssist.this.table.setSelection(index);
-					event.doit = false;
-					break;
-				case SWT.CR:
-					if (TextAssist.this.popup.isVisible() && TextAssist.this.table.getSelectionIndex() != -1) {
-						TextAssist.this.text.setText(TextAssist.this.table.getSelection()[0].getText());
+					case SWT.ARROW_DOWN:
+						int index = (TextAssist.this.table.getSelectionIndex() + 1) % TextAssist.this.table.getItemCount();
+						TextAssist.this.table.setSelection(index);
+						event.doit = false;
+						break;
+					case SWT.ARROW_UP:
+						index = TextAssist.this.table.getSelectionIndex() - 1;
+						if (index < 0) {
+							index = TextAssist.this.table.getItemCount() - 1;
+						}
+						TextAssist.this.table.setSelection(index);
+						event.doit = false;
+						break;
+					case SWT.CR:
+						if (TextAssist.this.popup.isVisible() && TextAssist.this.table.getSelectionIndex() != -1) {
+							TextAssist.this.text.setText(TextAssist.this.table.getSelection()[0].getText());
+							TextAssist.this.popup.setVisible(false);
+						}
+						break;
+					case SWT.ESC:
 						TextAssist.this.popup.setVisible(false);
-					}
-					break;
-				case SWT.ESC:
-					TextAssist.this.popup.setVisible(false);
-					break;
+						break;
 				}
 			}
 		};
@@ -172,6 +174,12 @@ public class TextAssist extends Composite {
 		return new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
+				if (text.getData(SETTEXT_KEY) != null && Boolean.TRUE.equals(text.getData(SETTEXT_KEY))) {
+					text.setData(SETTEXT_KEY, null);
+					return;
+				}
+				text.setData(SETTEXT_KEY, null);
+
 				final String string = TextAssist.this.text.getText();
 				if (string.length() == 0) {
 					TextAssist.this.popup.setVisible(false);
@@ -226,11 +234,11 @@ public class TextAssist extends Composite {
 		return new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				/* async is needed to wait until focus reaches its new Control */
+				/* Async is needed to wait until focus reaches its new Control */
 				TextAssist.this.getDisplay().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						if (TextAssist.this.getDisplay().isDisposed()) {
+						if (TextAssist.this.isDisposed() || TextAssist.this.getDisplay().isDisposed()) {
 							return;
 						}
 						final Control control = TextAssist.this.getDisplay().getFocusControl();
@@ -244,11 +252,38 @@ public class TextAssist extends Composite {
 	}
 
 	/**
+	 * @see org.eclipse.swt.widgets.Control#getBackground()
+	 */
+	@Override
+	public Color getBackground() {
+		checkWidget();
+		return text.getBackground();
+	}
+
+	/**
 	 * @return the contentProvider
 	 */
 	public TextAssistContentProvider getContentProvider() {
 		checkWidget();
 		return this.contentProvider;
+	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Control#getForeground()
+	 */
+	@Override
+	public Color getForeground() {
+		checkWidget();
+		return super.getForeground();
+	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Text#setBackground(org.eclipse.swt.graphics.Color)
+	 */
+	@Override
+	public void setBackground(final Color color) {
+		checkWidget();
+		this.text.setBackground(color);
 	}
 
 	/**
@@ -273,6 +308,15 @@ public class TextAssist extends Composite {
 	public void setNumberOfLines(final int numberOfLines) {
 		checkWidget();
 		this.numberOfLines = numberOfLines;
+	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Text#addListener(int,org.eclipse.swt.widgets.Listener)
+	 */
+	@Override
+	public void addListener(final int eventType, final Listener listener) {
+		checkWidget();
+		this.text.addListener(eventType, listener);
 	}
 
 	/**
@@ -403,6 +447,15 @@ public class TextAssist extends Composite {
 	public boolean getEditable() {
 		checkWidget();
 		return this.text.getEditable();
+	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Control#getEnabled()
+	 */
+	@Override
+	public boolean getEnabled() {
+		checkWidget();
+		return super.getEnabled();
 	}
 
 	/**
@@ -590,6 +643,15 @@ public class TextAssist extends Composite {
 	}
 
 	/**
+	 * @see org.eclipse.swt.widgets.Text#setEnabled(boolean)
+	 */
+	@Override
+	public void setEnabled(final boolean value) {
+		checkWidget();
+		this.text.setEnabled(value);
+	}
+
+	/**
 	 * @see org.eclipse.swt.widgets.Text#setFont(org.eclipse.swt.graphics.Font)
 	 */
 	@Override
@@ -597,6 +659,15 @@ public class TextAssist extends Composite {
 		checkWidget();
 		this.text.setFont(font);
 		this.table.setFont(font);
+	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Text#setForeground(org.eclipse.swt.graphics.Color)
+	 */
+	@Override
+	public void setForeground(final Color color) {
+		checkWidget();
+		this.text.setForeground(color);
 	}
 
 	/**
@@ -661,6 +732,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setText(final String text) {
 		checkWidget();
+		this.text.setData(SETTEXT_KEY, Boolean.TRUE);
 		this.text.setText(text);
 	}
 

@@ -280,7 +280,7 @@ public class DualList extends Composite {
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (index <= 0 || index >= this.items.size()) {
+		if (index < 0 || index >= this.items.size()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.items.add(index, item);
@@ -364,7 +364,7 @@ public class DualList extends Composite {
 	 */
 	public void deselect(final int index) {
 		this.checkWidget();
-		if (index <= 0 || index >= this.items.size()) {
+		if (index < 0 || index >= this.items.size()) {
 			return;
 		}
 		this.fireEvents(this.selection.remove(index));
@@ -399,7 +399,7 @@ public class DualList extends Composite {
 		final List<DLItem> toBeRemoved = new ArrayList<DLItem>();
 
 		for (final int index : indices) {
-			if (index <= 0 || index >= this.items.size()) {
+			if (index < 0 || index >= this.items.size()) {
 				continue;
 			}
 			toBeRemoved.add(this.selection.get(index));
@@ -440,7 +440,7 @@ public class DualList extends Composite {
 		final List<DLItem> toBeRemoved = new ArrayList<DLItem>();
 
 		for (int index = start; index <= end; index++) {
-			if (index <= 0 || index >= this.items.size()) {
+			if (index < 0 || index >= this.items.size()) {
 				continue;
 			}
 			toBeRemoved.add(this.selection.get(index));
@@ -492,7 +492,7 @@ public class DualList extends Composite {
 
 	public DLItem getItem(final int index) {
 		this.checkWidget();
-		if (index <= 0 || index >= this.items.size()) {
+		if (index < 0 || index >= this.items.size()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		return this.items.get(index);
@@ -639,7 +639,7 @@ public class DualList extends Composite {
 	 */
 	public void remove(final int index) {
 		this.checkWidget();
-		if (index <= 0 || index >= this.items.size()) {
+		if (index < 0 || index >= this.items.size()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.items.remove(index);
@@ -667,7 +667,7 @@ public class DualList extends Composite {
 	public void remove(final int[] indices) {
 		this.checkWidget();
 		for (final int index : indices) {
-			if (index <= 0 || index >= this.items.size()) {
+			if (index < 0 || index >= this.items.size()) {
 				SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 			}
 			this.items.remove(index);
@@ -699,8 +699,8 @@ public class DualList extends Composite {
 		if (start > end) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
-		for (int index = start; index <= end; index++) {
-			if (index <= 0 || index >= this.items.size()) {
+		for (int index = start; index < end; index++) {
+			if (index < 0 || index >= this.items.size()) {
 				SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 			}
 			this.items.remove(index);
@@ -770,7 +770,7 @@ public class DualList extends Composite {
 	 */
 	public void select(final int index) {
 		this.checkWidget();
-		if (index <= 0 || index >= this.items.size()) {
+		if (index < 0 || index >= this.items.size()) {
 			return;
 		}
 		this.selection.add(this.items.get(index));
@@ -806,7 +806,7 @@ public class DualList extends Composite {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 		for (final int index : indices) {
-			if (index <= 0 || index >= this.items.size()) {
+			if (index < 0 || index >= this.items.size()) {
 				continue;
 			}
 			this.selection.add(this.items.get(index));
@@ -843,7 +843,7 @@ public class DualList extends Composite {
 			SWT.error(SWT.ERROR_INVALID_RANGE);
 		}
 		for (int index = start; index <= end; index++) {
-			if (index <= 0 || index >= this.items.size()) {
+			if (index < 0 || index >= this.items.size()) {
 				continue;
 			}
 			this.selection.add(this.items.get(index));
@@ -950,7 +950,7 @@ public class DualList extends Composite {
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (index <= 0 || index >= this.items.size()) {
+		if (index < 0 || index >= this.items.size()) {
 			SWT.error(SWT.ERROR_INVALID_RANGE);
 		}
 		this.items.set(index, item);

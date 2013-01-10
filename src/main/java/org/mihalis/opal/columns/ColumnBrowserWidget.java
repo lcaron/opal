@@ -268,7 +268,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 			final Iterator<Table> it = this.columns.iterator();
 			while (it.hasNext()) {
 				final Table t = it.next();
-				if (i >= 3) {
+				if (i > selectedColumn) {
 					t.dispose();
 					it.remove();
 					// Don't know why, it's not working if I do not include this
@@ -278,8 +278,8 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 				i++;
 			}
 
-			if (selectedColumn != this.columns.size() - 1) {
-				this.columns.get(selectedColumn + 1).setData(c);
+		 	if (selectedColumn != this.columns.size() - 1) {
+		 		this.columns.get(selectedColumn+1).setData(c);
 			} else {
 				this.createTable();
 				this.columns.get(this.columns.size() - 1).setData(c);

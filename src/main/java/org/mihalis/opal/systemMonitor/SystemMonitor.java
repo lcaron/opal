@@ -95,6 +95,48 @@ public class SystemMonitor extends Canvas {
 	}
 
 	/**
+	 * Constructs a new instance of this class given its parent, a style
+	 * value describing its behavior and appearance. Also for a given
+	 * grid size and refresh interval
+	 * <p>
+	 * The style value is either one of the style constants defined in class
+	 * <code>SWT</code> which is applicable to instances of this class, or must
+	 * be built by <em>bitwise OR</em>'in together (that is, using the
+	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
+	 * style constants. The class description lists the style constants that are
+	 * applicable to the class. Style bits are also inherited from super
+	 * classes.
+	 * </p>
+	 * 
+	 * @param parent a composite control which will be the parent of the new
+	 *            instance (cannot be null)
+	 * @param style the style of control to construct
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the parent</li>
+	 *                </ul>
+	 * 
+	 */
+	public SystemMonitor(final Composite parent, final int style,final int gridSize,final int refeshTime) {
+		super(parent, style | SWT.DOUBLE_BUFFERED);
+		this.samples = new LinkedHashMap<String, SampleWrapper>();
+		this.captionVisible = true;
+		this.borderColor = new Color(getDisplay(), 96, 96, 96);
+		this.gridColor = new Color(getDisplay(), 89, 89, 89);
+		this.gridColorBackground = new Color(getDisplay(), 50, 50, 50);
+		this.gridSize = gridSize;
+		this.refreshTime = refeshTime;
+		this.keepRunning = true;
+
+		createListeners();
+		launchDataCollecting();
+	}
+
+	/**
 	 * Create the listeners
 	 */
 	private void createListeners() {

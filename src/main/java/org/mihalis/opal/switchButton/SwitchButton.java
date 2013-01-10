@@ -487,7 +487,7 @@ public class SwitchButton extends Canvas {
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
 		this.checkWidget();
 		boolean disposeGC = false;
-		if (this.gc == null) {
+		if (this.gc == null || this.gc.isDisposed()) {
 			this.gc = new GC(this);
 			disposeGC = true;
 		}

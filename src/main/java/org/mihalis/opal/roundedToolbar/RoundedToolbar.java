@@ -51,9 +51,13 @@ public class RoundedToolbar extends Canvas {
 	private final List<RoundedToolItem> items;
 	private boolean multiSelection;
 	private int cornerRadius;
-	private static Color START_GRADIENT_COLOR = SWTGraphicUtil.createDisposableColor(245, 245, 245);
-	private static Color END_GRADIENT_COLOR = SWTGraphicUtil.createDisposableColor(185, 185, 185);
+	private static Color START_GRADIENT_COLOR_DEFAULT = SWTGraphicUtil.createDisposableColor(245, 245, 245);
+	private static Color END_GRADIENT_COLOR_DEFAULT = SWTGraphicUtil.createDisposableColor(185, 185, 185);
 	static Color BORDER_COLOR = SWTGraphicUtil.createDisposableColor(66, 66, 66);
+	
+	private Color START_GRADIENT_COLOR = START_GRADIENT_COLOR_DEFAULT;
+	private Color END_GRADIENT_COLOR = END_GRADIENT_COLOR_DEFAULT;
+
 
 	/**
 	 * Constructs a new instance of this class given its parent
@@ -86,6 +90,42 @@ public class RoundedToolbar extends Canvas {
 		items = new ArrayList<RoundedToolItem>();
 		cornerRadius = 2;
 		addListeners();
+	}
+
+	/**
+	 * Constructs a new instance of this class given its parent,
+	 * a style value describing its behavior and appearance and colors
+	 * to specify the start and end gradient of the rounded corner
+	 * <p>
+	 * The style value is either one of the style constants defined in
+	 * class <code>SWT</code> which is applicable to instances of this
+	 * class, or must be built by <em>bitwise OR</em>'ing together 
+	 * (that is, using the <code>int</code> "|" operator) two or more
+	 * of those <code>SWT</code> style constants. The class description
+	 * lists the style constants that are applicable to the class.
+	 * Style bits are also inherited from superclasses.
+	 * </p>
+	 *
+	 * @param parent a composite control which will be the parent of the new instance (cannot be null)
+	 * @param style the style of control to construct
+	 *
+	 * @exception IllegalArgumentException <ul>
+	 *    <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+	 * </ul>
+	 * @exception SWTException <ul>
+	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
+	 *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
+	 * </ul>
+	 *
+	 * @see Widget#getStyle()
+	 */
+	public RoundedToolbar(final Composite parent, final int style,Color startGradientColor,Color endGradientColor) {
+		super(parent, style | SWT.DOUBLE_BUFFERED);
+		items = new ArrayList<RoundedToolItem>();
+		cornerRadius = 2;
+		addListeners();
+		START_GRADIENT_COLOR=startGradientColor;
+		END_GRADIENT_COLOR=endGradientColor;
 	}
 
 	private void addListeners() {

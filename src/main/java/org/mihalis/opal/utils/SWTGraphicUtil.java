@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.mihalis.opal.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -76,6 +77,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Create a color that is disposed automatically
+	 * 
 	 * @param r red component
 	 * @param g green component
 	 * @param b blue component
@@ -103,13 +105,16 @@ public class SWTGraphicUtil {
 	 * @see org.eclipse.swt.graphics.Image
 	 */
 	public static Image createImage(final String fileName) {
-		return new Image(Display.getCurrent(), SWTGraphicUtil.class.getClassLoader().getResourceAsStream(fileName));
+		if (new File(fileName).exists()) {
+			return new Image(Display.getCurrent(), fileName);
+		} else {
+			return new Image(Display.getCurrent(), SWTGraphicUtil.class.getClassLoader().getResourceAsStream(fileName));
+		}
 	}
 
 	/**
 	 * Create a reflected image of a source 
-	 * Inspired by Daniel Spiewak
-	 * (http://www.eclipsezone.com/eclipse/forums/t91013.html)
+	 * Inspired by Daniel Spiewak (http://www.eclipsezone.com/eclipse/forums/t91013.html)
 	 * 
 	 * @param source source to be reflected
 	 * @return the source image with a reflection
@@ -271,8 +276,23 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Apply a very basic HTML formating to a text stored in a StyledText
-	 * widget. Supported tags are <B>, <I>, <U> and <BR/>
+	 * @param shell
+	 * @return the bounds of the monitor on which the shell is running
+	 */
+	public static Rectangle getBoundsOfMonitorThatRuns(final Shell shell) {
+		for (final Monitor monitor : shell.getDisplay().getMonitors()) {
+			final Rectangle monitorBounds = monitor.getBounds();
+			final Rectangle shellBounds = shell.getBounds();
+			if (monitorBounds.contains(shellBounds.x, shellBounds.y)) {
+				return monitorBounds;
+			}
+		}
+		final Monitor primary = shell.getDisplay().getPrimaryMonitor();
+		return primary.getBounds();
+	}
+
+	/**
+	 * Apply a very basic HTML formating to a text stored in a StyledText widget. Supported tags are <B>, <I>, <U> and <BR/>
 	 * 
 	 * @param styledText styled text that contains an HTML text
 	 */
@@ -285,10 +305,8 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * @param originalImageData The ImageData to be average blurred.
-	 * Transparency information will be ignored.
-	 * @param radius the number of radius pixels to consider when blurring
-	 * image.
+	 * @param originalImageData The ImageData to be average blurred. Transparency information will be ignored.
+	 * @param radius the number of radius pixels to consider when blurring image.
 	 * @return A blurred copy of the image data, or null if an error occured.
 	 * @author Nicholas Rajendram
 	 * @see http://www.jasonwaltman.com/thesis/filter-blur.html
@@ -428,23 +446,43 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Enable/disable all widgets of a control
+	 * Enable all widgets of a control
 	 * 
 	 * @param control control to enable/disable
 	 * @param enable <code>true</code> to enable, <code>false</code> to disable
 	 */
-	public static void enable(final Control control, final boolean enable) {
+	public static void enable(final Control control) {
 		if (control instanceof Composite) {
 			for (final Control c : ((Composite) control).getChildren()) {
-				enable(c, enable);
+				enable(c);
 			}
+		}
+		boolean enable = true;
+		final Boolean previousState = (Boolean) control.getData(SWTGraphicUtil.class.toString() + "_enableState");
+		if (previousState != null) {
+			enable = previousState;
 		}
 		control.setEnabled(enable);
 	}
 
 	/**
-	 * Build a font from a given control. Useful if we just want a bold label
-	 * for example
+	 * Disable all widgets of a control
+	 * 
+	 * @param control control to enable/disable
+	 * @param enable <code>true</code> to enable, <code>false</code> to disable
+	 */
+	public static void disable(final Control control) {
+		if (control instanceof Composite) {
+			for (final Control c : ((Composite) control).getChildren()) {
+				disable(c);
+			}
+		}
+		control.setData(SWTGraphicUtil.class.toString() + "_enableState", control.isEnabled());
+		control.setEnabled(false);
+	}
+
+	/**
+	 * Build a font from a given control. Useful if we just want a bold label for example
 	 * 
 	 * @param control control that handle the default font
 	 * @param style new style
@@ -474,5 +512,13 @@ public class SWTGraphicUtil {
 			return temp;
 		}
 		return new Font(control.getDisplay(), fontData[0].getName(), size, style);
+	}
+
+	/**
+	 * @return <code>true</code> if the operating system is MacOS, false otherwise
+	 */
+	public static boolean isMacOS() {
+		final String OS = System.getProperty("os.name").toLowerCase();
+		return OS.indexOf("mac") >= 0;
 	}
 }

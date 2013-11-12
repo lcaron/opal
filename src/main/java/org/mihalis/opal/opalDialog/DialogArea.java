@@ -59,14 +59,22 @@ abstract class DialogArea {
 	 * @return the normal font used by the dialog box
 	 */
 	protected Font getNormalFont() {
-		return getFont("Segoe UI", 9, SWT.NONE);
+		if (SWTGraphicUtil.isMacOS()) {
+			return getFont("Lucida Grande", 11, SWT.NONE);
+		} else {
+			return getFont("Segoe UI", 9, SWT.NONE);
+		}
 	}
 
 	/**
 	 * @return the bigger font used by the dialog box
 	 */
 	protected Font getBiggerFont() {
-		return getFont("Segoe UI", 11, SWT.NONE);
+		if (SWTGraphicUtil.isMacOS()) {
+			return getFont("Lucida Grande", 13, SWT.NONE);
+		} else {
+			return getFont("Segoe UI", 11, SWT.NONE);
+		}
 	}
 
 	/**

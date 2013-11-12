@@ -314,6 +314,8 @@ public class OpalDialogSnippet {
 			@Override
 			public void run() {
 				dialog.getMessageArea().setProgressBarValue(counter[0]);
+				dialog.getMessageArea().setText("Location : from 'Others' to 'Others'<br/>" + //
+						"File Name : <b>photo" + counter[0] + ".jpg</b>");
 				counter[0] += 10;
 				if (counter[0] < 120) {
 					Display.getCurrent().timerExec(500, this);

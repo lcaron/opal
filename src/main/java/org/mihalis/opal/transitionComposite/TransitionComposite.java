@@ -22,8 +22,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 /**
- * Instances of this class provide a multi-part composite. You can perform
- * transitions when you move from one part to another
+ * Instances of this class provide a multi-part composite. You can perform transitions when you move from one part to another
  * <p>
  * <dl>
  * <dt><b>Styles:</b></dt>
@@ -40,27 +39,20 @@ public class TransitionComposite extends Composite {
 	private TRANSITIONS transition = TRANSITIONS.NONE;
 
 	/**
-	 * Constructs a new instance of this class given its parent and a style
-	 * value describing its behavior and appearance.
+	 * Constructs a new instance of this class given its parent and a style value describing its behavior and appearance.
 	 * <p>
-	 * The style value is either one of the style constants defined in class
-	 * <code>SWT</code> which is applicable to instances of this class, or must
-	 * be built by <em>bitwise OR</em>'ing together (that is, using the
-	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
-	 * style constants. The class description lists the style constants that are
-	 * applicable to the class. Style bits are also inherited from superclasses.
+	 * The style value is either one of the style constants defined in class <code>SWT</code> which is applicable to instances of this class, or must be built by <em>bitwise OR</em>'ing together (that is, using the <code>int</code> "|" operator) two or
+	 * more of those <code>SWT</code> style constants. The class description lists the style constants that are applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
 	 * 
-	 * @param parent a composite control which will be the parent of the new
-	 *            instance (cannot be null)
+	 * @param parent a composite control which will be the parent of the new instance (cannot be null)
 	 * @param style the style of control to construct
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the parent</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
 	 *                </ul>
 	 * 
 	 */
@@ -82,19 +74,27 @@ public class TransitionComposite extends Composite {
 	 * @param control control to add
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void addControl(final Control control) {
 		checkWidget();
-		this.controls.add(control);
-		if (this.controls.size() == 1) {
-			control.setVisible(true);
-		} else {
-			control.setVisible(false);
+		if (!control.isDisposed()) {
+			this.controls.add(control);
+
+			if (this.controls.size() == 1) {
+				control.setVisible(true);
+			} else {
+				control.setVisible(false);
+			}
+
+			control.addListener(SWT.Dispose, new Listener() {
+				@Override
+				public void handleEvent(final Event event) {
+					TransitionComposite.this.controls.remove(event.widget);
+				}
+			});
 		}
 	}
 
@@ -118,10 +118,8 @@ public class TransitionComposite extends Composite {
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public TRANSITIONS getTransition() {
@@ -133,10 +131,8 @@ public class TransitionComposite extends Composite {
 	 * Move selection to the first control
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void moveToFirst() {
@@ -148,10 +144,8 @@ public class TransitionComposite extends Composite {
 	 * Move selection to the last control
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void moveToLast() {
@@ -163,10 +157,8 @@ public class TransitionComposite extends Composite {
 	 * Move selection to the next control
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void moveToNext() {
@@ -182,10 +174,8 @@ public class TransitionComposite extends Composite {
 	 * Move selection to the previous control
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void moveToPrevious() {
@@ -203,10 +193,8 @@ public class TransitionComposite extends Composite {
 	 * @param index index of the new selection
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void setSelection(final int index) {
@@ -237,10 +225,8 @@ public class TransitionComposite extends Composite {
 	 * @param control control newly selected
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void setSelection(final Control control) {
@@ -259,10 +245,8 @@ public class TransitionComposite extends Composite {
 	 * @param transition new transition
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 

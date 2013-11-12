@@ -71,6 +71,7 @@ public class SnippetCheckBoxGroup {
 
 		final Text txtPassword = new Text(content, SWT.PASSWORD);
 		txtPassword.setText("password");
+		txtPassword.setEnabled(false);
 		txtPassword.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
 
 		// Open the shell

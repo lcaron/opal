@@ -34,10 +34,7 @@ import org.eclipse.swt.widgets.Widget;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
- * Instances of this class provide an etched border with a title and a checkbox.
- * If the checkbox is checked, the content of the composite is enabled. If the
- * checkbox is unchecked, the content of the composite is disabled, thus not
- * editable.
+ * Instances of this class provide an etched border with a title and a checkbox. If the checkbox is checked, the content of the composite is enabled. If the checkbox is unchecked, the content of the composite is disabled, thus not editable.
  * <p>
  * <dl>
  * <dt><b>Styles:</b></dt>
@@ -54,27 +51,20 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 	private boolean transparent = false;
 
 	/**
-	 * Constructs a new instance of this class given its parent and a style
-	 * value describing its behavior and appearance.
+	 * Constructs a new instance of this class given its parent and a style value describing its behavior and appearance.
 	 * <p>
-	 * The style value is either one of the style constants defined in class
-	 * <code>SWT</code> which is applicable to instances of this class, or must
-	 * be built by <em>bitwise OR</em>'ing together (that is, using the
-	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
-	 * style constants. The class description lists the style constants that are
-	 * applicable to the class. Style bits are also inherited from superclasses.
+	 * The style value is either one of the style constants defined in class <code>SWT</code> which is applicable to instances of this class, or must be built by <em>bitwise OR</em>'ing together (that is, using the <code>int</code> "|" operator) two or
+	 * more of those <code>SWT</code> style constants. The class description lists the style constants that are applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
 	 * 
-	 * @param parent a widget which will be the parent of the new instance
-	 *            (cannot be null)
+	 * @param parent a widget which will be the parent of the new instance (cannot be null)
 	 * @param style the style of widget to construct
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the parent</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
 	 *                </ul>
 	 * 
 	 * @see Composite#Composite(Composite, int)
@@ -157,34 +147,24 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 	 */
 	public void activate() {
 		this.button.setSelection(true);
-		SWTGraphicUtil.enable(this.content, true);
+		SWTGraphicUtil.enable(this.content);
 	}
 
 	/**
-	 * Adds the listener to the collection of listeners who will be notified
-	 * when the user changes the receiver's selection, by sending it one of the
-	 * messages defined in the <code>SelectionListener</code> interface.
+	 * Adds the listener to the collection of listeners who will be notified when the user changes the receiver's selection, by sending it one of the messages defined in the <code>SelectionListener</code> interface.
 	 * <p>
-	 * When <code>widgetSelected</code> is called, the item field of the event
-	 * object is valid. If the receiver has the <code>SWT.CHECK</code> style and
-	 * the check selection changes, the event object detail field contains the
-	 * value <code>SWT.CHECK</code>. <code>widgetDefaultSelected</code> is
-	 * typically called when an item is double-clicked. The item field of the
-	 * event object is valid for default selection, but the detail field is not
-	 * used.
+	 * When <code>widgetSelected</code> is called, the item field of the event object is valid. If the receiver has the <code>SWT.CHECK</code> style and the check selection changes, the event object detail field contains the value <code>SWT.CHECK</code>.
+	 * <code>widgetDefaultSelected</code> is typically called when an item is double-clicked. The item field of the event object is valid for default selection, but the detail field is not used.
 	 * </p>
 	 * 
-	 * @param listener the listener which should be notified when the user
-	 *            changes the receiver's selection
+	 * @param listener the listener which should be notified when the user changes the receiver's selection
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 * 
 	 * @see SelectionListener
@@ -201,12 +181,11 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 	 */
 	public void deactivate() {
 		this.button.setSelection(false);
-		SWTGraphicUtil.enable(this.content, false);
+		SWTGraphicUtil.disable(this.content);
 	}
 
 	/**
-	 * @return <code>true</code> if the content is activated, <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if the content is activated, <code>false</code> otherwise
 	 */
 	public boolean isActivated() {
 		return this.button.getSelection();
@@ -221,8 +200,7 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 	}
 
 	/**
-	 * Removes the listener from the collection of listeners who will be
-	 * notified when the user changes the receiver's selection.
+	 * Removes the listener from the collection of listeners who will be notified when the user changes the receiver's selection.
 	 * 
 	 * @param listener the listener which should no longer be notified
 	 * 
@@ -230,10 +208,8 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 * 
 	 * @see SelectionListener

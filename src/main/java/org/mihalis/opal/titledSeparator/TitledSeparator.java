@@ -134,18 +134,19 @@ public class TitledSeparator extends Composite {
 	 */
 	private void createContent() {
 		switch (this.alignment) {
-		case SWT.CENTER:
-			createSeparator();
-			createTitle();
-			break;
-		case SWT.LEFT:
-			createTitle();
-			createSeparator();
-			break;
-		default:
-			createSeparator();
-			createTitle();
-			break;
+			case SWT.CENTER:
+				createSeparator();
+				createTitle();
+				createSeparator();
+				break;
+			case SWT.LEFT:
+				createTitle();
+				createSeparator();
+				break;
+			default:
+				createSeparator();
+				createTitle();
+				break;
 		}
 
 	}

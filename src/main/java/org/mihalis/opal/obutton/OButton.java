@@ -58,29 +58,23 @@ public class OButton extends Canvas {
 	private boolean clicked;
 
 	/**
-	 * Constructs a new instance of this class given its parent
-	 * and a style value describing its behavior and appearance.
+	 * Constructs a new instance of this class given its parent and a style value describing its behavior and appearance.
 	 * <p>
-	 * The style value is either one of the style constants defined in
-	 * class <code>SWT</code> which is applicable to instances of this
-	 * class, or must be built by <em>bitwise OR</em>'ing together 
-	 * (that is, using the <code>int</code> "|" operator) two or more
-	 * of those <code>SWT</code> style constants. The class description
-	 * lists the style constants that are applicable to the class.
-	 * Style bits are also inherited from superclasses.
+	 * The style value is either one of the style constants defined in class <code>SWT</code> which is applicable to instances of this class, or must be built by <em>bitwise OR</em>'ing together (that is, using the <code>int</code> "|" operator) two or
+	 * more of those <code>SWT</code> style constants. The class description lists the style constants that are applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
-	 *
+	 * 
 	 * @param parent a composite control which will be the parent of the new instance (cannot be null)
 	 * @param style the style of control to construct
-	 *
+	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
-	 * </ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+	 *                </ul>
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
-	 *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
-	 * </ul>
-	 *
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
+	 *                <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
+	 *                </ul>
+	 * 
 	 * @see SWT#ARROW
 	 * @see SWT#CHECK
 	 * @see SWT#PUSH
@@ -165,6 +159,15 @@ public class OButton extends Canvas {
 					case SWT.Paint:
 						onPaint(event);
 						break;
+					case SWT.KeyDown:
+						if (event.keyCode == SWT.TAB) {
+							if (event.stateMask == SWT.SHIFT) {
+								OButton.this.traverse(SWT.TRAVERSE_TAB_PREVIOUS);
+							} else {
+								OButton.this.traverse(SWT.TRAVERSE_TAB_NEXT);
+							}
+						}
+						break;
 					case SWT.Dispose:
 						OButton.this.buttonRenderer.dispose();
 						break;
@@ -216,25 +219,21 @@ public class OButton extends Canvas {
 	}
 
 	/**
-	 * Adds the listener to the collection of listeners who will
-	 * be notified when the control is selected by the user, by sending
-	 * it one of the messages defined in the <code>SelectionListener</code>
-	 * interface.
+	 * Adds the listener to the collection of listeners who will be notified when the control is selected by the user, by sending it one of the messages defined in the <code>SelectionListener</code> interface.
 	 * <p>
-	 * <code>widgetSelected</code> is called when the control is selected by the user.
-	 * <code>widgetDefaultSelected</code> is not called.
+	 * <code>widgetSelected</code> is called when the control is selected by the user. <code>widgetDefaultSelected</code> is not called.
 	 * </p>
-	 *
+	 * 
 	 * @param listener the listener which should be notified
-	 *
+	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
-	 * </ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+	 *                </ul>
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
+	 * 
 	 * @see SelectionListener
 	 * @see #removeSelectionListener
 	 * @see SelectionEvent
@@ -258,20 +257,15 @@ public class OButton extends Canvas {
 	}
 
 	/**
-	 * Returns a value which describes the position of the
-	 * text or image in the receiver. The value will be one of
-	 * <code>LEFT</code>, <code>RIGHT</code> or <code>CENTER</code>
-	 * unless the receiver is an <code>ARROW</code> button, in 
-	 * which case, the alignment will indicate the direction of
-	 * the arrow (one of <code>LEFT</code>, <code>RIGHT</code>, 
-	 * <code>UP</code> or <code>DOWN</code>).
-	 *
-	 * @return the alignment 
-	 *
+	 * Returns a value which describes the position of the text or image in the receiver. The value will be one of <code>LEFT</code>, <code>RIGHT</code> or <code>CENTER</code> unless the receiver is an <code>ARROW</code> button, in which case, the
+	 * alignment will indicate the direction of the arrow (one of <code>LEFT</code>, <code>RIGHT</code>, <code>UP</code> or <code>DOWN</code>).
+	 * 
+	 * @return the alignment
+	 * 
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int getAlignment() {
 		checkWidget();
@@ -305,15 +299,14 @@ public class OButton extends Canvas {
 	}
 
 	/**
-	 * Returns the receiver's image if it has one, or null
-	 * if it does not.
-	 *
+	 * Returns the receiver's image if it has one, or null if it does not.
+	 * 
 	 * @return the receiver's image
-	 *
+	 * 
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public Image getImage() {
 		checkWidget();
@@ -321,15 +314,14 @@ public class OButton extends Canvas {
 	}
 
 	/**
-	 * Returns <code>true</code> if the receiver is selected,
-	 * and false otherwise.
-	 *
+	 * Returns <code>true</code> if the receiver is selected, and false otherwise.
+	 * 
 	 * @return the selection state
-	 *
+	 * 
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public boolean getSelection() {
 		checkWidget();
@@ -337,16 +329,14 @@ public class OButton extends Canvas {
 	}
 
 	/**
-	 * Returns the receiver's text, which will be an empty
-	 * string if it has never been set or if the receiver is
-	 * an <code>ARROW</code> button.
-	 *
+	 * Returns the receiver's text, which will be an empty string if it has never been set or if the receiver is an <code>ARROW</code> button.
+	 * 
 	 * @return the receiver's text
-	 *
+	 * 
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public String getText() {
 		checkWidget();
@@ -372,19 +362,18 @@ public class OButton extends Canvas {
 	}
 
 	/**
-	 * Removes the listener from the collection of listeners who will
-	 * be notified when the control is selected by the user.
-	 *
+	 * Removes the listener from the collection of listeners who will be notified when the control is selected by the user.
+	 * 
 	 * @param listener the listener which should no longer be notified
-	 *
+	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
-	 * </ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+	 *                </ul>
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
+	 * 
 	 * @see SelectionListener
 	 * @see #addSelectionListener
 	 */
@@ -397,20 +386,15 @@ public class OButton extends Canvas {
 	}
 
 	/**
-	 * Controls how text, images and arrows will be displayed
-	 * in the receiver. The argument should be one of
-	 * <code>LEFT</code>, <code>RIGHT</code> or <code>CENTER</code>
-	 * unless the receiver is an <code>ARROW</code> button, in 
-	 * which case, the argument indicates the direction of
-	 * the arrow (one of <code>LEFT</code>, <code>RIGHT</code>, 
-	 * <code>UP</code> or <code>DOWN</code>).
-	 *
-	 * @param alignment the new alignment 
-	 *
+	 * Controls how text, images and arrows will be displayed in the receiver. The argument should be one of <code>LEFT</code>, <code>RIGHT</code> or <code>CENTER</code> unless the receiver is an <code>ARROW</code> button, in which case, the argument
+	 * indicates the direction of the arrow (one of <code>LEFT</code>, <code>RIGHT</code>, <code>UP</code> or <code>DOWN</code>).
+	 * 
+	 * @param alignment the new alignment
+	 * 
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public void setAlignment(final int alignment) {
 		checkWidget();
@@ -446,18 +430,17 @@ public class OButton extends Canvas {
 	}
 
 	/**
-	 * Sets the receiver's image to the argument, which may be
-	 * <code>null</code> indicating that no image should be displayed.
-
+	 * Sets the receiver's image to the argument, which may be <code>null</code> indicating that no image should be displayed.
+	 * 
 	 * @param image the image to display on the receiver (may be <code>null</code>)
-	 *
+	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_INVALID_ARGUMENT - if the image has been disposed</li>
-	 * </ul> 
+	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been disposed</li>
+	 *                </ul>
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public void setImage(final Image image) {
 		checkWidget();
@@ -469,13 +452,13 @@ public class OButton extends Canvas {
 
 	/**
 	 * Sets the selection state of the receiver, if it is of type <code>TOGGLE</code>.
-	 *
+	 * 
 	 * @param selected the new selection state
-	 *
+	 * 
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public void setSelection(final boolean selected) {
 		checkWidget();
@@ -484,16 +467,16 @@ public class OButton extends Canvas {
 
 	/**
 	 * Sets the receiver's text.
-
+	 * 
 	 * @param string the new text
-	 *
+	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the text is null</li>
-	 * </ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the text is null</li>
+	 *                </ul>
 	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public void setText(final String string) {
 		checkWidget();

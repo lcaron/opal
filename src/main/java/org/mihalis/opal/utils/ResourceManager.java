@@ -67,6 +67,9 @@ public class ResourceManager {
 	public static final String CALCULATOR_DIVIDE_BY_ZERO = "calculator.dividebyzero";
 	public static final String CALCULATOR_INVALID_VALUE = "calculator.invalid";
 
+	public static final String MULTICHOICE_MESSAGE = "multichoice.message";
+	public static final String MULTICHOICE_MESSAGE_PLURAL = "multichoice.message.plural";
+
 	/**
 	 * Get a translated label
 	 * 

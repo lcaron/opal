@@ -72,9 +72,20 @@ public class MultiChoiceSnippet {
 		membersOfEUSelectAll.addAll(membersOfEuropeanUnion);
 		membersOfEUSelectAll.add(new Country("Select All", -1));
 
+		final List<Country> countryCodes = new ArrayList<Country>();
+		countryCodes.add(new Country("France", "FR"));
+		countryCodes.add(new Country("United states", "US"));
+		countryCodes.add(new Country("United Kingdom", "UK"));
+		countryCodes.add(new Country("Germany", "DE"));
+		countryCodes.add(new Country("Belgium", "BE"));
+		countryCodes.add(new Country("Netherland", "NL"));
+		countryCodes.add(new Country("Italy", "IT"));
+		countryCodes.add(new Country("Spain", "ES"));
+		countryCodes.add(new Country("Portugal", "PT"));
+
 		// Draw the window
 		drawLabel(shell, "Simple Multichoice :");
-		final MultiChoice<String> mcSimple = new MultiChoice<String>(shell, SWT.None);
+		final MultiChoice<String> mcSimple = new MultiChoice<String>(shell, SWT.READ_ONLY);
 		final GridData gridData = new GridData(GridData.FILL, GridData.BEGINNING, true, true);
 		gridData.widthHint = 200;
 		mcSimple.setLayoutData(gridData);
@@ -82,13 +93,13 @@ public class MultiChoiceSnippet {
 		addButons(mcSimple);
 
 		drawLabel(shell, "Multichoice with beans :");
-		final MultiChoice<Country> mcBeans = new MultiChoice<Country>(shell, SWT.None);
+		final MultiChoice<Country> mcBeans = new MultiChoice<Country>(shell, SWT.READ_ONLY);
 		mcBeans.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, true));
 		mcBeans.addAll(membersOfEuropeanUnion);
 		addButons(mcBeans);
 
 		drawLabel(shell, "Selection listener :");
-		final MultiChoice<Country> mcSL = new MultiChoice<Country>(shell, SWT.None);
+		final MultiChoice<Country> mcSL = new MultiChoice<Country>(shell, SWT.READ_ONLY);
 		mcSL.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, true));
 		mcSL.addAll(membersOfEUSelectAll);
 		mcSL.setSelectionListener(new MultiChoiceSelectionListener<Country>(mcSL) {
@@ -110,18 +121,33 @@ public class MultiChoiceSnippet {
 		addButons(mcSL);
 
 		drawLabel(shell, "3 columns :");
-		final MultiChoice<String> mc3Columns = new MultiChoice<String>(shell, SWT.None);
+		final MultiChoice<String> mc3Columns = new MultiChoice<String>(shell, SWT.READ_ONLY);
 		mc3Columns.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, true));
 		mc3Columns.addAll(euroZone);
 		mc3Columns.setNumberOfColumns(3);
 		addButons(mc3Columns);
 
 		drawLabel(shell, "Other separator :");
-		final MultiChoice<String> mcOtherSeparator = new MultiChoice<String>(shell, SWT.None);
+		final MultiChoice<String> mcOtherSeparator = new MultiChoice<String>(shell, SWT.READ_ONLY);
 		mcOtherSeparator.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, true));
 		mcOtherSeparator.addAll(euroZone);
 		mcOtherSeparator.setSeparator(" - ");
 		addButons(mcOtherSeparator);
+
+		drawLabel(shell, "Modifiable combo :");
+		final MultiChoice<Country> mcModify = new MultiChoice<Country>(shell, SWT.NONE);
+		mcModify.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, true));
+		mcModify.setLabelProvider(new MultiChoiceLabelProvider() {
+			@Override
+			public String getText(final Object element) {
+				if (element == null || !(element instanceof Country)) {
+					return "";
+				}
+				return ((Country) element).getCode();
+			}
+		});
+		mcModify.addAll(countryCodes);
+		addButons(mcModify);
 
 		// display the shell...
 		shell.open();

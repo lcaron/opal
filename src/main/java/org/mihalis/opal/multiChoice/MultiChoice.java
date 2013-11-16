@@ -33,18 +33,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.mihalis.opal.utils.ResourceManager;
 import org.mihalis.opal.utils.SimpleSelectionAdapter;
 
 /**
- * The MultiChoice class represents a selectable user interface object that
- * combines a read-only text-field and a set of checkboxes.
+ * The MultiChoice class represents a selectable user interface object that combines a read-only text-field and a set of checkboxes.
  * 
  * <p>
- * Note that although this class is a subclass of <code>Composite</code>, it
- * does not make sense to add children to it, or set a layout on it.
+ * Note that although this class is a subclass of <code>Composite</code>, it does not make sense to add children to it, or set a layout on it.
  * </p>
  * <dl>
  * <dt><b>Styles:</b>
@@ -57,7 +57,7 @@ import org.mihalis.opal.utils.SimpleSelectionAdapter;
  */
 public class MultiChoice<T> extends Composite {
 
-	private Label text;
+	private Text text;
 	private Button arrow;
 	private Shell popup;
 	private Listener listener, filter;
@@ -71,20 +71,19 @@ public class MultiChoice<T> extends Composite {
 	private Color foreground, background;
 	private Font font;
 	private String separator;
+	private MultiChoiceLabelProvider labelProvider;
 
 	/**
 	 * Constructs a new instance of this class given its parent.
 	 * 
-	 * @param parent a widget which will be the parent of the new instance
-	 *            (cannot be null)
+	 * @param parent a widget which will be the parent of the new instance (cannot be null)
 	 * @param style not used
 	 * 
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the parent</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
 	 *                </ul>
 	 */
 	public MultiChoice(final Composite parent, final int style) {
@@ -94,8 +93,7 @@ public class MultiChoice<T> extends Composite {
 	/**
 	 * Constructs a new instance of this class given its parent.
 	 * 
-	 * @param parent a widget which will be the parent of the new instance
-	 *            (cannot be null)
+	 * @param parent a widget which will be the parent of the new instance (cannot be null)
 	 * @param style not used
 	 * @param elements list of elements displayed by this widget
 	 * 
@@ -103,8 +101,7 @@ public class MultiChoice<T> extends Composite {
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the parent</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
 	 *                </ul>
 	 */
 	public MultiChoice(final Composite parent, final int style, final List<T> elements) {
@@ -114,7 +111,14 @@ public class MultiChoice<T> extends Composite {
 		gridLayout.horizontalSpacing = gridLayout.verticalSpacing = gridLayout.marginWidth = gridLayout.marginHeight = 0;
 		this.setLayout(gridLayout);
 
-		this.text = new Label(this, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		int readOnlyStyle;
+		if ((style & SWT.READ_ONLY) == SWT.READ_ONLY) {
+			readOnlyStyle = SWT.READ_ONLY;
+		} else {
+			readOnlyStyle = SWT.NONE;
+		}
+
+		this.text = new Text(this, SWT.SINGLE | readOnlyStyle | SWT.BORDER);
 		this.text.setBackground(this.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		this.text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
@@ -158,6 +162,19 @@ public class MultiChoice<T> extends Composite {
 			this.addListener(multiChoiceEvent[i], this.listener);
 		}
 
+		if ((style & SWT.READ_ONLY) == 0) {
+			final Listener validationListener = new Listener() {
+
+				@Override
+				public void handleEvent(final Event event) {
+					if (!MultiChoice.this.popup.isDisposed() && !MultiChoice.this.popup.isVisible()) {
+						validateEntry();
+					}
+				}
+			};
+			this.text.addListener(SWT.FocusOut, validationListener);
+		}
+
 		final int[] buttonEvents = { SWT.Selection, SWT.FocusIn };
 		for (int i = 0; i < buttonEvents.length; i++) {
 			this.arrow.addListener(buttonEvents[i], this.listener);
@@ -176,9 +193,71 @@ public class MultiChoice<T> extends Composite {
 		this.selection = new LinkedHashSet<T>();
 		this.elements = elements;
 		this.separator = ",";
+		this.labelProvider = new MultiChoiceDefaultLabelProvider();
 
 		createPopup();
 		setLabel();
+	}
+
+	protected void validateEntry() {
+		final String toValidate = this.text.getText();
+		final String[] elementsToValidate = toValidate.split(this.separator);
+		final List<String> fieldsInError = new ArrayList<String>();
+		this.selection.clear();
+		for (final String elementToValidate : elementsToValidate) {
+			final String temp = elementToValidate.trim();
+			if ("".equals(temp)) {
+				continue;
+			}
+
+			final T entry = convertEntry(temp);
+
+			if (entry == null) {
+				fieldsInError.add(temp);
+			} else {
+				this.selection.add(entry);
+			}
+		}
+
+		if (fieldsInError.size() == 0) {
+			updateSelection();
+			return;
+		}
+
+		final String messageToDisplay;
+		if (fieldsInError.size() == 1) {
+			messageToDisplay = String.format(ResourceManager.getLabel(ResourceManager.MULTICHOICE_MESSAGE), fieldsInError.get(0));
+		} else {
+			final StringBuilder sb = new StringBuilder();
+			final Iterator<String> it = fieldsInError.iterator();
+			while (it.hasNext()) {
+				sb.append(it.next());
+				if (it.hasNext()) {
+					sb.append(",");
+				}
+			}
+			messageToDisplay = String.format(ResourceManager.getLabel(ResourceManager.MULTICHOICE_MESSAGE_PLURAL), sb.toString());
+		}
+		getDisplay().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				final MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR);
+				mb.setMessage(messageToDisplay);
+				mb.open();
+				MultiChoice.this.text.forceFocus();
+			}
+		});
+
+	}
+
+	private T convertEntry(final String elementToValidate) {
+		for (final T elt : this.elements) {
+			if (this.labelProvider.getText(elt).trim().equals(elementToValidate)) {
+				return elt;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -189,10 +268,8 @@ public class MultiChoice<T> extends Composite {
 	 *                <li>ERROR_NULL_ARGUMENT - if the string is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void add(final T value) {
@@ -209,22 +286,17 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Adds the argument to the receiver's list at the given zero-relative
-	 * index.
+	 * Adds the argument to the receiver's list at the given zero-relative index.
 	 * 
 	 * @param values new item
 	 * @param index the index for the item
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the string is null</li>
-	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
-	 *                and the number of elements in the list minus 1 (inclusive)
-	 *                </li>
+	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0 and the number of elements in the list minus 1 (inclusive)</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void add(final T value, final int index) {
@@ -248,10 +320,8 @@ public class MultiChoice<T> extends Composite {
 	 *                <li>ERROR_NULL_ARGUMENT - if the string is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void addAll(final List<T> values) {
@@ -275,10 +345,8 @@ public class MultiChoice<T> extends Composite {
 	 *                <li>ERROR_NULL_ARGUMENT - if the string is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void addAll(final T[] values) {
@@ -296,23 +364,18 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Returns the item at the given, zero-relative index in the receiver's
-	 * list. Throws an exception if the index is out of range.
+	 * Returns the item at the given, zero-relative index in the receiver's list. Throws an exception if the index is out of range.
 	 * 
 	 * @param index the index of the item to return
 	 * @return the item at the given index
 	 * 
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
-	 *                and the number of elements in the list minus 1 (inclusive)
-	 *                </li>
+	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0 and the number of elements in the list minus 1 (inclusive)</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public T getItem(final int index) {
@@ -329,10 +392,8 @@ public class MultiChoice<T> extends Composite {
 	 * @return the number of items
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public int getItemCount() {
@@ -348,17 +409,14 @@ public class MultiChoice<T> extends Composite {
 	/**
 	 * Returns the list of items in the receiver's list.
 	 * <p>
-	 * Note: This is not the actual structure used by the receiver to maintain
-	 * its list of items, so modifying the array will not affect the receiver.
+	 * Note: This is not the actual structure used by the receiver to maintain its list of items, so modifying the array will not affect the receiver.
 	 * </p>
 	 * 
 	 * @return the items in the receiver's list
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public List<T> getItems() {
@@ -370,21 +428,16 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Removes the item from the receiver's list at the given zero-relative
-	 * index.
+	 * Removes the item from the receiver's list at the given zero-relative index.
 	 * 
 	 * @param index the index for the item
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
-	 *                and the number of elements in the list minus 1 (inclusive)
-	 *                </li>
+	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0 and the number of elements in the list minus 1 (inclusive)</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void removeAt(final int index) {
@@ -397,8 +450,7 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Searches the receiver's list starting at the first item until an item is
-	 * found that is equal to the argument, and removes that item from the list.
+	 * Searches the receiver's list starting at the first item until an item is found that is equal to the argument, and removes that item from the list.
 	 * 
 	 * @param object the item to remove
 	 * @exception NullPointerException if there is no item in the receiver
@@ -406,10 +458,8 @@ public class MultiChoice<T> extends Composite {
 	 *                <li>ERROR_NULL_ARGUMENT - if the object is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void remove(final T object) {
@@ -427,10 +477,8 @@ public class MultiChoice<T> extends Composite {
 	 * Remove all items of the receiver
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void removeAll() {
@@ -444,8 +492,14 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Sets the selection of the receiver. If the item was already selected, it
-	 * remains selected.
+	 * @param labelProvider the Label Provider to set
+	 */
+	public void setLabelProvider(final MultiChoiceLabelProvider labelProvider) {
+		this.labelProvider = labelProvider;
+	}
+
+	/**
+	 * Sets the selection of the receiver. If the item was already selected, it remains selected.
 	 * 
 	 * @param selection the new selection
 	 * @exception NullPointerException if there is no item in the receiver
@@ -453,13 +507,10 @@ public class MultiChoice<T> extends Composite {
 	 *                <li>ERROR_NULL_ARGUMENT - if the selection is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
-
 	public void setSelection(final Set<T> selection) {
 		checkWidget();
 		checkNullElement();
@@ -475,10 +526,8 @@ public class MultiChoice<T> extends Composite {
 	 * 
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void selectAll() {
@@ -489,21 +538,16 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Selects the item at the given zero-relative index in the receiver's list.
-	 * If the item at the index was already selected, it remains selected.
+	 * Selects the item at the given zero-relative index in the receiver's list. If the item at the index was already selected, it remains selected.
 	 * 
 	 * @param index the index of the item to select
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
-	 *                and the number of elements in the list minus 1 (inclusive)
-	 *                </li>
+	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0 and the number of elements in the list minus 1 (inclusive)</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void selectAt(final int index) {
@@ -515,8 +559,7 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Selects an item the receiver's list. If the item was already selected, it
-	 * remains selected.
+	 * Selects an item the receiver's list. If the item was already selected, it remains selected.
 	 * 
 	 * @param index the index of the item to select
 	 * @exception NullPointerException if there is no item in the receiver
@@ -524,10 +567,8 @@ public class MultiChoice<T> extends Composite {
 	 *                <li>ERROR_NULL_ARGUMENT - if the selection is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void select(final T value) {
@@ -541,22 +582,17 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Selects items in the receiver. If the items were already selected, they
-	 * remain selected.
+	 * Selects items in the receiver. If the items were already selected, they remain selected.
 	 * 
 	 * @param index the indexes of the items to select
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the selection is null</li>
-	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
-	 *                and the number of elements in the list minus 1 (inclusive)
-	 *                </li>
+	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0 and the number of elements in the list minus 1 (inclusive)</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void setSelectedIndex(final int[] index) {
@@ -570,21 +606,16 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Returns the zero-relative indices of the items which are currently
-	 * selected in the receiver. The order of the indices is unspecified. The
-	 * array is empty if no items are selected.
+	 * Returns the zero-relative indices of the items which are currently selected in the receiver. The order of the indices is unspecified. The array is empty if no items are selected.
 	 * <p>
-	 * Note: This is not the actual structure used by the receiver to maintain
-	 * its selection, so modifying the array will not affect the receiver.
+	 * Note: This is not the actual structure used by the receiver to maintain its selection, so modifying the array will not affect the receiver.
 	 * </p>
 	 * 
 	 * @return the array of indices of the selected items
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public int[] getSelectedIndex() {
@@ -606,21 +637,16 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Returns an array of <code>Object</code>s that are currently selected in
-	 * the receiver. The order of the items is unspecified. An empty array
-	 * indicates that no items are selected.
+	 * Returns an array of <code>Object</code>s that are currently selected in the receiver. The order of the items is unspecified. An empty array indicates that no items are selected.
 	 * <p>
-	 * Note: This is not the actual structure used by the receiver to maintain
-	 * its selection, so modifying the array will not affect the receiver.
+	 * Note: This is not the actual structure used by the receiver to maintain its selection, so modifying the array will not affect the receiver.
 	 * </p>
 	 * 
 	 * @return an array representing the selection
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public List<T> getSelection() {
@@ -630,22 +656,16 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Deselects the item at the given zero-relative index in the receiver's
-	 * list. If the item at the index was already deselected, it remains
-	 * deselected. Indices that are out of range are ignored.
+	 * Deselects the item at the given zero-relative index in the receiver's list. If the item at the index was already deselected, it remains deselected. Indices that are out of range are ignored.
 	 * 
 	 * @param index the index of the item to deselect
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
-	 *                and the number of elements in the list minus 1 (inclusive)
-	 *                </li>
+	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0 and the number of elements in the list minus 1 (inclusive)</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void deselectAt(final int index) {
@@ -661,21 +681,16 @@ public class MultiChoice<T> extends Composite {
 	}
 
 	/**
-	 * Deselects the item in the receiver's list. If the item at the index was
-	 * already deselected, it remains deselected.
+	 * Deselects the item in the receiver's list. If the item at the index was already deselected, it remains deselected.
 	 * 
 	 * @param value the item to deselect
 	 * @exception NullPointerException if there is no item in the receiver
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
-	 *                and the number of elements in the list minus 1 (inclusive)
-	 *                </li>
+	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0 and the number of elements in the list minus 1 (inclusive)</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void deselect(final T value) {
@@ -692,10 +707,8 @@ public class MultiChoice<T> extends Composite {
 	 * @exception NullPointerException if there is no item in the receiver
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the receiver</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void deselectAll() {
@@ -931,7 +944,7 @@ public class MultiChoice<T> extends Composite {
 
 			checkBoxButton.setData(o);
 			checkBoxButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false));
-			checkBoxButton.setText(o.toString());
+			checkBoxButton.setText(this.labelProvider.getText(o));
 			checkBoxButton.addSelectionListener(new SimpleSelectionAdapter() {
 				@Override
 				public void handle(final SelectionEvent e) {
@@ -971,7 +984,7 @@ public class MultiChoice<T> extends Composite {
 			}
 		}
 
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		final Iterator<String> it = values.iterator();
 		while (it.hasNext()) {
 			sb.append(it.next());
@@ -993,38 +1006,38 @@ public class MultiChoice<T> extends Composite {
 			return;
 		}
 		switch (type) {
-		case SWT.FocusIn: {
-			if (this.hasFocus) {
-				return;
+			case SWT.FocusIn: {
+				if (this.hasFocus) {
+					return;
+				}
+				this.hasFocus = true;
+				final Shell shell = getShell();
+				shell.removeListener(SWT.Deactivate, this.listener);
+				shell.addListener(SWT.Deactivate, this.listener);
+				final Display display = getDisplay();
+				display.removeFilter(SWT.FocusIn, this.filter);
+				display.addFilter(SWT.FocusIn, this.filter);
+				final Event e = new Event();
+				notifyListeners(SWT.FocusIn, e);
+				break;
 			}
-			this.hasFocus = true;
-			final Shell shell = getShell();
-			shell.removeListener(SWT.Deactivate, this.listener);
-			shell.addListener(SWT.Deactivate, this.listener);
-			final Display display = getDisplay();
-			display.removeFilter(SWT.FocusIn, this.filter);
-			display.addFilter(SWT.FocusIn, this.filter);
-			final Event e = new Event();
-			notifyListeners(SWT.FocusIn, e);
-			break;
-		}
-		case SWT.FocusOut: {
-			if (!this.hasFocus) {
-				return;
+			case SWT.FocusOut: {
+				if (!this.hasFocus) {
+					return;
+				}
+				final Control focusControl = getDisplay().getFocusControl();
+				if (focusControl == this.arrow) {
+					return;
+				}
+				this.hasFocus = false;
+				final Shell shell = getShell();
+				shell.removeListener(SWT.Deactivate, this.listener);
+				final Display display = getDisplay();
+				display.removeFilter(SWT.FocusIn, this.filter);
+				final Event e = new Event();
+				notifyListeners(SWT.FocusOut, e);
+				break;
 			}
-			final Control focusControl = getDisplay().getFocusControl();
-			if (focusControl == this.arrow) {
-				return;
-			}
-			this.hasFocus = false;
-			final Shell shell = getShell();
-			shell.removeListener(SWT.Deactivate, this.listener);
-			final Display display = getDisplay();
-			display.removeFilter(SWT.FocusIn, this.filter);
-			final Event e = new Event();
-			notifyListeners(SWT.FocusOut, e);
-			break;
-		}
 		}
 	}
 
@@ -1035,25 +1048,25 @@ public class MultiChoice<T> extends Composite {
 	 */
 	private void multiChoiceEvent(final Event event) {
 		switch (event.type) {
-		case SWT.Dispose:
-			if (this.popup != null && !this.popup.isDisposed()) {
-				this.popup.dispose();
-			}
-			final Shell shell = getShell();
-			shell.removeListener(SWT.Deactivate, this.listener);
-			final Display display = getDisplay();
-			display.removeFilter(SWT.FocusIn, this.filter);
-			this.popup = null;
-			this.arrow = null;
-			break;
-		case SWT.Move:
-			dropDown(false);
-			break;
-		case SWT.Resize:
-			if (isDropped()) {
+			case SWT.Dispose:
+				if (this.popup != null && !this.popup.isDisposed()) {
+					this.popup.dispose();
+				}
+				final Shell shell = getShell();
+				shell.removeListener(SWT.Deactivate, this.listener);
+				final Display display = getDisplay();
+				display.removeFilter(SWT.FocusIn, this.filter);
+				this.popup = null;
+				this.arrow = null;
+				break;
+			case SWT.Move:
 				dropDown(false);
-			}
-			break;
+				break;
+			case SWT.Resize:
+				if (isDropped()) {
+					dropDown(false);
+				}
+				break;
 		}
 
 	}
@@ -1065,20 +1078,19 @@ public class MultiChoice<T> extends Composite {
 	 */
 	private void buttonEvent(final Event event) {
 		switch (event.type) {
-		case SWT.FocusIn: {
-			handleFocus(SWT.FocusIn);
-			break;
-		}
-		case SWT.Selection: {
-			dropDown(!isDropped());
-			break;
-		}
+			case SWT.FocusIn: {
+				handleFocus(SWT.FocusIn);
+				break;
+			}
+			case SWT.Selection: {
+				dropDown(!isDropped());
+				break;
+			}
 		}
 	}
 
 	/**
-	 * @return <code>true</code> if the popup is visible and not dropped,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if the popup is visible and not dropped, <code>false</code> otherwise
 	 */
 	private boolean isDropped() {
 		return !this.popup.isDisposed() && this.popup.getVisible();
@@ -1091,25 +1103,25 @@ public class MultiChoice<T> extends Composite {
 	 */
 	private void popupEvent(final Event event) {
 		switch (event.type) {
-		case SWT.Paint:
-			final Rectangle listRect = this.popup.getBounds();
-			final Color black = getDisplay().getSystemColor(SWT.COLOR_BLACK);
-			event.gc.setForeground(black);
-			event.gc.drawRectangle(0, 0, listRect.width - 1, listRect.height - 1);
-			break;
-		case SWT.Close:
-			event.doit = false;
-			dropDown(false);
-			break;
-		case SWT.Deactivate:
-			dropDown(false);
-			break;
-		case SWT.Dispose:
-			if (this.checkboxes != null) {
-				this.checkboxes.clear();
-			}
-			this.checkboxes = null;
-			break;
+			case SWT.Paint:
+				final Rectangle listRect = this.popup.getBounds();
+				final Color black = getDisplay().getSystemColor(SWT.COLOR_BLACK);
+				event.gc.setForeground(black);
+				event.gc.drawRectangle(0, 0, listRect.width - 1, listRect.height - 1);
+				break;
+			case SWT.Close:
+				event.doit = false;
+				dropDown(false);
+				break;
+			case SWT.Deactivate:
+				dropDown(false);
+				break;
+			case SWT.Dispose:
+				if (this.checkboxes != null) {
+					this.checkboxes.clear();
+				}
+				this.checkboxes = null;
+				break;
 		}
 
 	}
@@ -1117,8 +1129,7 @@ public class MultiChoice<T> extends Composite {
 	/**
 	 * Display/Hide the popup window
 	 * 
-	 * @param drop if <code>true</code>, displays the popup window. If
-	 *            <code>false</code>, hide the popup window
+	 * @param drop if <code>true</code>, displays the popup window. If <code>false</code>, hide the popup window
 	 */
 	private void dropDown(final boolean drop) {
 		if (drop == isDropped()) {

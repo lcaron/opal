@@ -252,8 +252,17 @@ public class OButton extends Canvas {
 	@Override
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
 		checkWidget();
-		final Point size = this.buttonRenderer.computeSize(this, wHint, hHint, changed);
-		return new Point(Math.max(size.x, wHint), Math.max(size.y, hHint));
+		final Point computedSize = this.buttonRenderer.computeSize(this, wHint, hHint, changed);
+
+		if (wHint != SWT.DEFAULT) {
+			computedSize.x = wHint;
+		}
+		if (hHint != SWT.DEFAULT) {
+			computedSize.y = hHint;
+		}
+		setWidth(computedSize.x);
+		setHeight(computedSize.y);
+		return computedSize;
 	}
 
 	/**
@@ -402,6 +411,8 @@ public class OButton extends Canvas {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.alignment = alignment;
+		redraw();
+		update();
 	}
 
 	/**
@@ -427,6 +438,8 @@ public class OButton extends Canvas {
 	public void setHeight(final int height) {
 		checkWidget();
 		this.height = Math.max(height, 0);
+		redraw();
+		update();
 	}
 
 	/**
@@ -448,6 +461,8 @@ public class OButton extends Canvas {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.image = image;
+		redraw();
+		update();
 	}
 
 	/**
@@ -463,6 +478,8 @@ public class OButton extends Canvas {
 	public void setSelection(final boolean selected) {
 		checkWidget();
 		this.selected = selected;
+		redraw();
+		update();
 	}
 
 	/**
@@ -481,6 +498,8 @@ public class OButton extends Canvas {
 	public void setText(final String string) {
 		checkWidget();
 		this.text = string;
+		redraw();
+		update();
 	}
 
 	/**
@@ -499,5 +518,48 @@ public class OButton extends Canvas {
 	public void setWidth(final int width) {
 		checkWidget();
 		this.width = Math.max(0, width);
+		redraw();
+		update();
 	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Control#setEnabled(boolean)
+	 */
+	@Override
+	public void setEnabled(final boolean enabled) {
+		super.setEnabled(enabled);
+		redraw();
+		update();
+	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Control#setSize(int, int)
+	 */
+	@Override
+	public void setSize(final int width, final int height) {
+		super.setSize(width, height);
+		redraw();
+		update();
+	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Control#setSize(org.eclipse.swt.graphics.Point)
+	 */
+	@Override
+	public void setSize(final Point size) {
+		super.setSize(size);
+		redraw();
+		update();
+	}
+
+	/**
+	 * @see org.eclipse.swt.widgets.Control#setVisible(boolean)
+	 */
+	@Override
+	public void setVisible(final boolean visible) {
+		super.setVisible(visible);
+		redraw();
+		update();
+	}
+
 }

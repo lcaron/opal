@@ -62,7 +62,9 @@ public class OButtonSnippet {
 
 		final OButton button1 = new OButton(shell, SWT.PUSH);
 		button1.setText("Normal button");
-		button1.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false));
+		final GridData gd = new GridData(GridData.BEGINNING, GridData.CENTER, false, false);
+		gd.widthHint = 200;
+		button1.setLayoutData(gd);
 		button1.setButtonRenderer(renderer);
 
 		final OButton button2 = new OButton(shell, SWT.PUSH);

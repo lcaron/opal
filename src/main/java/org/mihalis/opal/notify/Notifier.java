@@ -28,8 +28,7 @@ import org.mihalis.opal.notify.NotifierColorsFactory.NotifierTheme;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
- * This class provides a notifier window, which is a window that appears in the
- * bottom of the screen and slides.
+ * This class provides a notifier window, which is a window that appears in the bottom of the screen and slides.
  */
 public class Notifier {
 	private static final int FONT_SIZE = 10;
@@ -42,8 +41,7 @@ public class Notifier {
 	private static final int STEP = 5;
 
 	/**
-	 * Starts a notification. A window will appear in the bottom of the screen,
-	 * then will disappear after 4.5 s
+	 * Starts a notification. A window will appear in the bottom of the screen, then will disappear after 4.5 s
 	 * 
 	 * @param title the title of the popup window
 	 * @param text the text of the notification
@@ -54,11 +52,9 @@ public class Notifier {
 	}
 
 	/**
-	 * Starts a notification. A window will appear in the bottom of the screen,
-	 * then will disappear after 4.5 s
+	 * Starts a notification. A window will appear in the bottom of the screen, then will disappear after 4.5 s
 	 * 
-	 * @param image the image to display (if <code>null</code>, a default image
-	 *            is displayed)
+	 * @param image the image to display (if <code>null</code>, a default image is displayed)
 	 * @param title the title of the popup window
 	 * @param text the text of the notification
 	 * 
@@ -69,13 +65,11 @@ public class Notifier {
 	}
 
 	/**
-	 * Starts a notification. A window will appear in the bottom of the screen,
-	 * then will disappear after 4.5 s
+	 * Starts a notification. A window will appear in the bottom of the screen, then will disappear after 4.5 s
 	 * 
 	 * @param title the title of the popup window
 	 * @param text the text of the notification
-	 * @param theme the graphical theme. If <code>null</code>, the yellow theme
-	 *            is used
+	 * @param theme the graphical theme. If <code>null</code>, the yellow theme is used
 	 * 
 	 * @see NotifierTheme
 	 */
@@ -84,15 +78,12 @@ public class Notifier {
 	}
 
 	/**
-	 * Starts a notification. A window will appear in the bottom of the screen,
-	 * then will disappear after 4.5 s
+	 * Starts a notification. A window will appear in the bottom of the screen, then will disappear after 4.5 s
 	 * 
-	 * @param image the image to display (if <code>null</code>, a default image
-	 *            is displayed)
+	 * @param image the image to display (if <code>null</code>, a default image is displayed)
 	 * @param title the title of the popup window
 	 * @param text the text of the notification
-	 * @param theme the graphical theme. If <code>null</code>, the yellow theme
-	 *            is used
+	 * @param theme the graphical theme. If <code>null</code>, the yellow theme is used
 	 * 
 	 * @see NotifierTheme
 	 */
@@ -112,7 +103,7 @@ public class Notifier {
 	 * @return the notification window as a shell object
 	 */
 	private static Shell createNotificationWindow(final Image image, final String title, final String text, final NotifierColors colors) {
-		final Shell shell = new Shell(SWT.NO_TRIM | SWT.NO_FOCUS);
+		final Shell shell = new Shell(SWT.NO_TRIM | SWT.NO_FOCUS | SWT.ON_TOP);
 		shell.setLayout(new GridLayout(2, false));
 		shell.setBackgroundMode(SWT.INHERIT_FORCE);
 
@@ -321,8 +312,7 @@ public class Notifier {
 	}
 
 	/**
-	 * Add a listener to the shell in order to handle the clicks on the close
-	 * button
+	 * Add a listener to the shell in order to handle the clicks on the close button
 	 * 
 	 * @param shell associated shell
 	 */

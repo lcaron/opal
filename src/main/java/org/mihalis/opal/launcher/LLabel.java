@@ -38,10 +38,10 @@ class LLabel extends Canvas {
 	private static final int GAP = 12;
 	private static int DRAW_FLAGS = SWT.DRAW_MNEMONIC | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER;
 	private static final int DEFAULT_MARGIN = 5;
-	private final int leftMargin = DEFAULT_MARGIN;
-	private final int topMargin = DEFAULT_MARGIN;
-	private final int rightMargin = DEFAULT_MARGIN;
-	private final int bottomMargin = DEFAULT_MARGIN;
+	private int leftMargin = DEFAULT_MARGIN;
+	private int topMargin = DEFAULT_MARGIN;
+	private int rightMargin = DEFAULT_MARGIN;
+	private int bottomMargin = DEFAULT_MARGIN;
 	private Point textSize;
 
 	private static final int MAX_NUMBER_OF_STEPS = 10;
@@ -272,6 +272,62 @@ class LLabel extends Canvas {
 			redraw();
 		}
 		return !stopAnimation;
+	}
+
+	/**
+	 * @return the left margin
+	 */
+	public int getLeftMargin() {
+		return leftMargin;
+	}
+
+	/**
+	 * @param leftMargin the left margin to set
+	 */
+	public void setLeftMargin(final int leftMargin) {
+		this.leftMargin = leftMargin;
+	}
+
+	/**
+	 * @return the top margin
+	 */
+	public int getTopMargin() {
+		return topMargin;
+	}
+
+	/**
+	 * @param topMargin the top margin to set
+	 */
+	public void setTopMargin(final int topMargin) {
+		this.topMargin = topMargin;
+	}
+
+	/**
+	 * @return the right margin
+	 */
+	public int getRightMargin() {
+		return rightMargin;
+	}
+
+	/**
+	 * @param rightMargin the right margin to set
+	 */
+	public void setRightMargin(final int rightMargin) {
+		this.rightMargin = rightMargin;
+	}
+
+	/**
+	 * @return the bottom margin
+	 */
+	public int getBottomMargin() {
+		return bottomMargin;
+	}
+
+	/**
+	 * @param bottomMargin the bottom margin to set
+	 */
+	public void setBottomMargin(final int bottomMargin) {
+		this.bottomMargin = bottomMargin;
 	}
 
 }

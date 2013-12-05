@@ -58,7 +58,7 @@ public class PWIntegerText extends PWText {
 	public void check() {
 		final Object value = PreferenceWindow.getInstance().getValueFor(getPropertyKey());
 		if (value == null) {
-			PreferenceWindow.getInstance().setValue(getPropertyKey(), new Integer(0));
+			PreferenceWindow.getInstance().setValue(getPropertyKey(), Integer.valueOf(0));
 		} else {
 			if (!(value instanceof Integer)) {
 				throw new UnsupportedOperationException("The property '" + getPropertyKey() + "' has to be an Integer because it is associated to a integer text widget");

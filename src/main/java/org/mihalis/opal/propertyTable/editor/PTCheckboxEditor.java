@@ -61,7 +61,7 @@ public class PTCheckboxEditor extends PTEditor {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				property.setValue(new Boolean(button.getSelection()));
+				property.setValue(Boolean.valueOf(button.getSelection()));
 			}
 		});
 

@@ -596,56 +596,56 @@ public class RangeSlider extends Canvas {
 		}
 
 		switch (event.keyCode) {
-		case SWT.HOME:
-			if (this.lastSelected == SELECTED_KNOB.UPPER) {
-				this.upperValue = this.minimum;
-			} else {
-				this.lowerValue = this.minimum;
-			}
-			needRedraw = true;
-			break;
-		case SWT.END:
-			if (this.lastSelected == SELECTED_KNOB.UPPER) {
-				this.upperValue = this.maximum;
-			} else {
-				this.upperValue = this.maximum;
-			}
-			needRedraw = true;
-			break;
-		case SWT.PAGE_UP:
-			if (this.lastSelected == SELECTED_KNOB.UPPER) {
-				this.upperValue += this.pageIncrement;
-			} else {
-				this.lowerValue += this.pageIncrement;
-			}
-			needRedraw = true;
-			break;
-		case SWT.PAGE_DOWN:
-			if (this.lastSelected == SELECTED_KNOB.UPPER) {
-				this.upperValue -= this.pageIncrement;
-			} else {
-				this.lowerValue -= this.pageIncrement;
-			}
-			needRedraw = true;
-			break;
-		case SWT.ARROW_LEFT:
-		case SWT.ARROW_UP:
-			if (this.lastSelected == SELECTED_KNOB.UPPER) {
-				this.upperValue -= this.increment;
-			} else {
-				this.lowerValue -= this.increment;
-			}
-			needRedraw = true;
-			break;
-		case SWT.ARROW_RIGHT:
-		case SWT.ARROW_DOWN:
-			if (this.lastSelected == SELECTED_KNOB.UPPER) {
-				this.upperValue += this.increment;
-			} else {
-				this.lowerValue += this.increment;
-			}
-			needRedraw = true;
-			break;
+			case SWT.HOME:
+				if (this.lastSelected == SELECTED_KNOB.UPPER) {
+					this.upperValue = this.minimum;
+				} else {
+					this.lowerValue = this.minimum;
+				}
+				needRedraw = true;
+				break;
+			case SWT.END:
+				if (this.lastSelected == SELECTED_KNOB.UPPER) {
+					this.upperValue = this.maximum;
+				} else {
+					this.lowerValue = this.maximum;
+				}
+				needRedraw = true;
+				break;
+			case SWT.PAGE_UP:
+				if (this.lastSelected == SELECTED_KNOB.UPPER) {
+					this.upperValue += this.pageIncrement;
+				} else {
+					this.lowerValue += this.pageIncrement;
+				}
+				needRedraw = true;
+				break;
+			case SWT.PAGE_DOWN:
+				if (this.lastSelected == SELECTED_KNOB.UPPER) {
+					this.upperValue -= this.pageIncrement;
+				} else {
+					this.lowerValue -= this.pageIncrement;
+				}
+				needRedraw = true;
+				break;
+			case SWT.ARROW_LEFT:
+			case SWT.ARROW_UP:
+				if (this.lastSelected == SELECTED_KNOB.UPPER) {
+					this.upperValue -= this.increment;
+				} else {
+					this.lowerValue -= this.increment;
+				}
+				needRedraw = true;
+				break;
+			case SWT.ARROW_RIGHT:
+			case SWT.ARROW_DOWN:
+				if (this.lastSelected == SELECTED_KNOB.UPPER) {
+					this.upperValue += this.increment;
+				} else {
+					this.lowerValue += this.increment;
+				}
+				needRedraw = true;
+				break;
 		}
 
 		if (needRedraw) {

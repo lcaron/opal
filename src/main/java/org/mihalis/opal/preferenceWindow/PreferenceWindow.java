@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,7 +44,7 @@ public class PreferenceWindow {
 	private static PreferenceWindow instance;
 	private PWTabContainer container;
 	private int selectedTab;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -55,8 +56,8 @@ public class PreferenceWindow {
 		this.parentShell = parent;
 		this.values = new HashMap<String, ValueAndAssociatedWidgets>(values.size());
 
-		for (final String key : values.keySet()) {
-			this.values.put(key, new ValueAndAssociatedWidgets(values.get(key)));
+		for (final Entry<String, Object> entry : values.entrySet()) {
+			values.put(entry.getKey(), entry.getValue());
 		}
 
 		this.tabs = new ArrayList<PWTab>();
@@ -298,14 +299,12 @@ public class PreferenceWindow {
 	 * Set the selected tab
 	 * @param selectedTab
 	 */
-	public void setSelectedTab(int selectedTab) {
+	public void setSelectedTab(final int selectedTab) {
 		this.selectedTab = selectedTab;
 		if (container != null) {
 			container.redraw();
 			container.update();
 		}
 	}
-
-
 
 }

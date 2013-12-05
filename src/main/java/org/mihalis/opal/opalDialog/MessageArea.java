@@ -294,7 +294,7 @@ public class MessageArea extends DialogArea {
 			button.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 			button.setText(this.radioValues[i]);
 
-			final Integer index = new Integer(i);
+			final Integer index = Integer.valueOf(i);
 			button.addSelectionListener(new SelectionAdapter() {
 
 				/**
@@ -378,7 +378,7 @@ public class MessageArea extends DialogArea {
 			choice.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 			choice.setChoiceItem(this.choiceValues[i]);
 
-			final Integer index = new Integer(i);
+			final Integer index = Integer.valueOf(i);
 			choice.addSelectionListener(new SelectionAdapter() {
 
 				/**

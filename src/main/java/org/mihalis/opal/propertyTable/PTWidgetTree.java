@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.eclipse.swt.SWT;
@@ -122,19 +123,19 @@ public class PTWidgetTree extends AbstractPTWidget {
 			data.get(category).add(p);
 		}
 
-		for (final String key : data.keySet()) {
+		for (final Entry<String, List<PTProperty>> entry : data.entrySet()) {
 
-			if (data.get(key) == null || data.get(key).isEmpty()) {
+			if (entry.getValue() == null || entry.getValue().isEmpty()) {
 				continue;
 			}
 
 			final TreeItem root = new TreeItem(this.tree, SWT.NONE);
-			root.setText(0, key);
+			root.setText(0, entry.getKey());
 			root.setBackground(root.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 			root.setForeground(root.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 			root.setExpanded(true);
 
-			for (final PTProperty p : data.get(key)) {
+			for (final PTProperty p : entry.getValue()) {
 				final TreeItem item = new TreeItem(root, SWT.NONE);
 				item.setData(p);
 				item.setText(0, StringUtil.safeToString(p.getName()));

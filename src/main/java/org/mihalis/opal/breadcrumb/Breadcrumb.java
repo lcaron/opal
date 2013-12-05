@@ -87,9 +87,9 @@ public class Breadcrumb extends Canvas {
 		addListeners();
 	}
 
-	private static int checkStyle(int style) {
+	private static int checkStyle(final int style) {
 		if ((style & SWT.BORDER) != 0) {
-			style = style & ~SWT.BORDER;
+			return style & ~SWT.BORDER;
 		}
 		return 0;
 	}

@@ -52,7 +52,7 @@ class CalculatorEngine {
 		// If the input string already contains a decimal point, don't do
 		// anything to it.
 		if (inputString.indexOf(".") < 0) {
-			setDisplayString(new String(inputString + "."));
+			setDisplayString(inputString + ".");
 		}
 	}
 

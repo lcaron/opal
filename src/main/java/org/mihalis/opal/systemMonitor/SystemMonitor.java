@@ -121,7 +121,7 @@ public class SystemMonitor extends Canvas {
 	 *                </ul>
 	 * 
 	 */
-	public SystemMonitor(final Composite parent, final int style,final int gridSize,final int refeshTime) {
+	public SystemMonitor(final Composite parent, final int style, final int gridSize, final int refeshTime) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 		this.samples = new LinkedHashMap<String, SampleWrapper>();
 		this.captionVisible = true;
@@ -320,8 +320,8 @@ public class SystemMonitor extends Canvas {
 
 		final String format = sample.getFormatPattern().replace("{value}", "1$").replace("{maxValue}", "2$").replace("{percentValue}", "3$");
 		final String formattedCaption = String.format(format, //
-				new Object[] { Double.valueOf(sample.getLastValue()), //
-						Double.valueOf(sample.getLastMaxValue()), //
+				new Object[] { sample.getLastValue(), //
+						sample.getLastMaxValue(), //
 						Double.valueOf(sample.getLastValue() / sample.getLastMaxValue() * 100.0D) });
 
 		this.gc.drawString(sample.getCaption() + " : " + formattedCaption, clientArea.x + this.gridSize, clientArea.y + clientArea.height - 19);

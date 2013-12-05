@@ -167,65 +167,65 @@ public class Launcher extends Composite {
 	 */
 	private void OnKeyPressed(final Event event) {
 		switch (event.keyCode) {
-		case SWT.ARROW_LEFT:
-			if (this.selection == -1) {
-				this.selection = 0;
-				changeColor(this.selection, true);
-				return;
-			}
+			case SWT.ARROW_LEFT:
+				if (this.selection == -1) {
+					this.selection = 0;
+					changeColor(this.selection, true);
+					return;
+				}
 
-			if (this.selection % 2 == 1) {
+				if (this.selection % 2 != 0) {
+					changeColor(this.selection, false);
+					this.selection--;
+					changeColor(this.selection, true);
+				}
+				break;
+			case SWT.ARROW_UP:
+				if (this.selection == -1) {
+					this.selection = 0;
+					changeColor(this.selection, true);
+					return;
+				}
+				if (this.selection >= 2) {
+					changeColor(this.selection, false);
+					this.selection -= 2;
+					changeColor(this.selection, true);
+				}
+				break;
+			case SWT.ARROW_RIGHT:
+				if (this.selection == -1) {
+					this.selection = 0;
+					changeColor(this.selection, true);
+					return;
+				}
+				if (this.selection % 2 == 0) {
+					changeColor(this.selection, false);
+					this.selection++;
+					changeColor(this.selection, true);
+				}
+				break;
+			case SWT.ARROW_DOWN:
+				if (this.selection == -1) {
+					this.selection = 0;
+					changeColor(this.selection, true);
+					return;
+				}
+				if (this.selection <= this.items.size() - 2) {
+					changeColor(this.selection, false);
+					this.selection += 2;
+					changeColor(this.selection, true);
+				}
+				break;
+			case SWT.HOME:
 				changeColor(this.selection, false);
-				this.selection--;
-				changeColor(this.selection, true);
-			}
-			break;
-		case SWT.ARROW_UP:
-			if (this.selection == -1) {
 				this.selection = 0;
 				changeColor(this.selection, true);
-				return;
-			}
-			if (this.selection >= 2) {
+				break;
+			case SWT.END:
 				changeColor(this.selection, false);
-				this.selection -= 2;
+				this.selection = this.items.size() - 1;
 				changeColor(this.selection, true);
-			}
-			break;
-		case SWT.ARROW_RIGHT:
-			if (this.selection == -1) {
-				this.selection = 0;
-				changeColor(this.selection, true);
-				return;
-			}
-			if (this.selection % 2 == 0) {
-				changeColor(this.selection, false);
-				this.selection++;
-				changeColor(this.selection, true);
-			}
-			break;
-		case SWT.ARROW_DOWN:
-			if (this.selection == -1) {
-				this.selection = 0;
-				changeColor(this.selection, true);
-				return;
-			}
-			if (this.selection <= this.items.size() - 2) {
-				changeColor(this.selection, false);
-				this.selection += 2;
-				changeColor(this.selection, true);
-			}
-			break;
-		case SWT.HOME:
-			changeColor(this.selection, false);
-			this.selection = 0;
-			changeColor(this.selection, true);
-			break;
-		case SWT.END:
-			changeColor(this.selection, false);
-			this.selection = this.items.size() - 1;
-			changeColor(this.selection, true);
-			break;
+				break;
 		}
 
 	}

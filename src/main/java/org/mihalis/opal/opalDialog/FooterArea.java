@@ -149,7 +149,7 @@ public class FooterArea extends DialogArea {
 				defaultButton = button;
 			}
 
-			final Integer integer = new Integer(i);
+			final Integer integer = Integer.valueOf(i);
 			button.addSelectionListener(new SelectionAdapter() {
 
 				/**

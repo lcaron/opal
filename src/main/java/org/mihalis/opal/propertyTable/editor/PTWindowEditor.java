@@ -131,7 +131,7 @@ public abstract class PTWindowEditor extends PTChooserEditor {
 		if (text.getText().trim().equals("")) {
 			return 0;
 		}
-		return Integer.valueOf(text.getText().trim());
+		return Integer.parseInt(text.getText().trim());
 	}
 
 	/**

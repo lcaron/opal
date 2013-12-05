@@ -16,10 +16,10 @@ package org.mihalis.opal.dynamictablecolumns;
  * 
  */
 public class DynamicLength {
-	
+
 	private Double value = 0.0d;
 	private DynamicLengthMeasure dynamicLengthMeasure = null;
-	
+
 	/**
 	 * Constructor
 	 * @param value Double
@@ -29,11 +29,11 @@ public class DynamicLength {
 		this.value = value;
 		this.dynamicLengthMeasure = dynamicLengthMeasure;
 	}
-	
+
 	@Override
 	public String toString() {
 		if ((value == null) || (dynamicLengthMeasure == null)) {
-			return null;
+			return "";
 		}
 		return (value + "" + dynamicLengthMeasure.getId());
 	}
@@ -66,8 +66,8 @@ public class DynamicLength {
 	 * Set dynamic length measure
 	 * @param dynamicLengthMeasure DynamicLengthMeasure
 	 */
-	public void setMeasure(final DynamicLengthMeasure dynamicLengthMeasure)	{
+	public void setMeasure(final DynamicLengthMeasure dynamicLengthMeasure) {
 		this.dynamicLengthMeasure = dynamicLengthMeasure;
 	}
-	
+
 }

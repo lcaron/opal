@@ -56,7 +56,7 @@ public class PWSpinner extends PWWidget {
 		spinner.addListener(SWT.Modify, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				PreferenceWindow.getInstance().setValue(getPropertyKey(), new Integer(spinner.getSelection()));
+				PreferenceWindow.getInstance().setValue(getPropertyKey(), Integer.valueOf(spinner.getSelection()));
 			}
 		});
 
@@ -70,7 +70,7 @@ public class PWSpinner extends PWWidget {
 	public void check() {
 		final Object value = PreferenceWindow.getInstance().getValueFor(getPropertyKey());
 		if (value == null) {
-			PreferenceWindow.getInstance().setValue(getPropertyKey(), new Integer(this.min));
+			PreferenceWindow.getInstance().setValue(getPropertyKey(), Integer.valueOf(this.min));
 		} else {
 			if (!(value instanceof Integer)) {
 				throw new UnsupportedOperationException("The property '" + getPropertyKey() + "' has to be an Integer because it is associated to a spinner");

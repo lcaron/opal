@@ -66,7 +66,7 @@ public class PWCheckbox extends PWWidget {
 	public void check() {
 		final Object value = PreferenceWindow.getInstance().getValueFor(getPropertyKey());
 		if (value == null) {
-			PreferenceWindow.getInstance().setValue(getPropertyKey(), new Boolean(false));
+			PreferenceWindow.getInstance().setValue(getPropertyKey(), Boolean.valueOf(false));
 		} else {
 			if (!(value instanceof Boolean)) {
 				throw new UnsupportedOperationException("The property '" + getPropertyKey() + "' has to be a Boolean because it is associated to a checkbox");

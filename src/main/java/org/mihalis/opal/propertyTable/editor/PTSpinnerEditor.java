@@ -76,7 +76,7 @@ public class PTSpinnerEditor extends PTEditor {
 		spinner.addListener(SWT.Modify, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				property.setValue(new Integer(spinner.getSelection()));
+				property.setValue(Integer.valueOf(spinner.getSelection()));
 			}
 		});
 

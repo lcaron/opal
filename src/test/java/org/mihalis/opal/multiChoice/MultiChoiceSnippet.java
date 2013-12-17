@@ -101,7 +101,6 @@ public class MultiChoiceSnippet {
 		drawLabel(shell, "Selection listener :");
 		final MultiChoice<Country> mcSL = new MultiChoice<Country>(shell, SWT.READ_ONLY);
 		mcSL.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, true));
-		mcSL.addAll(membersOfEUSelectAll);
 		mcSL.setSelectionListener(new MultiChoiceSelectionListener<Country>(mcSL) {
 
 			@Override
@@ -118,6 +117,7 @@ public class MultiChoiceSnippet {
 
 			}
 		});
+		mcSL.addAll(membersOfEUSelectAll);
 		addButons(mcSL);
 
 		drawLabel(shell, "3 columns :");

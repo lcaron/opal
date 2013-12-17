@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class OButton extends Canvas {
 
+	private static final String IS_BUTTON_PRESSED = OButton.class.toString() + "_pressed";
 	private final List<SelectionListener> selectionListeners;
 	int alignment = SWT.LEFT;
 	private ButtonRenderer buttonRenderer;
@@ -146,10 +147,15 @@ public class OButton extends Canvas {
 						break;
 					case SWT.MouseDown:
 						OButton.this.clicked = true;
+						OButton.this.setData(IS_BUTTON_PRESSED, "*");
 						redraw();
 						update();
 						break;
 					case SWT.MouseUp:
+						if (OButton.this.getData(IS_BUTTON_PRESSED) == null) {
+							return;
+						}
+						OButton.this.setData(IS_BUTTON_PRESSED, null);
 						OButton.this.clicked = false;
 						OButton.this.selected = !OButton.this.selected;
 						redraw();

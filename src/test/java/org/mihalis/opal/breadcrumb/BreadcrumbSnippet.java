@@ -11,6 +11,8 @@
 package org.mihalis.opal.breadcrumb;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -64,6 +66,14 @@ public class BreadcrumbSnippet {
 		for (int i = 1; i < 5; i++) {
 			final BreadcrumbItem item = new BreadcrumbItem(bc, itemArgument);
 			item.setText(String.valueOf(i));
+			item.addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(final SelectionEvent e) {
+					System.out.println("Click !");
+				}
+
+			});
 		}
 	}
 

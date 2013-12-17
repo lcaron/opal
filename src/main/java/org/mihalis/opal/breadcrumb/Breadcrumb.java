@@ -45,6 +45,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  */
 public class Breadcrumb extends Canvas {
 
+	private static final String IS_BUTTON_PRESSED = Breadcrumb.class.toString() + "_pressed";
 	private final List<BreadcrumbItem> items;
 	private static Color START_GRADIENT_COLOR = SWTGraphicUtil.createDisposableColor(255, 255, 255);
 	private static Color END_GRADIENT_COLOR = SWTGraphicUtil.createDisposableColor(224, 224, 224);
@@ -107,6 +108,7 @@ public class Breadcrumb extends Canvas {
 							redraw();
 							update();
 						}
+						item.setData(IS_BUTTON_PRESSED, "*");
 						return;
 					}
 				}
@@ -118,6 +120,12 @@ public class Breadcrumb extends Canvas {
 			public void handleEvent(final Event event) {
 				for (final BreadcrumbItem item : items) {
 					if (item.getBounds().contains(event.x, event.y)) {
+						if (item.getData(IS_BUTTON_PRESSED) == null) {
+							// The button was not pressed
+							return;
+						}
+						item.setData(IS_BUTTON_PRESSED, null);
+
 						if ((item.getStyle() & SWT.PUSH) != 0) {
 							item.setSelection(false);
 						}

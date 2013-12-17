@@ -158,8 +158,8 @@ public class MultiChoice<T> extends Composite {
 		};
 
 		final int[] multiChoiceEvent = { SWT.Dispose, SWT.Move, SWT.Resize };
-		for (int i = 0; i < multiChoiceEvent.length; i++) {
-			this.addListener(multiChoiceEvent[i], this.listener);
+		for (final int element : multiChoiceEvent) {
+			this.addListener(element, this.listener);
 		}
 
 		if ((style & SWT.READ_ONLY) == 0) {
@@ -176,8 +176,8 @@ public class MultiChoice<T> extends Composite {
 		}
 
 		final int[] buttonEvents = { SWT.Selection, SWT.FocusIn };
-		for (int i = 0; i < buttonEvents.length; i++) {
-			this.arrow.addListener(buttonEvents[i], this.listener);
+		for (final int buttonEvent : buttonEvents) {
+			this.arrow.addListener(buttonEvent, this.listener);
 		}
 
 		this.filter = new Listener() {
@@ -883,7 +883,7 @@ public class MultiChoice<T> extends Composite {
 			return;
 		}
 
-		if (this.popup == null || this.popup.isDisposed()) {
+		if (this.popup == null || this.popup.isDisposed() || checkboxes == null) {
 			return;
 		}
 
@@ -920,8 +920,8 @@ public class MultiChoice<T> extends Composite {
 		this.popup.setLayout(new GridLayout(this.numberOfColumns, true));
 
 		final int[] popupEvents = { SWT.Close, SWT.Paint, SWT.Deactivate, SWT.Dispose };
-		for (int i = 0; i < popupEvents.length; i++) {
-			this.popup.addListener(popupEvents[i], this.listener);
+		for (final int popupEvent : popupEvents) {
+			this.popup.addListener(popupEvent, this.listener);
 		}
 
 		if (this.elements == null) {

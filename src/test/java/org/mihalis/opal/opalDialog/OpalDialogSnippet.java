@@ -352,16 +352,16 @@ public class OpalDialogSnippet {
 	private static void displayLargeText() {
 		final StringBuilder stringBuilder = new StringBuilder();
 		for (int t = 0; t < 20; t++) {
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A <b>very</b> long tekst " + t + "");
-			stringBuilder.append("A very long tekst " + t + "<br/>");
+			stringBuilder.append("A <b>very</b> <size=10>long text (10)</size> " + t + "");
+			stringBuilder.append("A <b>very</b> <size=+12>long text (+12)</size> " + t + "");
+			stringBuilder.append("A <b>very</b> <size=-4>long text (-4)</size> " + t + "");
+			stringBuilder.append("A <b>very</b> <color=#088A29>long text</color> " + t + "");
+			stringBuilder.append("A <b>very</b> <color=255,0,255>long text</color> " + t + "");
+			stringBuilder.append("A <b>very</b> <color=navy>long text</color> " + t + "");
+			stringBuilder.append("A <b>very</b> <backgroundcolor=255,0,0>long text</backgroundcolor> " + t + "");
+			stringBuilder.append("A <b>very</b> <backgroundcolor=#FFFFCC>long text</backgroundcolor> " + t + "");
+			stringBuilder.append("A <b>very</b> <backgroundcolor=lavender>long text</backgroundcolor> " + t + "");
+			stringBuilder.append("A very long text " + t + "<br/>");
 			stringBuilder.append("..." + "<br/>");
 		}
 

@@ -123,7 +123,7 @@ class PWTabContainer extends Composite {
 
 			}
 		});
-		SWTGraphicUtil.dispose(this.buttonContainer, this.oldButtonContainerImage);
+		SWTGraphicUtil.addDisposer(this.buttonContainer, this.oldButtonContainerImage);
 	}
 
 	/**
@@ -135,7 +135,7 @@ class PWTabContainer extends Composite {
 			final FlatButton button = new FlatButton(this.buttonContainer, SWT.NONE);
 			button.setText(tab.getText());
 			button.setImage(tab.getImage());
-			SWTGraphicUtil.dispose(button, tab.getImage());
+			SWTGraphicUtil.addDisposer(button, tab.getImage());
 
 			final GridData gd;
 			if (i == this.tabs.size() - 1) {

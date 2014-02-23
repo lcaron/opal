@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Peter Weishapl - Inspiration
- *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.promptSupport;
 

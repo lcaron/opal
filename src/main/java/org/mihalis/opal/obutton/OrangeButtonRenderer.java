@@ -21,8 +21,8 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 public class OrangeButtonRenderer extends AbstractButtonRenderer {
 
 	private static OrangeButtonRenderer instance;
-	private static final Color FIRST_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(255, 195, 117);
-	private static final Color SECOND_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(238, 180, 79);
+	private static final Color FIRST_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(255, 195, 117);
+	private static final Color SECOND_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(238, 180, 79);
 
 	private OrangeButtonRenderer() {
 		super();

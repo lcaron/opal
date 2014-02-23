@@ -16,7 +16,7 @@ package org.mihalis.opal.dynamictablecolumns;
  * 
  */
 public class DynamicLengthFormat {
-	
+
 	/**
 	 * Parse
 	 * @param str String
@@ -25,7 +25,7 @@ public class DynamicLengthFormat {
 	public static DynamicLength parse(final String str) {
 		for (final DynamicLengthMeasure measure : DynamicLengthMeasure.values()) {
 			final int indexOf = str.indexOf(measure.getId());
-			
+
 			if (indexOf >= 0) {
 				final String valuePart = str.substring(0, indexOf).trim();
 				final double value = Double.parseDouble(valuePart);
@@ -34,7 +34,7 @@ public class DynamicLengthFormat {
 		}
 		throw new IllegalArgumentException("Format invalid length");
 	}
-	
+
 	/**
 	 * TODO
 	 * @param dynamicLength DynamicLength
@@ -43,5 +43,5 @@ public class DynamicLengthFormat {
 	public static String format(final DynamicLength dynamicLength) {
 		return "";
 	}
-	
+
 }

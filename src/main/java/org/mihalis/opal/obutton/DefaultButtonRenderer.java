@@ -21,8 +21,8 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 public class DefaultButtonRenderer extends AbstractButtonRenderer {
 
 	private static DefaultButtonRenderer instance;
-	private static final Color FIRST_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(121, 187, 255);
-	private static final Color SECOND_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(56, 142, 229);
+	private static final Color FIRST_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(121, 187, 255);
+	private static final Color SECOND_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(56, 142, 229);
 
 	private DefaultButtonRenderer() {
 		super();

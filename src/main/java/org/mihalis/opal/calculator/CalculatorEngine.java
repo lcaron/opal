@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Hermant (http://www.javabeginner.com/java-swing/java-swing-calculator) - Initial Version in SWING
- *     Laurent CARON (laurent.caron at gmail dot com) - Port to SWT, improvements
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.calculator;
 
@@ -18,6 +17,14 @@ import org.mihalis.opal.utils.ResourceManager;
  */
 class CalculatorEngine {
 
+	static final String OPERATOR_PLUS = "+";
+	static final String OPERATOR_MINUS = "-";
+	static final String OPERATOR_MULTIPLY = "*";
+	static final String OPERATOR_DIVIDE = "/";
+	static final String CHARACTER_ZERO = "0";
+	static final String DOT_CHARACTER = ".";
+	static final String EMPTY_STRING = "";
+
 	private enum DISPLAY_MODE {
 		INPUT, RESULT, ERROR
 	}
@@ -26,15 +33,15 @@ class CalculatorEngine {
 	private boolean clearOnNextDigit;
 	private double lastNumber;
 	private String lastOperator;
-	private final CalculatorButtonsPanel panel;
+	private final CalculatorButtonsComposite composite;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param calculator calculator widget associated to this engine
 	 */
-	CalculatorEngine(final CalculatorButtonsPanel panel) {
-		this.panel = panel;
+	CalculatorEngine(final CalculatorButtonsComposite composite) {
+		this.composite = composite;
 	}
 
 	/**
@@ -44,15 +51,13 @@ class CalculatorEngine {
 		this.displayMode = DISPLAY_MODE.INPUT;
 
 		if (this.clearOnNextDigit) {
-			setDisplayString("");
+			setDisplayString(EMPTY_STRING);
 		}
 
 		final String inputString = getDisplayString();
 
-		// If the input string already contains a decimal point, don't do
-		// anything to it.
-		if (inputString.indexOf(".") < 0) {
-			setDisplayString(inputString + ".");
+		if (inputString.indexOf(DOT_CHARACTER) < 0) {
+			setDisplayString(inputString + DOT_CHARACTER);
 		}
 	}
 
@@ -60,8 +65,8 @@ class CalculatorEngine {
 	 * @param value value to display
 	 */
 	private void setDisplayString(final String value) {
-		this.panel.getDisplayArea().setText(value);
-		this.panel.fireModifyListeners();
+		this.composite.getDisplayArea().setText(value);
+		this.composite.fireModifyListeners();
 	}
 
 	/**
@@ -69,30 +74,29 @@ class CalculatorEngine {
 	 */
 	void addDigitToDisplay(final int digit) {
 		if (this.clearOnNextDigit) {
-			setDisplayString("");
+			setDisplayString(EMPTY_STRING);
 		}
 
 		String inputString = getDisplayString();
 
-		if (inputString.indexOf("0") == 0) {
+		if (inputString.indexOf(CHARACTER_ZERO) == 0) {
 			inputString = inputString.substring(1);
 		}
 
-		if (!inputString.equals("0") || digit > 0) {
+		if (!inputString.equals(CHARACTER_ZERO) || digit > 0) {
 			setDisplayString(inputString + digit);
 		}
 
 		this.displayMode = DISPLAY_MODE.INPUT;
 		this.clearOnNextDigit = false;
-
 	}
 
 	/**
 	 * Clear content
 	 */
-	void clearAll() {
-		setDisplayString("0");
-		this.lastOperator = "0";
+	void clearWholeContent() {
+		setDisplayString(CHARACTER_ZERO);
+		this.lastOperator = CHARACTER_ZERO;
 		this.lastNumber = 0;
 		this.displayMode = DISPLAY_MODE.INPUT;
 		this.clearOnNextDigit = true;
@@ -101,8 +105,8 @@ class CalculatorEngine {
 	/**
 	 * Clear result
 	 */
-	void clearExisting() {
-		setDisplayString("0");
+	void clearResult() {
+		setDisplayString(CHARACTER_ZERO);
 		this.clearOnNextDigit = true;
 		this.displayMode = DISPLAY_MODE.INPUT;
 	}
@@ -114,7 +118,7 @@ class CalculatorEngine {
 		if (this.displayMode != DISPLAY_MODE.ERROR) {
 			setDisplayString(getDisplayString().substring(0, getDisplayString().length() - 1));
 			if (getDisplayString().length() < 1) {
-				setDisplayString("0");
+				setDisplayString(CHARACTER_ZERO);
 			}
 		}
 	}
@@ -123,7 +127,7 @@ class CalculatorEngine {
 	 * @return the displayed value as string
 	 */
 	private String getDisplayString() {
-		return this.panel.getDisplayArea().getText();
+		return this.composite.getDisplayArea().getText();
 	}
 
 	/**
@@ -137,10 +141,40 @@ class CalculatorEngine {
 				result = processLastOperator();
 				displayResult(result);
 			} catch (final DivideByZeroException e) {
-				displayError(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
+				displayErrorMessage(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
 			}
-			this.lastOperator = "0";
+			this.lastOperator = CHARACTER_ZERO;
 		}
+	}
+
+	/**
+	 * @return the result of the last operation
+	 * @throws DivideByZeroException
+	 */
+	private double processLastOperator() throws DivideByZeroException {
+		double result = 0;
+		final double numberInDisplay = getDisplayedNumber();
+
+		if (this.lastOperator.equals(OPERATOR_DIVIDE)) {
+			if (numberInDisplay == 0) {
+				throw new DivideByZeroException();
+			}
+			result = this.lastNumber / numberInDisplay;
+		}
+
+		if (this.lastOperator.equals(OPERATOR_MULTIPLY)) {
+			result = this.lastNumber * numberInDisplay;
+		}
+
+		if (this.lastOperator.equals(OPERATOR_MINUS)) {
+			result = this.lastNumber - numberInDisplay;
+		}
+
+		if (this.lastOperator.equals(OPERATOR_PLUS)) {
+			result = this.lastNumber + numberInDisplay;
+		}
+
+		return result;
 	}
 
 	/**
@@ -160,7 +194,7 @@ class CalculatorEngine {
 	/**
 	 * @param errorMessage error message
 	 */
-	private void displayError(final String errorMessage) {
+	private void displayErrorMessage(final String errorMessage) {
 		setDisplayString(ResourceManager.getLabel(errorMessage));
 		this.lastNumber = 0;
 		this.displayMode = DISPLAY_MODE.ERROR;
@@ -170,16 +204,17 @@ class CalculatorEngine {
 	/**
 	 * Process 1/x operation
 	 */
-	void processInverse() {
+	void processInverseOperation() {
 		if (this.displayMode != DISPLAY_MODE.ERROR) {
 			try {
-				if (getNumberInDisplay() == 0) {
-					displayError(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
+				if (getDisplayedNumber() == 0) {
+					displayErrorMessage(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
+					return;
 				}
-				final double result = 1 / getNumberInDisplay();
+				final double result = 1 / getDisplayedNumber();
 				displayResult(result);
 			} catch (final Exception ex) {
-				displayError(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
+				displayErrorMessage(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
 				this.displayMode = DISPLAY_MODE.ERROR;
 			}
 		}
@@ -188,18 +223,18 @@ class CalculatorEngine {
 	/**
 	 * @return the displayed number
 	 */
-	private double getNumberInDisplay() {
+	private double getDisplayedNumber() {
 		final String input = getDisplayString();
 		return Double.parseDouble(input);
 	}
 
 	/**
-	 * @param op operation to process
+	 * @param operator operation to process
 	 */
-	void processOperator(final String op) {
+	void processOperation(final String operator) {
 		if (this.displayMode != DISPLAY_MODE.ERROR) {
-			final double numberInDisplay = getNumberInDisplay();
-			if (this.lastOperator != null && !this.lastOperator.equals("0")) {
+			final double numberInDisplay = getDisplayedNumber();
+			if (this.lastOperator != null && !this.lastOperator.equals(CHARACTER_ZERO)) {
 				try {
 					final double result = processLastOperator();
 					displayResult(result);
@@ -210,51 +245,20 @@ class CalculatorEngine {
 				this.lastNumber = numberInDisplay;
 			}
 			this.clearOnNextDigit = true;
-			this.lastOperator = op;
+			this.lastOperator = operator;
 		}
-	}
-
-	/**
-	 * @return the result of the last operation
-	 * @throws DivideByZeroException
-	 */
-	private double processLastOperator() throws DivideByZeroException {
-		double result = 0;
-		final double numberInDisplay = getNumberInDisplay();
-
-		if (this.lastOperator.equals("/")) {
-			if (numberInDisplay == 0) {
-				throw new DivideByZeroException();
-			}
-
-			result = this.lastNumber / numberInDisplay;
-		}
-
-		if (this.lastOperator.equals("*")) {
-			result = this.lastNumber * numberInDisplay;
-		}
-
-		if (this.lastOperator.equals("-")) {
-			result = this.lastNumber - numberInDisplay;
-		}
-
-		if (this.lastOperator.equals("+")) {
-			result = this.lastNumber + numberInDisplay;
-		}
-
-		return result;
 	}
 
 	/**
 	 * Process percentage operation
 	 */
-	void processPerCent() {
+	void processPerCentageOperation() {
 		if (this.displayMode != DISPLAY_MODE.ERROR) {
 			try {
-				final double result = getNumberInDisplay() / 100;
+				final double result = getDisplayedNumber() / 100;
 				displayResult(result);
 			} catch (final Exception ex) {
-				displayError(ResourceManager.CALCULATOR_INVALID_VALUE);
+				displayErrorMessage(ResourceManager.CALCULATOR_INVALID_VALUE);
 				this.displayMode = DISPLAY_MODE.ERROR;
 			}
 		}
@@ -266,16 +270,15 @@ class CalculatorEngine {
 	void processSignChange() {
 		if (this.displayMode == DISPLAY_MODE.INPUT) {
 			final String input = getDisplayString();
-
-			if (input.length() > 0 && !input.equals("0")) {
-				if (input.indexOf("-") == 0) {
+			if (input.length() > 0 && !input.equals(CHARACTER_ZERO)) {
+				if (input.indexOf(OPERATOR_MINUS) == 0) {
 					setDisplayString(input.substring(1));
 				} else {
-					setDisplayString("-" + input);
+					setDisplayString(OPERATOR_MINUS + input);
 				}
 			}
 		} else if (this.displayMode == DISPLAY_MODE.RESULT) {
-			final double numberInDisplay = getNumberInDisplay();
+			final double numberInDisplay = getDisplayedNumber();
 
 			if (numberInDisplay != 0) {
 				displayResult(-numberInDisplay);
@@ -286,17 +289,17 @@ class CalculatorEngine {
 	/**
 	 * Process square root operation
 	 */
-	void processSqrt() {
+	void processSquareRootOperation() {
 		if (this.displayMode != DISPLAY_MODE.ERROR) {
 			try {
-				if (getDisplayString().indexOf("-") == 0) {
-					displayError(ResourceManager.CALCULATOR_INVALID_VALUE);
+				if (getDisplayString().indexOf(OPERATOR_MINUS) == 0) {
+					displayErrorMessage(ResourceManager.CALCULATOR_INVALID_VALUE);
 				}
 
-				final double result = Math.sqrt(getNumberInDisplay());
+				final double result = Math.sqrt(getDisplayedNumber());
 				displayResult(result);
 			} catch (final Exception ex) {
-				displayError(ResourceManager.CALCULATOR_INVALID_VALUE);
+				displayErrorMessage(ResourceManager.CALCULATOR_INVALID_VALUE);
 				this.displayMode = DISPLAY_MODE.ERROR;
 			}
 		}

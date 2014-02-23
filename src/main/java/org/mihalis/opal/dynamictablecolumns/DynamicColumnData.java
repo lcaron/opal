@@ -23,13 +23,13 @@ import org.eclipse.swt.widgets.TreeColumn;
  * @see org.mihalis.opal.dynamictablecolumns.DynamicTableColumnLayout
  */
 public class DynamicColumnData {
-	
+
 	private DynamicLength preferredLength = null;
 	private DynamicLength minLength = null;
 	private boolean visible = true;
-	
+
 	private TableColumn tableColumn = null;
-	private TreeColumn  treeColumn = null;
+	private TreeColumn treeColumn = null;
 
 	/**
 	 * <p>Create a dynamic column definition in order to specify
@@ -49,16 +49,16 @@ public class DynamicColumnData {
 	public DynamicColumnData(final TableColumn tableColumn, final String preferredLength, final String minLength) {
 		this(tableColumn, DynamicLengthFormat.parse(preferredLength), DynamicLengthFormat.parse(minLength));
 	}
-	
+
 	/**
 	 * <p>Create a dynamic column definition in order to specify
-     * steps required for a <code>TableColumn</code>.</p>
+	 * steps required for a <code>TableColumn</code>.</p>
 	 * <p><i>!Builder alternative avoids setting minimum length,
-     * using default 0px !</i></p>
+	 * using default 0px !</i></p>
 	 * 
 	 * <p><b>Definition of length</b>
 	 * <br>The lengths are specified using a <code>String</code>, containing
-     * quantity, followed by an identifier of measurement.
+	 * quantity, followed by an identifier of measurement.
 	 * <br>Ex.: "355px", "100%"</p>
 	 * 
 	 * @param tableColumn     TableColumn The column (a table) that should be controlled length.
@@ -69,14 +69,14 @@ public class DynamicColumnData {
 	public DynamicColumnData(final TableColumn tableColumn, final String preferredLength) {
 		this(tableColumn, DynamicLengthFormat.parse(preferredLength), new DynamicLength(0d, DynamicLengthMeasure.PIXEL));
 	}
-	
+
 	/**
 	 * <p>Create a dynamic column definition in order to specify
-     * steps required for a <code>TreeColumn</code>.</p>
+	 * steps required for a <code>TreeColumn</code>.</p>
 	 * 
 	 * <p><b>Definition of length</b>
 	 * <br>The lengths are specified using a <code>String</code>, containing
-     * quantity, followed by an identifier of measurement.
+	 * quantity, followed by an identifier of measurement.
 	 * <br>Ex.: "355px", "100%"</p>
 	 * 
 	 * @param treeColumn      TreeColumn Column (a tree) you want to control the length.
@@ -88,16 +88,16 @@ public class DynamicColumnData {
 	public DynamicColumnData(final TreeColumn treeColumn, final String preferredLength, final String minLength) {
 		this(treeColumn, DynamicLengthFormat.parse(preferredLength), DynamicLengthFormat.parse(minLength));
 	}
-	
+
 	/**
 	 * <p>Create a dynamic column definition in order to specify
-     * steps required for a <code>TreeColumn</code>.</p>
+	 * steps required for a <code>TreeColumn</code>.</p>
 	 * <p><i>!Builder alternative avoids setting minimum length,
 	 * using as standard 0px !</i></p>
 	 * 
 	 * <p><b>Definition of length</b>
 	 * <br>The lengths are specified using a <code>String</code>, containing
-     * quantity, followed by an identifier of measurement.
+	 * quantity, followed by an identifier of measurement.
 	 * <br>Ex.: "355px", "100%"</p>
 	 * 
 	 * @param treeColumn      TreeColumn Column (a tree) you want to control the length.
@@ -108,10 +108,10 @@ public class DynamicColumnData {
 	public DynamicColumnData(final TreeColumn treeColumn, final String preferredLength) {
 		this(treeColumn, DynamicLengthFormat.parse(preferredLength), new DynamicLength(0d, DynamicLengthMeasure.PIXEL));
 	}
-	
+
 	/**
 	 * Create a dynamic column definition in order to specify
-     * steps required for a <code>TableColumn</code>.
+	 * steps required for a <code>TableColumn</code>.
 	 * 
 	 * @param tableColumn     TableColumn   The column (a table) that should be controlled length.
 	 * @param preferredLength DynamicLength The <i>desired length</i> as column.
@@ -124,7 +124,7 @@ public class DynamicColumnData {
 		this.preferredLength = preferredLength;
 		this.minLength = minLength;
 	}
-	
+
 	/**
 	 * Create a dynamic column definition in order to specify
 	 * measures required for a <code>TreeColumn</code>.
@@ -140,12 +140,12 @@ public class DynamicColumnData {
 		this.preferredLength = preferredLength;
 		this.minLength = minLength;
 	}
-	
+
 	/**
 	 * Get preferred length
 	 */
 	public DynamicLength getPreferredLength() {
-		return preferredLength;
+		return this.preferredLength;
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class DynamicColumnData {
 	 * @return DynamicLength
 	 */
 	public DynamicLength getMinLength() {
-		return minLength;
+		return this.minLength;
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class DynamicColumnData {
 	 * @return TableColumn
 	 */
 	public TableColumn getTableColumn() {
-		return tableColumn;
+		return this.tableColumn;
 	}
 
 	/**
@@ -193,7 +193,7 @@ public class DynamicColumnData {
 	 * @return TreeColumn
 	 */
 	public TreeColumn getTreeColumn() {
-		return treeColumn;
+		return this.treeColumn;
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class DynamicColumnData {
 	 * @return boolean
 	 */
 	public boolean isVisible() {
-		return visible;
+		return this.visible;
 	}
 
 	/**
@@ -219,5 +219,5 @@ public class DynamicColumnData {
 	public void setVisible(final boolean visible) {
 		this.visible = visible;
 	}
-	
+
 }

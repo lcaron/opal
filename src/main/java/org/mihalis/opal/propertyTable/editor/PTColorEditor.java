@@ -41,7 +41,7 @@ public class PTColorEditor extends PTChooserEditor {
 				if (item instanceof TreeItem) {
 					((TreeItem) item).setBackground(1, bgColor);
 				}
-				SWTGraphicUtil.dispose(item, bgColor);
+				SWTGraphicUtil.addDisposer(item, bgColor);
 			}
 
 			if (item instanceof TableItem) {

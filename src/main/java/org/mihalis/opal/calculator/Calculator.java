@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Hermant (http://www.javabeginner.com/java-swing/java-swing-calculator) - Initial Version in SWING
- *     Laurent CARON (laurent.caron at gmail dot com) - Port to SWT, improvements
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.calculator;
 
@@ -27,11 +26,12 @@ import org.eclipse.swt.widgets.Label;
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
+ * This component is inspired by Hermant (http://www.javabeginner.com/java-swing/java-swing-calculator)
  */
 public class Calculator extends Composite {
 
 	private final Label displayArea;
-	private final CalculatorButtonsPanel panel;
+	private final CalculatorButtonsComposite panel;
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -62,7 +62,7 @@ public class Calculator extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout());
 		this.displayArea = createTextArea();
-		this.panel = new CalculatorButtonsPanel(this, SWT.NONE);
+		this.panel = new CalculatorButtonsComposite(this, SWT.NONE);
 		this.panel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		this.panel.setDisplayArea(this.displayArea);
 		this.displayArea.addKeyListener(this.panel.getKeyListener());

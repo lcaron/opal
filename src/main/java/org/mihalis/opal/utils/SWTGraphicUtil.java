@@ -53,13 +53,13 @@ public class SWTGraphicUtil {
 	 * Dispose safely any SWT resource when a widget is disposed
 	 * 
 	 * @param widget widget attached to the resource
-	 * @param r the resource to dispose
+	 * @param resource the resource to dispose
 	 */
-	public static void dispose(final Widget widget, final Resource r) {
+	public static void addDisposer(final Widget widget, final Resource resource) {
 		widget.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				dispose(r);
+				safeDispose(resource);
 			}
 		});
 	}
@@ -67,11 +67,11 @@ public class SWTGraphicUtil {
 	/**
 	 * Dispose safely any SWT resource
 	 * 
-	 * @param r the resource to dispose
+	 * @param resource the resource to dispose
 	 */
-	public static void dispose(final Resource r) {
-		if (r != null && !r.isDisposed()) {
-			r.dispose();
+	public static void safeDispose(final Resource resource) {
+		if (resource != null && !resource.isDisposed()) {
+			resource.dispose();
 		}
 	}
 
@@ -83,7 +83,7 @@ public class SWTGraphicUtil {
 	 * @param b blue component
 	 * @return the color
 	 */
-	public static Color createDisposableColor(final int r, final int g, final int b) {
+	public static Color getColorSafely(final int r, final int g, final int b) {
 		final Display display = Display.getCurrent();
 		final Color color = new Color(display, r, g, b);
 		display.addListener(SWT.Dispose, new Listener() {
@@ -104,7 +104,7 @@ public class SWTGraphicUtil {
 	 * @return an image
 	 * @see org.eclipse.swt.graphics.Image
 	 */
-	public static Image createImage(final String fileName) {
+	public static Image createImageFromFile(final String fileName) {
 		if (new File(fileName).exists()) {
 			return new Image(Display.getCurrent(), fileName);
 		} else {
@@ -114,7 +114,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Create a reflected image of a source 
-	 * Inspired by Daniel Spiewak (http://www.eclipsezone.com/eclipse/forums/t91013.html)
+	 * Inspired by Daniel Spiewak work (http://www.eclipsezone.com/eclipse/forums/t91013.html)
 	 * 
 	 * @param source source to be reflected
 	 * @return the source image with a reflection
@@ -279,7 +279,7 @@ public class SWTGraphicUtil {
 	 * @param shell
 	 * @return the bounds of the monitor on which the shell is running
 	 */
-	public static Rectangle getBoundsOfMonitorThatRuns(final Shell shell) {
+	public static Rectangle getBoundsOfMonitorOnWhichShellIsDisplayed(final Shell shell) {
 		for (final Monitor monitor : shell.getDisplay().getMonitors()) {
 			final Rectangle monitorBounds = monitor.getBounds();
 			final Rectangle shellBounds = shell.getBounds();
@@ -292,7 +292,7 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Apply a very basic HTML formating to a text stored in a StyledText widget. Supported tags are <B>, <I>, <U> and <BR/>
+	 * Apply a very basic pseudo-HTML formating to a text stored in a StyledText widget. Supported tags are <b>, <i>, <u> , <COLOR>, <backgroundcolor>, <size> and <BbrR/>
 	 * 
 	 * @param styledText styled text that contains an HTML text
 	 */
@@ -309,29 +309,15 @@ public class SWTGraphicUtil {
 	 * @param radius the number of radius pixels to consider when blurring image.
 	 * @return A blurred copy of the image data, or null if an error occured.
 	 * @author Nicholas Rajendram
-	 * @see http://www.jasonwaltman.com/thesis/filter-blur.html
-	 * @see http://www.blackpawn.com/texts/blur/default.html
+	 * @see http://www.eclipse.org/articles/article.php?file=Article-SimpleImageEffectsForSWT/index.html
 	 */
 	public static ImageData blur(final ImageData originalImageData, int radius) {
-		/*
-		 * This method will vertically blur all the pixels in a row at once. 
-		 * This blurring is performed incrementally to each row. In order to vertically blur any given pixel, 
-		 * maximally (radius * 2 + 1) pixels must be examined. Since each of these pixels exists in the same 
-		 * column, they span across a series of consecutive rows. 
-		 * These rows are horizontally blurred before being cached and used as input for the vertical blur. 
-		 * Blurring a pixel horizontally and then vertically is equivalent to blurring the pixel with both its 
-		 * horizontal and vertical neighbours at once. Pixels are blurred under the notion of a 'summing scope'. 
-		 * A certain scope of pixels in a column are summed then averaged to determine a target pixel's resulting 
-		 * RGB value. When the next lower target pixel is being calculated, the topmost pixel is removed from the 
-		 * summing scope (by subtracting its RGB) and a new pixel is added to the bottom of the scope (by adding its RGB). 
-		 * In this sense, the summing scope is moving downward.
-		 */
+
 		if (radius < 1) {
 			return originalImageData;
 		}
 
-		// prepare new image data with 24-bit direct palette to hold blurred
-		// copy of image
+		// prepare new image data with 24-bit direct palette to hold blurred copy of image
 		final ImageData newImageData = new ImageData(originalImageData.width, originalImageData.height, 24, new PaletteData(0xFF, 0xFF00, 0xFF0000));
 		if (radius >= newImageData.height || radius >= newImageData.width) {
 			radius = Math.min(newImageData.height, newImageData.width) - 1;
@@ -451,10 +437,10 @@ public class SWTGraphicUtil {
 	 * @param control control to enable/disable
 	 * @param enable <code>true</code> to enable, <code>false</code> to disable
 	 */
-	public static void enable(final Control control) {
+	public static void enableAllChildrenWidgets(final Control control) {
 		if (control instanceof Composite) {
 			for (final Control c : ((Composite) control).getChildren()) {
-				enable(c);
+				enableAllChildrenWidgets(c);
 			}
 		}
 		boolean enable = true;
@@ -471,10 +457,10 @@ public class SWTGraphicUtil {
 	 * @param control control to enable/disable
 	 * @param enable <code>true</code> to enable, <code>false</code> to disable
 	 */
-	public static void disable(final Control control) {
+	public static void disableAllChildrenWidgets(final Control control) {
 		if (control instanceof Composite) {
 			for (final Control c : ((Composite) control).getChildren()) {
-				disable(c);
+				disableAllChildrenWidgets(c);
 			}
 		}
 		control.setData(SWTGraphicUtil.class.toString() + "_enableState", control.isEnabled());

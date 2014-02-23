@@ -141,7 +141,7 @@ public class TipOfTheDay {
 		header.setLayoutData(gd);
 		header.setTitle(ResourceManager.getLabel(ResourceManager.DID_YOU_KNOW));
 		if (this.image == null) {
-			final Image img = SWTGraphicUtil.createImage("images/light2.png");
+			final Image img = SWTGraphicUtil.createImageFromFile("images/light2.png");
 			header.setImage(img);
 			this.shell.addListener(SWT.Dispose, new Listener() {
 
@@ -173,7 +173,7 @@ public class TipOfTheDay {
 		composite.setLayout(compositeLayout);
 		final Label label = new Label(composite, SWT.NONE);
 		if (this.image == null) {
-			final Image img = SWTGraphicUtil.createImage("images/light1.png");
+			final Image img = SWTGraphicUtil.createImageFromFile("images/light1.png");
 			label.setImage(img);
 			this.shell.addListener(SWT.Dispose, new Listener() {
 

@@ -25,10 +25,10 @@ class NotifierColors {
 	Color rightColor;
 
 	void dispose() {
-		SWTGraphicUtil.dispose(this.titleColor);
-		SWTGraphicUtil.dispose(this.borderColor);
-		SWTGraphicUtil.dispose(this.leftColor);
-		SWTGraphicUtil.dispose(this.rightColor);
-		SWTGraphicUtil.dispose(this.textColor);
+		SWTGraphicUtil.safeDispose(this.titleColor);
+		SWTGraphicUtil.safeDispose(this.borderColor);
+		SWTGraphicUtil.safeDispose(this.leftColor);
+		SWTGraphicUtil.safeDispose(this.rightColor);
+		SWTGraphicUtil.safeDispose(this.textColor);
 	}
 }

@@ -94,7 +94,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 		layout.pack = false;
 		this.composite.setLayout(layout);
 
-		this.columnArrow = SWTGraphicUtil.createImage("images/columnArrow.png");
+		this.columnArrow = SWTGraphicUtil.createImageFromFile("images/columnArrow.png");
 
 		this.columns = new ArrayList<Table>();
 		for (int i = 0; i < 3; i++) {
@@ -117,7 +117,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent arg0) {
-				SWTGraphicUtil.dispose(ColumnBrowserWidget.this.columnArrow);
+				SWTGraphicUtil.safeDispose(ColumnBrowserWidget.this.columnArrow);
 			}
 		});
 
@@ -133,6 +133,22 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 		table.setLayoutData(new RowData(150, 175));
 		this.columns.add(table);
 
+		addTableListeners(table);
+
+		if (super.getBackground() != null && super.getBackground().getRed() != 240 && super.getBackground().getGreen() != 240 && super.getBackground().getBlue() != 240) {
+			table.setBackground(super.getBackground());
+		}
+		table.setBackgroundImage(super.getBackgroundImage());
+		table.setBackgroundMode(super.getBackgroundMode());
+		table.setCursor(super.getCursor());
+		table.setFont(super.getFont());
+		table.setForeground(super.getForeground());
+		table.setMenu(super.getMenu());
+		table.setToolTipText(super.getToolTipText());
+
+	}
+
+	private void addTableListeners(final Table table) {
 		table.addListener(SWT.Resize, new Listener() {
 
 			@Override
@@ -157,32 +173,32 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 			@Override
 			public void handleEvent(final Event event) {
 				switch (event.type) {
-				case SWT.MeasureItem: {
-					final Rectangle rect = ColumnBrowserWidget.this.columnArrow.getBounds();
-					event.width += rect.width;
-					event.height = Math.max(event.height, rect.height + 2);
-					break;
-				}
-
-				case SWT.PaintItem: {
-					if (!(event.item instanceof TableItem)) {
-						return;
-					}
-					final TableItem item = (TableItem) event.item;
-					if (item.getData() == null) {
-						return;
+					case SWT.MeasureItem: {
+						final Rectangle rect = ColumnBrowserWidget.this.columnArrow.getBounds();
+						event.width += rect.width;
+						event.height = Math.max(event.height, rect.height + 2);
+						break;
 					}
 
-					if (((ColumnItem) item.getData()).getItemCount() == 0) {
-						return;
-					}
+					case SWT.PaintItem: {
+						if (!(event.item instanceof TableItem)) {
+							return;
+						}
+						final TableItem item = (TableItem) event.item;
+						if (item.getData() == null) {
+							return;
+						}
 
-					final int x = event.x + event.width;
-					final Rectangle rect = ColumnBrowserWidget.this.columnArrow.getBounds();
-					final int offset = Math.max(0, (event.height - rect.height) / 2);
-					event.gc.drawImage(ColumnBrowserWidget.this.columnArrow, x, event.y + offset);
-					break;
-				}
+						if (((ColumnItem) item.getData()).getItemCount() == 0) {
+							return;
+						}
+
+						final int x = event.x + event.width;
+						final Rectangle rect = ColumnBrowserWidget.this.columnArrow.getBounds();
+						final int offset = Math.max(0, (event.height - rect.height) / 2);
+						event.gc.drawImage(ColumnBrowserWidget.this.columnArrow, x, event.y + offset);
+						break;
+					}
 				}
 			}
 		};
@@ -201,18 +217,6 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 				ColumnBrowserWidget.this.fireSelectionListeners(e);
 			}
 		});
-
-		if (super.getBackground() != null && super.getBackground().getRed() != 240 && super.getBackground().getGreen() != 240 && super.getBackground().getBlue() != 240) {
-			table.setBackground(super.getBackground());
-		}
-		table.setBackgroundImage(super.getBackgroundImage());
-		table.setBackgroundMode(super.getBackgroundMode());
-		table.setCursor(super.getCursor());
-		table.setFont(super.getFont());
-		table.setForeground(super.getForeground());
-		table.setMenu(super.getMenu());
-		table.setToolTipText(super.getToolTipText());
-
 	}
 
 	/**
@@ -222,19 +226,20 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	 * @return true if the selection could be changed, false otherwise
 	 */
 	private boolean fireSelectionListeners(final SelectionEvent selectionEvent) {
+		final Event event = new Event();
+
+		event.button = 0;
+		event.display = this.getDisplay();
+		event.item = null;
+		event.widget = this;
+		event.data = null;
+		event.time = selectionEvent.time;
+		event.x = selectionEvent.x;
+		event.y = selectionEvent.y;
+
+		final SelectionEvent selEvent = new SelectionEvent(event);
+
 		for (final SelectionListener listener : this.selectionListeners) {
-			final Event event = new Event();
-
-			event.button = 0;
-			event.display = this.getDisplay();
-			event.item = null;
-			event.widget = this;
-			event.data = null;
-			event.time = selectionEvent.time;
-			event.x = selectionEvent.x;
-			event.y = selectionEvent.y;
-
-			final SelectionEvent selEvent = new SelectionEvent(event);
 			listener.widgetSelected(selEvent);
 			if (!selEvent.doit) {
 				return false;
@@ -271,15 +276,13 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 				if (i > selectedColumn) {
 					t.dispose();
 					it.remove();
-					// Don't know why, it's not working if I do not include this
-					// :(
 					this.setMinSize(this.composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 				}
 				i++;
 			}
 
-		 	if (selectedColumn != this.columns.size() - 1) {
-		 		this.columns.get(selectedColumn+1).setData(c);
+			if (selectedColumn != this.columns.size() - 1) {
+				this.columns.get(selectedColumn + 1).setData(c);
 			} else {
 				this.createTable();
 				this.columns.get(this.columns.size() - 1).setData(c);
@@ -348,15 +351,6 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 	 * Adds the listener to the collection of listeners who will be notified
 	 * when the user changes the receiver's selection, by sending it one of the
 	 * messages defined in the <code>SelectionListener</code> interface.
-	 * <p>
-	 * When <code>widgetSelected</code> is called, the item field of the event
-	 * object is valid. If the receiver has the <code>SWT.CHECK</code> style and
-	 * the check selection changes, the event object detail field contains the
-	 * value <code>SWT.CHECK</code>. <code>widgetDefaultSelected</code> is
-	 * typically called when an item is double-clicked. The item field of the
-	 * event object is valid for default selection, but the detail field is not
-	 * used.
-	 * </p>
 	 * 
 	 * @param listener the listener which should be notified when the user
 	 *            changes the receiver's selection
@@ -428,9 +422,7 @@ public class ColumnBrowserWidget extends ScrolledComposite {
 			if (table == null || table.getData() == null || table.getSelection().length == 0) {
 				continue;
 			}
-
 			return (ColumnItem) table.getItem(table.getSelectionIndex()).getData();
-
 		}
 		return null;
 	}

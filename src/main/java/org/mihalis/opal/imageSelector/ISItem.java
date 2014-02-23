@@ -30,7 +30,7 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 	 * @param fileName file name of the image that will be displayed
 	 */
 	public ISItem(final String fileName) {
-		setImage(SWTGraphicUtil.createImage(fileName));
+		setImage(SWTGraphicUtil.createImageFromFile(fileName));
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 	 * @param fileName file name of the image that will be displayed
 	 */
 	public ISItem(final String title, final String fileName) {
-		setImage(SWTGraphicUtil.createImage(fileName));
+		setImage(SWTGraphicUtil.createImageFromFile(fileName));
 		setText(title);
 	}
 

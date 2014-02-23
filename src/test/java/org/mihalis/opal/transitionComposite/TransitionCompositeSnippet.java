@@ -95,7 +95,7 @@ public class TransitionCompositeSnippet {
 
 				@Override
 				public void handleEvent(final Event event) {
-					SWTGraphicUtil.dispose(image);
+					SWTGraphicUtil.safeDispose(image);
 				}
 			});
 

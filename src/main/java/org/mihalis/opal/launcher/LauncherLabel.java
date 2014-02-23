@@ -21,15 +21,13 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instance of this class are a button with text, image and a nice animation
  * effect
  */
-class LLabel extends Canvas {
+class LauncherLabel extends Canvas {
 
 	private String text;
 	private Image image;
@@ -72,7 +70,7 @@ class LLabel extends Canvas {
 	 *                </ul>
 	 * 
 	 */
-	LLabel(final Composite parent, final int style) {
+	LauncherLabel(final Composite parent, final int style) {
 		super(parent, style | SWT.BORDER | SWT.DOUBLE_BUFFERED);
 
 		final Font original = super.getFont();
@@ -86,12 +84,9 @@ class LLabel extends Canvas {
 			}
 		});
 
-		addListener(SWT.Dispose, new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				onDispose(event);
-			}
-		});
+		SWTGraphicUtil.addDisposer(this, this.image);
+		SWTGraphicUtil.addDisposer(this, this.font);
+
 	}
 
 	/**
@@ -147,18 +142,6 @@ class LLabel extends Canvas {
 
 		bufferImage.dispose();
 
-	}
-
-	/**
-	 * Dispose elements when the widget is disposed
-	 * 
-	 * @param event dispose event
-	 */
-	private void onDispose(final Event event) {
-		SWTGraphicUtil.dispose(this.image);
-		SWTGraphicUtil.dispose(this.font);
-		this.text = null;
-		this.image = null;
 	}
 
 	/**
@@ -252,7 +235,7 @@ class LLabel extends Canvas {
 	 */
 	@Override
 	public void setFont(final Font font) {
-		SWTGraphicUtil.dispose(font);
+		SWTGraphicUtil.safeDispose(font);
 		this.font = font;
 	}
 
@@ -278,7 +261,7 @@ class LLabel extends Canvas {
 	 * @return the left margin
 	 */
 	public int getLeftMargin() {
-		return leftMargin;
+		return this.leftMargin;
 	}
 
 	/**
@@ -292,7 +275,7 @@ class LLabel extends Canvas {
 	 * @return the top margin
 	 */
 	public int getTopMargin() {
-		return topMargin;
+		return this.topMargin;
 	}
 
 	/**
@@ -306,7 +289,7 @@ class LLabel extends Canvas {
 	 * @return the right margin
 	 */
 	public int getRightMargin() {
-		return rightMargin;
+		return this.rightMargin;
 	}
 
 	/**
@@ -320,7 +303,7 @@ class LLabel extends Canvas {
 	 * @return the bottom margin
 	 */
 	public int getBottomMargin() {
-		return bottomMargin;
+		return this.bottomMargin;
 	}
 
 	/**

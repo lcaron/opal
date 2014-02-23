@@ -6,15 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation, 
- *     inspired by Romain Guy's work (http://www.curious-creature.org)
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.infinitePanel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -32,7 +29,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 /**
  * Instances of this class are controls located on the top of a shell. They
  * display a ticker that indicates to the user that a long task operation is
- * running
+ * running. The design is inspired by Romain Guy's work (http://www.curious-creature.org)
  */
 public class InfiniteProgressPanel {
 
@@ -40,7 +37,7 @@ public class InfiniteProgressPanel {
 	private static final int NUMBER_OF_STEPS = 10;
 
 	private final Shell parent;
-	private Shell panel;
+	private Shell shellHover;
 	private String text;
 	private Font textFont;
 	private Color textColor;
@@ -101,10 +98,10 @@ public class InfiniteProgressPanel {
 
 			@Override
 			public void handleEvent(final Event e) {
-				if (InfiniteProgressPanel.this.panel != null && //
-						!InfiniteProgressPanel.this.panel.isDisposed() && !InfiniteProgressPanel.this.panel.isVisible()) {
-					InfiniteProgressPanel.this.panel.setVisible(true);
-					InfiniteProgressPanel.this.panel.setActive();
+				if (InfiniteProgressPanel.this.shellHover != null && //
+						!InfiniteProgressPanel.this.shellHover.isDisposed() && !InfiniteProgressPanel.this.shellHover.isVisible()) {
+					InfiniteProgressPanel.this.shellHover.setVisible(true);
+					InfiniteProgressPanel.this.shellHover.setActive();
 				}
 			}
 		});
@@ -118,41 +115,48 @@ public class InfiniteProgressPanel {
 			SWT.error(SWT.ERROR_WIDGET_DISPOSED);
 		}
 
-		this.panel = new Shell(this.parent, SWT.APPLICATION_MODAL | SWT.NO_TRIM | SWT.ON_TOP);
-		this.panel.setLayout(new FillLayout());
-		this.panel.setAlpha(0);
+		this.currentPosition = 0;
+		this.fadeIn = true;
+		this.fadeOut = false;
+		this.fadeOutCounter = 0;
 
-		this.panel.addListener(SWT.KeyUp, new Listener() {
+		if (this.defaultColor == null) {
+			this.defaultColor = new Color(this.parent.getDisplay(), 200, 200, 200);
+		}
+		SWTGraphicUtil.addDisposer(this.parent, this.defaultColor);
 
+		if (this.selectionColor == null) {
+			this.selectionColor = new Color(this.parent.getDisplay(), 0, 0, 0);
+		}
+		SWTGraphicUtil.addDisposer(this.parent, this.selectionColor);
+
+		createShell();
+		createAndRunAnimatorThread();
+	}
+
+	private void createShell() {
+		this.shellHover = new Shell(this.parent, SWT.APPLICATION_MODAL | SWT.NO_TRIM | SWT.ON_TOP);
+		this.shellHover.setLayout(new FillLayout());
+		this.shellHover.setAlpha(0);
+
+		this.shellHover.addListener(SWT.KeyUp, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
 				event.doit = false;
 			}
 		});
 
-		if (this.defaultColor == null) {
-			this.defaultColor = new Color(this.parent.getDisplay(), 200, 200, 200);
-		}
-
-		if (this.selectionColor == null) {
-			this.selectionColor = new Color(this.parent.getDisplay(), 0, 0, 0);
-		}
-
-		this.parent.addDisposeListener(new DisposeListener() {
+		this.shellHover.addListener(SWT.Deactivate, new Listener() {
 
 			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(InfiniteProgressPanel.this.defaultColor);
-				SWTGraphicUtil.dispose(InfiniteProgressPanel.this.selectionColor);
+			public void handleEvent(final Event arg0) {
+				InfiniteProgressPanel.this.shellHover.setVisible(false);
 			}
 		});
 
-		this.currentPosition = 0;
-		this.fadeIn = true;
-		this.fadeOut = false;
-		this.fadeOutCounter = 0;
+		this.shellHover.setBounds(this.shellHover.getDisplay().map(this.parent, null, this.parent.getClientArea()));
 
-		this.canvas = new Canvas(this.panel, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
+		this.canvas = new Canvas(this.shellHover, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
 		this.canvas.addPaintListener(new PaintListener() {
 
 			@Override
@@ -161,9 +165,10 @@ public class InfiniteProgressPanel {
 			}
 		});
 
-		this.panel.setBounds(this.panel.getDisplay().map(this.parent, null, this.parent.getClientArea()));
-		this.panel.open();
+		this.shellHover.open();
+	}
 
+	private void createAndRunAnimatorThread() {
 		this.animatorThread = new Thread() {
 
 			/**
@@ -176,7 +181,7 @@ public class InfiniteProgressPanel {
 					if (InfiniteProgressPanel.this.fadeOut) {
 						InfiniteProgressPanel.this.fadeOutCounter++;
 					}
-					InfiniteProgressPanel.this.panel.getDisplay().asyncExec(new Runnable() {
+					InfiniteProgressPanel.this.shellHover.getDisplay().asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
@@ -193,15 +198,6 @@ public class InfiniteProgressPanel {
 			}
 		};
 		this.animatorThread.start();
-
-		this.panel.addListener(SWT.Deactivate, new Listener() {
-
-			@Override
-			public void handleEvent(final Event arg0) {
-				InfiniteProgressPanel.this.panel.setVisible(false);
-			}
-		});
-
 	}
 
 	/**
@@ -223,21 +219,21 @@ public class InfiniteProgressPanel {
 	}
 
 	/**
-	 * Handle the fade in effect of the panel
+	 * Handle the fade in effect of the hover shell
 	 */
 	private void handleFadeIn() {
 		if (this.fadeIn) {
 			if (this.currentPosition == NUMBER_OF_STEPS) {
 				this.fadeIn = false;
-				this.panel.setAlpha(this.alpha);
+				this.shellHover.setAlpha(this.alpha);
 			} else {
-				this.panel.setAlpha(this.currentPosition * this.alpha / NUMBER_OF_STEPS);
+				this.shellHover.setAlpha(this.currentPosition * this.alpha / NUMBER_OF_STEPS);
 			}
 		}
 	}
 
 	/**
-	 * Handle the fade out effect of the panel
+	 * Handle the fade out effect of the hover shell
 	 */
 	private void handleFadeOut() {
 		if (this.fadeOut) {
@@ -246,19 +242,18 @@ public class InfiniteProgressPanel {
 					this.animatorThread.interrupt();
 					this.animatorThread = null;
 				}
-				if (!this.panel.isDisposed()) {
-					this.panel.getDisplay().asyncExec(new Runnable() {
-
+				if (!this.shellHover.isDisposed()) {
+					this.shellHover.getDisplay().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							if (!InfiniteProgressPanel.this.panel.isDisposed()) {
-								InfiniteProgressPanel.this.panel.dispose();
+							if (!InfiniteProgressPanel.this.shellHover.isDisposed()) {
+								InfiniteProgressPanel.this.shellHover.dispose();
 							}
 						}
 					});
 				}
 			}
-			this.panel.setAlpha(255 - this.fadeOutCounter * this.alpha / NUMBER_OF_STEPS);
+			this.shellHover.setAlpha(255 - this.fadeOutCounter * this.alpha / NUMBER_OF_STEPS);
 		}
 	}
 
@@ -269,8 +264,7 @@ public class InfiniteProgressPanel {
 	 * @param clientArea client area of the canvas
 	 */
 	private void drawBackground(final Rectangle clientArea, final GC gc) {
-		// Draw the background
-		gc.setBackground(this.panel.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		gc.setBackground(this.shellHover.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(clientArea);
 	}
 
@@ -281,7 +275,6 @@ public class InfiniteProgressPanel {
 	 * @param clientArea client area of the canvas
 	 */
 	private void drawTicker(final Rectangle clientArea, final GC gc) {
-		// Draw the ticker
 		final int centerX = clientArea.width / 2;
 		final int centerY = clientArea.height / 2;
 		final int maxRay = (int) (Math.min(clientArea.width, clientArea.height) * 0.6f) / 2;
@@ -347,7 +340,7 @@ public class InfiniteProgressPanel {
 	 * Stop the animation and dispose the panel
 	 */
 	public void stop() {
-		if (this.panel.isDisposed() || this.panel.getDisplay().isDisposed()) {
+		if (this.shellHover.isDisposed() || this.shellHover.getDisplay().isDisposed()) {
 			return;
 		}
 		this.fadeOut = true;
@@ -474,7 +467,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setDefaultColor(final Color defaultColor) {
 		this.checkIfAnimationIsRunning();
-		SWTGraphicUtil.dispose(this.defaultColor);
+		SWTGraphicUtil.safeDispose(this.defaultColor);
 		this.defaultColor = defaultColor;
 	}
 
@@ -533,7 +526,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setSelectionColor(final Color selectionColor) {
 		this.checkIfAnimationIsRunning();
-		SWTGraphicUtil.dispose(this.selectionColor);
+		SWTGraphicUtil.safeDispose(this.selectionColor);
 		this.selectionColor = selectionColor;
 	}
 
@@ -573,7 +566,7 @@ public class InfiniteProgressPanel {
 	 */
 	public void setTextColor(final Color textColor) {
 		this.checkIfAnimationIsRunning();
-		SWTGraphicUtil.dispose(this.textColor);
+		SWTGraphicUtil.safeDispose(this.textColor);
 		this.textColor = textColor;
 	}
 
@@ -598,7 +591,6 @@ public class InfiniteProgressPanel {
 			this.textFont.dispose();
 		}
 		this.textFont = textFont;
-
 	}
 
 }

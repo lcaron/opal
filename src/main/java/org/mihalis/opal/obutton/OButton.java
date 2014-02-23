@@ -163,7 +163,7 @@ public class OButton extends Canvas {
 						fireSelectionEvent();
 						break;
 					case SWT.Paint:
-						onPaint(event);
+						handlePaintEvent(event);
 						break;
 					case SWT.KeyDown:
 						if (event.keyCode == SWT.TAB) {
@@ -199,7 +199,7 @@ public class OButton extends Canvas {
 		}
 	}
 
-	private void onPaint(final Event event) {
+	private void handlePaintEvent(final Event event) {
 		if (!isEnabled()) {
 			this.buttonRenderer.drawButtonWhenDisabled(event.gc, this);
 			return;

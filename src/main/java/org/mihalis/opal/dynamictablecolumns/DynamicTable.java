@@ -29,13 +29,13 @@ import org.eclipse.swt.widgets.TableColumn;
  * 
  */
 public class DynamicTable extends Table {
-	
+
 	private Composite parent = null;
 	private Composite container = null;
-	
+
 	private Menu headerMenu = null;
 	private DynamicTableColumnLayout dynamicLayout = null;
-	
+
 	/**
 	 * Constructor
 	 * @param parent Composite
@@ -48,33 +48,35 @@ public class DynamicTable extends Table {
 				super.reskin(flags);
 			}
 		}, style);
-		
-		this.parent  = parent;
+
+		this.parent = parent;
 		this.container = super.getParent();
-		
-		dynamicLayout = new DynamicTableColumnLayout() {
+
+		this.dynamicLayout = new DynamicTableColumnLayout() {
 			@Override
 			public void setColumnData(final DynamicColumnData column) {
 				super.setColumnData(column);
-				createMenuItem(headerMenu, column);
+				createMenuItem(DynamicTable.this.headerMenu, column);
 			}
 		};
-		
-		container.setLayout(dynamicLayout);
-		headerMenu = new Menu(container.getShell(), SWT.POP_UP);
+
+		this.container.setLayout(this.dynamicLayout);
+		this.headerMenu = new Menu(this.container.getShell(), SWT.POP_UP);
 		addListener(SWT.MenuDetect, new Listener() {
+			@Override
 			public void handleEvent(final Event event) {
-				setMenu(((isMouseOverHeader(event.x, event.y)) ? headerMenu : null));
+				setMenu(((isMouseOverHeader(event.x, event.y)) ? DynamicTable.this.headerMenu : null));
 			}
 		});
-		
+
 		addListener(SWT.Dispose, new Listener() {
+			@Override
 			public void handleEvent(final Event event) {
-				headerMenu.dispose();
+				DynamicTable.this.headerMenu.dispose();
 			}
 		});
 	}
-	
+
 	/**
 	 * Verify is mouse over header
 	 * @param x int
@@ -84,7 +86,7 @@ public class DynamicTable extends Table {
 	protected boolean isMouseOverHeader(final int x, final int y) {
 		final Point pt = Display.getDefault().map(null, DynamicTable.this, new Point(x, y));
 		final Rectangle clientArea = getClientArea();
-		return (clientArea.y <= pt.y) && (pt.y < (clientArea.y+getHeaderHeight()));
+		return (clientArea.y <= pt.y) && (pt.y < (clientArea.y + getHeaderHeight()));
 	}
 
 	/**
@@ -98,6 +100,7 @@ public class DynamicTable extends Table {
 		itemName.setText(tableColumn.getText());
 		itemName.setSelection(tableColumn.getResizable());
 		itemName.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(final Event event) {
 				final boolean checked = itemName.getSelection();
 				dynamicColumnData.setVisible(checked);
@@ -106,35 +109,35 @@ public class DynamicTable extends Table {
 			}
 		});
 	}
-	
+
 	@Override
 	public DynamicTableColumnLayout getLayout() {
-		return (DynamicTableColumnLayout)container.getLayout();
+		return (DynamicTableColumnLayout) this.container.getLayout();
 	}
-	
+
 	@Override
 	public void setLayout(final Layout layout) {
 		throw new IllegalStateException();
 	}
-	
+
 	@Override
 	public void setLayoutData(final Object layoutData) {
-		container.setLayoutData(layoutData);
+		this.container.setLayoutData(layoutData);
 	}
-	
+
 	@Override
 	public void layout() {
-		container.layout();
+		this.container.layout();
 	}
-	
+
 	@Override
 	public Composite getParent() {
 		return this.parent;
 	}
-	
+
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components.	
 	}
-	
+
 }

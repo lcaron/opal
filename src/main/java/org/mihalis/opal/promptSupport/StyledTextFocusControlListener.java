@@ -5,9 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+
  * Contributors:
- *     Peter Weishapl - Inspiration
- *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.promptSupport;
 
@@ -32,7 +32,7 @@ class StyledTextFocusControlListener extends BaseFocusControlListener {
 	 */
 	@Override
 	protected void hidePrompt() {
-		((StyledText) this.control).setText("");
+		((StyledText) this.control).setText(EMPTY_STRING);
 	}
 
 	/**
@@ -70,7 +70,7 @@ class StyledTextFocusControlListener extends BaseFocusControlListener {
 		if (promptText != null && promptText.equals(((StyledText) this.control).getText().trim())) {
 			return false;
 		}
-		return !"".equals(((StyledText) this.control).getText().trim());
+		return !EMPTY_STRING.equals(((StyledText) this.control).getText().trim());
 	}
 
 }

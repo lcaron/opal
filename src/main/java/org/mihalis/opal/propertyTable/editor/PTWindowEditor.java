@@ -53,7 +53,7 @@ public abstract class PTWindowEditor extends PTChooserEditor {
 		final Font font = SWTGraphicUtil.buildFontFrom(title, SWT.BOLD, 16);
 		title.setFont(font);
 		title.setText(ResourceManager.getLabel(ResourceManager.EDIT_PROPERTY));
-		SWTGraphicUtil.dispose(title, font);
+		SWTGraphicUtil.addDisposer(title, font);
 
 		createContent(shell, property);
 

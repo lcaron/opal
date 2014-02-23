@@ -146,9 +146,7 @@ public class HorizontalSpinner extends Composite {
 			createText(readOnly);
 			createMinusButton(buttonStyle);
 			createPlusButton(buttonStyle);
-
 		}
-
 	}
 
 	/**
@@ -200,16 +198,13 @@ public class HorizontalSpinner extends Composite {
 	 */
 	private void addTextListeners() {
 		this.text.addVerifyListener(new VerifyListener() {
-
 			@Override
 			public void verifyText(final VerifyEvent e) {
 				if (e.character != 0 && !Character.isDigit(e.character) && e.keyCode != SWT.BS && e.keyCode != SWT.DEL) {
 					e.doit = false;
 					return;
 				}
-
 				e.doit = HorizontalSpinner.this.verifyEntryAndStoreValue(e.text, e.keyCode);
-
 			}
 		});
 
@@ -237,7 +232,6 @@ public class HorizontalSpinner extends Composite {
 		});
 
 		this.text.addFocusListener(new org.eclipse.swt.events.FocusAdapter() {
-
 			/**
 			 * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
 			 */
@@ -247,9 +241,7 @@ public class HorizontalSpinner extends Composite {
 					HorizontalSpinner.this.setSelection(HorizontalSpinner.this.storedValue);
 				}
 			}
-
 		});
-
 	}
 
 	/**
@@ -344,7 +336,6 @@ public class HorizontalSpinner extends Composite {
 				for (final ModifyListener m : HorizontalSpinner.this.modifyListeners) {
 					m.modifyText(e);
 				}
-
 			}
 		});
 
@@ -548,7 +539,6 @@ public class HorizontalSpinner extends Composite {
 	public int getSelection() {
 		this.checkWidget();
 		return this.storedValue;
-
 	}
 
 	/**
@@ -686,7 +676,7 @@ public class HorizontalSpinner extends Composite {
 	public void setDigits(final int value) {
 		this.checkWidget();
 		this.digits = value;
-		this.convertSelection();
+		this.convertSelectionToStringValue();
 	}
 
 	/**
@@ -791,7 +781,7 @@ public class HorizontalSpinner extends Composite {
 		}
 
 		this.storedValue = selection;
-		this.text.setText(this.convertSelection());
+		this.text.setText(this.convertSelectionToStringValue());
 		this.text.selectAll();
 		this.text.setFocus();
 
@@ -806,16 +796,16 @@ public class HorizontalSpinner extends Composite {
 	 * 
 	 * @return the string representation of the selection
 	 */
-	private String convertSelection() {
+	private String convertSelectionToStringValue() {
 		if (this.getDigits() == 0) {
 			return String.valueOf(this.storedValue);
 		}
 		final StringBuilder unformatted = new StringBuilder(String.valueOf(this.storedValue * Math.pow(10, -1 * this.getDigits())));
-		for (int i = 0; i < digits; i++) {
+		for (int i = 0; i < this.digits; i++) {
 			unformatted.append("0");
 		}
 		final int position = unformatted.indexOf(".");
-		final String temp = unformatted.substring(0, position + 1 + digits);
+		final String temp = unformatted.substring(0, position + 1 + this.digits);
 		return temp.replace('.', this.decimalFormatSeparator);
 
 	}
@@ -1013,7 +1003,6 @@ public class HorizontalSpinner extends Composite {
 		this.leftButton.setCursor(cursor);
 		this.rightButton.setCursor(cursor);
 		this.text.setCursor(cursor);
-
 	}
 
 	/**
@@ -1036,7 +1025,6 @@ public class HorizontalSpinner extends Composite {
 		this.leftButton.setEnabled(enabled);
 		this.rightButton.setEnabled(enabled);
 		this.text.setEnabled(enabled);
-
 	}
 
 	/**
@@ -1090,7 +1078,6 @@ public class HorizontalSpinner extends Composite {
 		this.leftButton.setForeground(color);
 		this.rightButton.setForeground(color);
 		this.text.setForeground(color);
-
 	}
 
 	/**

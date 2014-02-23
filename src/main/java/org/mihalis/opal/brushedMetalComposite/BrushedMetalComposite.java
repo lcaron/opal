@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Jerry Huxtable (http://www.jhlabs.com/index.html) - initial API and implementation (on SWING), 
- *     Laurent CARON (laurent.caron at gmail dot com) - port to SWT
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.brushedMetalComposite;
 
@@ -33,6 +32,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 /**
  * Instances of this class are controls which background's texture is brushed
  * metal "a la Mac"
+ * This work is inspired by the article "Creating a brushed metal texture" by Jerry Huxtable (http://www.jhlabs.com/ip/brushed_metal.html)
  */
 public class BrushedMetalComposite extends Composite {
 
@@ -43,6 +43,7 @@ public class BrushedMetalComposite extends Composite {
 	private float shine = 0.1f;
 	private boolean monochrome = true;
 	private Random randomNumbers;
+	private final PaletteData palette = new PaletteData(0xFF0000, 0x00FF00, 0x0000FF);
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -80,33 +81,37 @@ public class BrushedMetalComposite extends Composite {
 	 */
 	public BrushedMetalComposite(final Composite parent, final int style) {
 		super(parent, style);
+		addListeners(parent);
+	}
+
+	private void addListeners(final Composite parent) {
 		this.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				BrushedMetalComposite.this.redrawComposite();
+				paintControl();
 			}
 		});
 
 		parent.addDisposeListener(new DisposeListener() {
-
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(BrushedMetalComposite.this.oldImage);
+				SWTGraphicUtil.safeDispose(BrushedMetalComposite.this.oldImage);
 			}
 		});
 	}
 
 	/**
-	 * Redraws the composite
+	 * Paint the component
+	 * @param e event
 	 */
-	private void redrawComposite() {
-		final Display display = this.getDisplay();
-		final Rectangle rect = this.getClientArea();
-		final ImageData imageData = this.drawBrushedMetalBackground(Math.max(1, rect.width), Math.max(1, rect.width));
+	private void paintControl() {
+		final Display display = getDisplay();
+		final Rectangle rect = getClientArea();
+		final ImageData imageData = drawBrushedMetalBackground(Math.max(1, rect.width), Math.max(1, rect.width));
 		final Image newImage = new Image(display, imageData);
 
-		this.setBackgroundImage(newImage);
-		SWTGraphicUtil.dispose(this.oldImage);
+		setBackgroundImage(newImage);
+		SWTGraphicUtil.safeDispose(this.oldImage);
 		this.oldImage = newImage;
 	}
 
@@ -120,8 +125,8 @@ public class BrushedMetalComposite extends Composite {
 	private ImageData drawBrushedMetalBackground(final int width, final int height) {
 
 		final int[] inPixels = new int[width];
-		final PaletteData palette = new PaletteData(0xFF0000, 0x00FF00, 0x0000FF);
-		final ImageData data = new ImageData(width, height, 0x20, palette);
+
+		final ImageData data = new ImageData(width, height, 0x20, this.palette);
 
 		this.randomNumbers = new Random(0);
 		final int a = this.color & 0xff000000;
@@ -148,9 +153,9 @@ public class BrushedMetalComposite extends Composite {
 			}
 
 			if (this.radius != 0) {
-				this.setDataElements(data, palette, 0, y, width, 1, this.blur(inPixels, width, this.radius));
+				setDataElements(data, 0, y, width, 1, this.blur(inPixels, width, this.radius));
 			} else {
-				this.setDataElements(data, palette, 0, y, width, 1, inPixels);
+				setDataElements(data, 0, y, width, 1, inPixels);
 			}
 		}
 
@@ -161,7 +166,6 @@ public class BrushedMetalComposite extends Composite {
 	 * Sets the data for a rectangle of pixels from a primitive array
 	 * 
 	 * @param data the source ImageData
-	 * @param palette the palette associated to the imageData
 	 * @param posX The X coordinate of the upper left pixel location.
 	 * @param posY The Y coordinate of the upper left pixel location.
 	 * @param width Width of the pixel rectangle.
@@ -169,12 +173,12 @@ public class BrushedMetalComposite extends Composite {
 	 * @param pixels An array containing the pixel data to place between x,y and
 	 *            x+w-1, y+h-1.
 	 */
-	private void setDataElements(final ImageData data, final PaletteData palette, final int posX, final int posY, final int width, final int height, final int[] pixels) {
+	private void setDataElements(final ImageData data, final int posX, final int posY, final int width, final int height, final int[] pixels) {
 		int cpt = 0;
 		for (int y = posY; y < posY + height; y++) {
 			for (int x = posX; x < posX + width; x++) {
 				final int rgb = pixels[cpt++];
-				final int pixel = palette.getPixel(new RGB(rgb >> 16 & 0xFF, rgb >> 8 & 0xFF, rgb & 0xFF));
+				final int pixel = this.palette.getPixel(new RGB(rgb >> 16 & 0xFF, rgb >> 8 & 0xFF, rgb & 0xFF));
 				data.setPixel(x, y, pixel);
 				data.setAlpha(x, y, rgb >> 24 & 0xFF);
 			}
@@ -290,7 +294,7 @@ public class BrushedMetalComposite extends Composite {
 	 */
 	public void setRadius(final int radius) {
 		this.radius = radius;
-		this.redrawComposite();
+		paintControl();
 	}
 
 	/**
@@ -313,7 +317,7 @@ public class BrushedMetalComposite extends Composite {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.amount = amount;
-		this.redrawComposite();
+		paintControl();
 	}
 
 	/**
@@ -335,7 +339,7 @@ public class BrushedMetalComposite extends Composite {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 		this.color = 0xFF << 24 | color.getRed() << 16 | color.getGreen() << 8 | color.getBlue();
-		this.redrawComposite();
+		paintControl();
 	}
 
 	/**
@@ -357,7 +361,7 @@ public class BrushedMetalComposite extends Composite {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.shine = shine;
-		this.redrawComposite();
+		paintControl();
 	}
 
 	/**
@@ -372,7 +376,7 @@ public class BrushedMetalComposite extends Composite {
 	 */
 	public void setMonochrome(final boolean monochrome) {
 		this.monochrome = monochrome;
-		this.redrawComposite();
+		paintControl();
 	}
 
 }

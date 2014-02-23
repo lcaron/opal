@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Laurent CARON.
+ * Copyright (c) 2012 Laurent CARON
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
+ * Contributors:  
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial API and implementation
  *******************************************************************************/
 
 package org.mihalis.opal.calculator;
@@ -56,13 +56,12 @@ public class CalculatorCombo extends Composite {
 	private Listener listener, filter;
 	private boolean hasFocus;
 	private KeyListener keyListener;
-	private CalculatorButtonsPanel panel;
+	private CalculatorButtonsComposite composite;
 
 	/**
 	 * Constructs a new instance of this class given its parent.
 	 * 
-	 * @param parent a widget which will be the parent of the new instance
-	 *            (cannot be null)
+	 * @param parent a widget which will be the parent of the new instance (cannot be null)
 	 * @param style not used
 	 * 
 	 * @exception IllegalArgumentException <ul>
@@ -91,17 +90,17 @@ public class CalculatorCombo extends Composite {
 			@Override
 			public void handleEvent(final Event event) {
 				if (CalculatorCombo.this.popup == event.widget) {
-					popupEvent(event);
+					handlePopupEvent(event);
 					return;
 				}
 
 				if (CalculatorCombo.this.arrow == event.widget) {
-					buttonEvent(event);
+					handleButtonEvent(event);
 					return;
 				}
 
 				if (CalculatorCombo.this == event.widget) {
-					multiChoiceEvent(event);
+					handleMultiChoiceEvent(event);
 					return;
 				}
 
@@ -112,7 +111,7 @@ public class CalculatorCombo extends Composite {
 							if (isDisposed()) {
 								return;
 							}
-							handleFocus(SWT.FocusOut);
+							handleFocusEvent(SWT.FocusOut);
 						}
 					});
 				}
@@ -120,13 +119,13 @@ public class CalculatorCombo extends Composite {
 		};
 
 		final int[] calculatorComboEvents = { SWT.Dispose, SWT.Move, SWT.Resize };
-		for (int i = 0; i < calculatorComboEvents.length; i++) {
-			this.addListener(calculatorComboEvents[i], this.listener);
+		for (final int calculatorComboEvent : calculatorComboEvents) {
+			this.addListener(calculatorComboEvent, this.listener);
 		}
 
 		final int[] buttonEvents = { SWT.Selection, SWT.FocusIn };
-		for (int i = 0; i < buttonEvents.length; i++) {
-			this.arrow.addListener(buttonEvents[i], this.listener);
+		for (final int buttonEvent : buttonEvents) {
+			this.arrow.addListener(buttonEvent, this.listener);
 		}
 
 		this.filter = new Listener() {
@@ -134,12 +133,12 @@ public class CalculatorCombo extends Composite {
 			public void handleEvent(final Event event) {
 				final Shell shell = ((Control) event.widget).getShell();
 				if (shell == CalculatorCombo.this.getShell()) {
-					handleFocus(SWT.FocusOut);
+					handleFocusEvent(SWT.FocusOut);
 				}
 			}
 		};
 
-		createPopup();
+		createPopupShell();
 	}
 
 	/**
@@ -147,7 +146,7 @@ public class CalculatorCombo extends Composite {
 	 * 
 	 * @param event event to handle
 	 */
-	private void popupEvent(final Event event) {
+	private void handlePopupEvent(final Event event) {
 		switch (event.type) {
 			case SWT.Paint:
 				final Rectangle listRect = this.popup.getBounds();
@@ -157,10 +156,10 @@ public class CalculatorCombo extends Composite {
 				break;
 			case SWT.Close:
 				event.doit = false;
-				dropDown(false);
+				hidePopupWindow(false);
 				break;
 			case SWT.Deactivate:
-				dropDown(false);
+				hidePopupWindow(false);
 				break;
 			case SWT.Dispose:
 				if (this.keyListener != null) {
@@ -170,18 +169,16 @@ public class CalculatorCombo extends Composite {
 		}
 	}
 
-	/**
-	 * Display/Hide the popup window
-	 * 
-	 * @param drop if <code>true</code>, displays the popup window. If
-	 *            <code>false</code>, hide the popup window
-	 */
-	private void dropDown(final boolean drop) {
-		if (drop == isDropped()) {
+	private void hidePopupWindow(final boolean drop) {
+		_displayHidePopupWindow(false);
+	}
+
+	private void _displayHidePopupWindow(final boolean show) {
+		if (show == isPopupVisible()) {
 			return;
 		}
 
-		if (!drop) {
+		if (!show) {
 			this.popup.setVisible(false);
 			if (!isDisposed()) {
 				this.label.setFocus();
@@ -192,7 +189,7 @@ public class CalculatorCombo extends Composite {
 		if (getShell() != this.popup.getParent()) {
 			this.popup.dispose();
 			this.popup = null;
-			createPopup();
+			createPopupShell();
 		}
 
 		final Point textRect = this.label.toDisplay(this.label.getLocation().x, this.label.getLocation().y);
@@ -204,55 +201,42 @@ public class CalculatorCombo extends Composite {
 		this.popup.setFocus();
 	}
 
-	/**
-	 * Create the popup that contains all checkboxes
-	 */
-	private void createPopup() {
+	private void createPopupShell() {
 		this.popup = new Shell(getShell(), SWT.NO_TRIM | SWT.ON_TOP);
 		this.popup.setLayout(new GridLayout());
 
 		final int[] popupEvents = { SWT.Close, SWT.Paint, SWT.Deactivate, SWT.Dispose };
-		for (int i = 0; i < popupEvents.length; i++) {
-			this.popup.addListener(popupEvents[i], this.listener);
+		for (final int popupEvent : popupEvents) {
+			this.popup.addListener(popupEvent, this.listener);
 		}
 
-		this.panel = new CalculatorButtonsPanel(this.popup, SWT.NONE);
-		this.panel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-		this.panel.setDisplayArea(this.label);
-		this.keyListener = this.panel.getKeyListener();
+		this.composite = new CalculatorButtonsComposite(this.popup, SWT.NONE);
+		this.composite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+		this.composite.setDisplayArea(this.label);
+		this.keyListener = this.composite.getKeyListener();
 		this.label.addKeyListener(this.keyListener);
 
 		this.popup.pack();
 	}
 
-	/**
-	 * Handle a button event
-	 * 
-	 * @param event event to hangle
-	 */
-	private void buttonEvent(final Event event) {
+	private void handleButtonEvent(final Event event) {
 		switch (event.type) {
 			case SWT.FocusIn: {
-				handleFocus(SWT.FocusIn);
+				handleFocusEvent(SWT.FocusIn);
 				break;
 			}
 			case SWT.Selection: {
-				dropDown(!isDropped());
+				_displayHidePopupWindow(!isPopupVisible());
 				break;
 			}
 		}
 	}
 
-	/**
-	 * Handle a focus event
-	 * 
-	 * @param type type of the event to handle
-	 */
-	private void handleFocus(final int type) {
+	private void handleFocusEvent(final int eventType) {
 		if (isDisposed()) {
 			return;
 		}
-		switch (type) {
+		switch (eventType) {
 			case SWT.FocusIn: {
 				if (this.hasFocus) {
 					return;
@@ -288,20 +272,11 @@ public class CalculatorCombo extends Composite {
 		}
 	}
 
-	/**
-	 * @return <code>true</code> if the popup is visible and not dropped,
-	 *         <code>false</code> otherwise
-	 */
-	private boolean isDropped() {
+	private boolean isPopupVisible() {
 		return !this.popup.isDisposed() && this.popup.getVisible();
 	}
 
-	/**
-	 * Handle a multichoice event
-	 * 
-	 * @param event event to handle
-	 */
-	private void multiChoiceEvent(final Event event) {
+	private void handleMultiChoiceEvent(final Event event) {
 		switch (event.type) {
 			case SWT.Dispose:
 				if (this.popup != null && !this.popup.isDisposed()) {
@@ -315,15 +290,14 @@ public class CalculatorCombo extends Composite {
 				this.arrow = null;
 				break;
 			case SWT.Move:
-				dropDown(false);
+				hidePopupWindow(false);
 				break;
 			case SWT.Resize:
-				if (isDropped()) {
-					dropDown(false);
+				if (isPopupVisible()) {
+					hidePopupWindow(false);
 				}
 				break;
 		}
-
 	}
 
 	/**
@@ -348,7 +322,7 @@ public class CalculatorCombo extends Composite {
 	 */
 	public void addModifyListener(final ModifyListener listener) {
 		checkWidget();
-		this.panel.addModifyListener(listener);
+		this.composite.addModifyListener(listener);
 	}
 
 	/**
@@ -407,7 +381,7 @@ public class CalculatorCombo extends Composite {
 	 */
 	public void removeModifyListener(final ModifyListener listener) {
 		checkWidget();
-		this.panel.removeModifyListener(listener);
+		this.composite.removeModifyListener(listener);
 	}
 
 	/**

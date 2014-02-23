@@ -27,10 +27,14 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  */
 public abstract class AbstractButtonRenderer implements ButtonRenderer {
 
+	private static final String ARROW_RIGHT_IMAGE = "images/arrow_right.png";
+	private static final String ARROW_LEFT_IMAGE = "images/arrow_left.png";
+	private static final String ARROW_DOWN_IMAGE = "images/arrow_down.png";
+	private static final String ARROW_UP_IMAGE = "images/arrow_up.png";
 	private static final int RADIUS_VALUE = 10;
-	private static final Color DISABLED_FONT_COLOR = SWTGraphicUtil.createDisposableColor(119, 119, 119);
-	private static final Color DISABLED_SECOND_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(220, 220, 220);
-	private static final Color DISABLED_FIRST_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(237, 237, 237);
+	private static final Color DISABLED_FONT_COLOR = SWTGraphicUtil.getColorSafely(119, 119, 119);
+	private static final Color DISABLED_SECOND_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(220, 220, 220);
+	private static final Color DISABLED_FIRST_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(237, 237, 237);
 
 	private ButtonConfiguration normal, hover, disabled, selected, onclick;
 	private GC gc;
@@ -129,10 +133,10 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	}
 
 	private void createArrows() {
-		imageUp = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("images/arrow_up.png"));
-		imageDown = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("images/arrow_down.png"));
-		imageLeft = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("images/arrow_left.png"));
-		imageRight = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("images/arrow_right.png"));
+		imageUp = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_UP_IMAGE));
+		imageDown = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_DOWN_IMAGE));
+		imageLeft = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_LEFT_IMAGE));
+		imageRight = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_RIGHT_IMAGE));
 
 		Display.getCurrent().addListener(SWT.Dispose, new Listener() {
 

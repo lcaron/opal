@@ -21,8 +21,8 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 public class GreenButtonRenderer extends AbstractButtonRenderer {
 
 	private static GreenButtonRenderer instance;
-	private static final Color FIRST_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(119, 212, 42);
-	private static final Color SECOND_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(38, 138, 22);
+	private static final Color FIRST_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(119, 212, 42);
+	private static final Color SECOND_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(38, 138, 22);
 
 	private GreenButtonRenderer() {
 		super();

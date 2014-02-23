@@ -90,7 +90,6 @@ public class Notifier {
 	public static void notify(final Image image, final String title, final String text, final NotifierTheme theme) {
 		final Shell shell = createNotificationWindow(image, title, text, NotifierColorsFactory.getColorsForTheme(theme));
 		makeShellAppears(shell);
-
 	}
 
 	/**
@@ -144,7 +143,7 @@ public class Notifier {
 		final Font titleFont = SWTGraphicUtil.buildFontFrom(titleLabel, SWT.BOLD, FONT_SIZE);
 		titleLabel.setFont(titleFont);
 		titleLabel.setText(title);
-		SWTGraphicUtil.dispose(shell, titleFont);
+		SWTGraphicUtil.addDisposer(shell, titleFont);
 	}
 
 	/**
@@ -159,9 +158,9 @@ public class Notifier {
 		gdImage.horizontalIndent = 10;
 		labelImage.setLayoutData(gdImage);
 		if (image == null) {
-			final Image temp = SWTGraphicUtil.createImage("images/information.png");
+			final Image temp = SWTGraphicUtil.createImageFromFile("images/information.png");
 			labelImage.setImage(temp);
-			SWTGraphicUtil.dispose(shell, temp);
+			SWTGraphicUtil.addDisposer(shell, temp);
 		} else {
 			labelImage.setImage(image);
 		}
@@ -190,8 +189,7 @@ public class Notifier {
 		textLabel.setText(text);
 		SWTGraphicUtil.applyHTMLFormating(textLabel);
 
-		SWTGraphicUtil.dispose(shell, textFont);
-
+		SWTGraphicUtil.addDisposer(shell, textFont);
 	}
 
 	/**
@@ -224,7 +222,7 @@ public class Notifier {
 				gc.fillRoundRectangle(30, 1, rect.width - 32, rect.height - 2, 8, 8);
 				gc.fillRectangle(30, 1, 10, rect.height - 2);
 
-				final Image closeImage = SWTGraphicUtil.createImage("images/close.png");
+				final Image closeImage = SWTGraphicUtil.createImageFromFile("images/close.png");
 				gc.drawImage(closeImage, rect.width - 21, 13);
 
 				gc.dispose();

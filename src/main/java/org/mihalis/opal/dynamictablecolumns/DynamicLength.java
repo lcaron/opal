@@ -32,10 +32,10 @@ public class DynamicLength {
 
 	@Override
 	public String toString() {
-		if ((value == null) || (dynamicLengthMeasure == null)) {
+		if ((this.value == null) || (this.dynamicLengthMeasure == null)) {
 			return "";
 		}
-		return (value + "" + dynamicLengthMeasure.getId());
+		return (this.value + "" + this.dynamicLengthMeasure.getId());
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class DynamicLength {
 	 * @return Double
 	 */
 	public Double getValue() {
-		return value;
+		return this.value;
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class DynamicLength {
 	 * @return DynamicLengthMeasure
 	 */
 	public DynamicLengthMeasure getMeasure() {
-		return dynamicLengthMeasure;
+		return this.dynamicLengthMeasure;
 	}
 
 	/**

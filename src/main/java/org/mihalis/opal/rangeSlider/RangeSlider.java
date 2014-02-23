@@ -121,15 +121,15 @@ public class RangeSlider extends Canvas {
 
 			@Override
 			public void handleEvent(final Event event) {
-				SWTGraphicUtil.dispose(RangeSlider.this.slider);
-				SWTGraphicUtil.dispose(RangeSlider.this.sliderHover);
-				SWTGraphicUtil.dispose(RangeSlider.this.sliderDrag);
-				SWTGraphicUtil.dispose(RangeSlider.this.sliderSelected);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.slider);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderHover);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderDrag);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderSelected);
 
-				SWTGraphicUtil.dispose(RangeSlider.this.vSlider);
-				SWTGraphicUtil.dispose(RangeSlider.this.vSliderHover);
-				SWTGraphicUtil.dispose(RangeSlider.this.vSliderDrag);
-				SWTGraphicUtil.dispose(RangeSlider.this.vSliderSelected);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.vSlider);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderHover);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderDrag);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderSelected);
 			}
 		});
 

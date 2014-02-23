@@ -21,8 +21,8 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 public class RedButtonRenderer extends AbstractButtonRenderer {
 
 	private static RedButtonRenderer instance;
-	private static final Color FIRST_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(254, 26, 0);
-	private static final Color SECOND_BACKGROUND_COLOR = SWTGraphicUtil.createDisposableColor(208, 2, 0);
+	private static final Color FIRST_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(254, 26, 0);
+	private static final Color SECOND_BACKGROUND_COLOR = SWTGraphicUtil.getColorSafely(208, 2, 0);
 
 	private RedButtonRenderer() {
 		super();

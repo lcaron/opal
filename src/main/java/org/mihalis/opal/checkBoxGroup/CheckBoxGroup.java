@@ -44,7 +44,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * </dl>
  */
 public class CheckBoxGroup extends Canvas implements PaintListener {
-	protected final Button button;
+	protected Button button;
 	private final Composite content;
 	private final List<SelectionListener> selectionListeners;
 
@@ -73,20 +73,27 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 	 */
 	public CheckBoxGroup(final Composite parent, final int style) {
 		super(parent, style);
-
 		super.setLayout(new GridLayout());
+
 		this.selectionListeners = new ArrayList<SelectionListener>();
 
+		createCheckBoxButton();
+
+		this.content = new Composite(this, style);
+		this.content.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+
+		this.addPaintListener(this);
+	}
+
+	private void createCheckBoxButton() {
 		this.button = new Button(this, SWT.CHECK);
 		final GridData gdButton = new GridData(GridData.BEGINNING, GridData.CENTER, true, false);
 		gdButton.horizontalIndent = 15;
 		this.button.setLayoutData(gdButton);
 		this.button.setSelection(true);
-		// this.button.setBackground(this.getBackground());
 		this.button.pack();
 
 		this.button.addSelectionListener(new SelectionAdapter() {
-
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
@@ -103,11 +110,6 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 				}
 			}
 		});
-
-		this.content = new Composite(this, style);
-		this.content.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-
-		this.addPaintListener(this);
 	}
 
 	/**
@@ -128,26 +130,11 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 	}
 
 	/**
-	 * Draws the widget
-	 */
-	private void drawWidget(final GC gc) {
-		final Rectangle rect = this.getClientArea();
-		final int margin = (int) (this.button.getSize().y * 1.5);
-		final int startY = margin / 2;
-
-		gc.setForeground(this.getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-		gc.drawRoundRectangle(1, startY, rect.width - 2, rect.height - startY - 2, 2, 2);
-
-		gc.setForeground(this.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		gc.drawRoundRectangle(2, startY + 1, rect.width - 4, rect.height - startY - 4, 2, 2);
-	}
-
-	/**
 	 * Activate the content
 	 */
 	public void activate() {
 		this.button.setSelection(true);
-		SWTGraphicUtil.enable(this.content);
+		SWTGraphicUtil.enableAllChildrenWidgets(this.content);
 	}
 
 	/**
@@ -181,7 +168,7 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 	 */
 	public void deactivate() {
 		this.button.setSelection(false);
-		SWTGraphicUtil.disable(this.content);
+		SWTGraphicUtil.disableAllChildrenWidgets(this.content);
 	}
 
 	/**
@@ -292,6 +279,21 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 		if (paintEvent.widget == this) {
 			drawWidget(paintEvent.gc);
 		}
+	}
+
+	/**
+	 * Draws the widget
+	 */
+	private void drawWidget(final GC gc) {
+		final Rectangle rect = this.getClientArea();
+		final int margin = (int) (this.button.getSize().y * 1.5);
+		final int startY = margin / 2;
+
+		gc.setForeground(this.getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+		gc.drawRoundRectangle(1, startY, rect.width - 2, rect.height - startY - 2, 2, 2);
+
+		gc.setForeground(this.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		gc.drawRoundRectangle(2, startY + 1, rect.width - 4, rect.height - startY - 4, 2, 2);
 	}
 
 }

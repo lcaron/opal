@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
- *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
  *******************************************************************************/
 package org.mihalis.opal.opalDialog;
 
@@ -24,6 +23,10 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * This abstract class if the mother of MessageArea and FooterArea classes
  */
 abstract class DialogArea {
+	private static final String MORE_DETAILS_IMAGE = "moreDetails.png";
+	private static final String FEWER_DETAILS_IMAGE = "fewerDetails.png";
+	private static final String WINDOWS_DEFAULT_FONT = "Segoe UI";
+	private static final String MAC_OS_DEFAULT_FONT = "Lucida Grande";
 	protected final Dialog parent;
 	private boolean initialised;
 
@@ -60,9 +63,9 @@ abstract class DialogArea {
 	 */
 	protected Font getNormalFont() {
 		if (SWTGraphicUtil.isMacOS()) {
-			return getFont("Lucida Grande", 11, SWT.NONE);
+			return getFont(MAC_OS_DEFAULT_FONT, 11, SWT.NONE);
 		} else {
-			return getFont("Segoe UI", 9, SWT.NONE);
+			return getFont(WINDOWS_DEFAULT_FONT, 9, SWT.NONE);
 		}
 	}
 
@@ -71,9 +74,9 @@ abstract class DialogArea {
 	 */
 	protected Font getBiggerFont() {
 		if (SWTGraphicUtil.isMacOS()) {
-			return getFont("Lucida Grande", 13, SWT.NONE);
+			return getFont(MAC_OS_DEFAULT_FONT, 13, SWT.NONE);
 		} else {
-			return getFont("Segoe UI", 11, SWT.NONE);
+			return getFont(WINDOWS_DEFAULT_FONT, 11, SWT.NONE);
 		}
 	}
 
@@ -91,7 +94,7 @@ abstract class DialogArea {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(font);
+				SWTGraphicUtil.safeDispose(font);
 			}
 		});
 		return font;
@@ -102,13 +105,7 @@ abstract class DialogArea {
 	 */
 	protected Color getTitleColor() {
 		final Color color = new Color(Display.getCurrent(), 35, 107, 178);
-		this.parent.shell.addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(color);
-			}
-		});
+		SWTGraphicUtil.addDisposer(this.parent.shell, color);
 		return color;
 	}
 
@@ -117,13 +114,7 @@ abstract class DialogArea {
 	 */
 	protected Color getGreyColor() {
 		final Color color = new Color(Display.getCurrent(), 240, 240, 240);
-		this.parent.shell.addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(color);
-			}
-		});
+		SWTGraphicUtil.addDisposer(this.parent.shell, color);
 		return color;
 	}
 
@@ -131,14 +122,14 @@ abstract class DialogArea {
 	 * @return the image "fewer details"
 	 */
 	protected Image getFewerDetailsImage() {
-		return loadImage("images/fewerDetails.png");
+		return loadImage("images/" + FEWER_DETAILS_IMAGE);
 	}
 
 	/**
 	 * @return the image "more details"
 	 */
 	protected Image getMoreDetailsImage() {
-		return loadImage("images/moreDetails.png");
+		return loadImage("images/" + MORE_DETAILS_IMAGE);
 	}
 
 	/**
@@ -148,14 +139,8 @@ abstract class DialogArea {
 	 * @return the image
 	 */
 	private Image loadImage(final String fileName) {
-		final Image image = SWTGraphicUtil.createImage(fileName);
-		this.parent.shell.addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(image);
-			}
-		});
+		final Image image = SWTGraphicUtil.createImageFromFile(fileName);
+		SWTGraphicUtil.addDisposer(this.parent.shell, image);
 		return image;
 	}
 

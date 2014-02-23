@@ -82,13 +82,11 @@ public class Launcher extends Composite {
 		});
 
 		this.addListener(SWT.KeyUp, new Listener() {
-
 			@Override
 			public void handleEvent(final Event event) {
-				OnKeyPressed(event);
+				handleKeyPressedEvent(event);
 			}
 		});
-
 	}
 
 	/**
@@ -123,41 +121,52 @@ public class Launcher extends Composite {
 		gridLayout.horizontalSpacing = gridLayout.verticalSpacing = 0;
 		this.setLayout(gridLayout);
 		for (final LauncherItem item : this.items) {
-			final LLabel label = new LLabel(this, SWT.CENTER);
-			label.setText(item.title);
-			label.setImage(SWTGraphicUtil.createImage(item.image));
-			label.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-			final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, false);
-			gd.widthHint = 192;
-			gd.heightHint = 220;
-			label.setLayoutData(gd);
-			item.label = label;
-
-			label.addListener(SWT.KeyUp, new Listener() {
-
-				@Override
-				public void handleEvent(final Event event) {
-					OnKeyPressed(event);
-				}
-			});
-
-			label.addListener(SWT.MouseUp, new Listener() {
-
-				@Override
-				public void handleEvent(final Event event) {
-					OnClick(event);
-				}
-			});
-
-			label.addListener(SWT.MouseDoubleClick, new Listener() {
-
-				@Override
-				public void handleEvent(final Event event) {
-					OnDoubleClick(event);
-				}
-			});
-
+			createItem(item);
 		}
+	}
+
+	private void createItem(final LauncherItem item) {
+		final LauncherLabel label = createLauncherLabel(item);
+		addListenerToLabel(label);
+	}
+
+	private LauncherLabel createLauncherLabel(final LauncherItem item) {
+		final LauncherLabel label = new LauncherLabel(this, SWT.CENTER);
+		label.setText(item.title);
+		label.setImage(SWTGraphicUtil.createImageFromFile(item.image));
+		label.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, false);
+		gd.widthHint = 192;
+		gd.heightHint = 220;
+		label.setLayoutData(gd);
+		item.label = label;
+		return label;
+	}
+
+	private void addListenerToLabel(final LauncherLabel label) {
+		label.addListener(SWT.KeyUp, new Listener() {
+
+			@Override
+			public void handleEvent(final Event event) {
+				handleKeyPressedEvent(event);
+			}
+		});
+
+		label.addListener(SWT.MouseUp, new Listener() {
+
+			@Override
+			public void handleEvent(final Event event) {
+				handleClickEvent(event);
+			}
+		});
+
+		label.addListener(SWT.MouseDoubleClick, new Listener() {
+
+			@Override
+			public void handleEvent(final Event event) {
+				handleDoubleClickEvent(event);
+			}
+		});
 	}
 
 	/**
@@ -165,7 +174,7 @@ public class Launcher extends Composite {
 	 * 
 	 * @param event Event
 	 */
-	private void OnKeyPressed(final Event event) {
+	private void handleKeyPressedEvent(final Event event) {
 		switch (event.keyCode) {
 			case SWT.ARROW_LEFT:
 				if (this.selection == -1) {
@@ -235,7 +244,7 @@ public class Launcher extends Composite {
 	 * 
 	 * @param event Event
 	 */
-	private void OnClick(final Event event) {
+	private void handleClickEvent(final Event event) {
 		for (int i = 0; i < this.items.size(); i++) {
 			final LauncherItem item = this.items.get(i);
 			if (item.label != null && item.label.equals(event.widget)) {
@@ -267,7 +276,7 @@ public class Launcher extends Composite {
 	 * 
 	 * @param event Event
 	 */
-	private void OnDoubleClick(final Event event) {
+	private void handleDoubleClickEvent(final Event event) {
 		for (int i = 0; i < this.items.size(); i++) {
 			final LauncherItem item = this.items.get(i);
 			if (item.label != null && item.label.equals(event.widget)) {
@@ -289,9 +298,8 @@ public class Launcher extends Composite {
 	 * @param event event (propagated to the selection listeners)
 	 */
 	private void startAnimation(final int index, final Event event) {
-		final LLabel label = this.items.get(index).label;
+		final LauncherLabel label = this.items.get(index).label;
 		getDisplay().timerExec(0, new Runnable() {
-
 			@Override
 			public void run() {
 				if (label.incrementAnimation()) {
@@ -312,18 +320,18 @@ public class Launcher extends Composite {
 	 *         <code>false</code> otherwise
 	 */
 	private boolean fireSelectionListeners(final Event originalEvent) {
+		final Event event = new Event();
+
+		event.button = originalEvent.button;
+		event.display = this.getDisplay();
+		event.item = null;
+		event.widget = this;
+		event.data = null;
+		event.time = originalEvent.time;
+		event.x = originalEvent.x;
+		event.y = originalEvent.y;
+
 		for (final SelectionListener listener : this.selectionListeners) {
-			final Event event = new Event();
-
-			event.button = originalEvent.button;
-			event.display = this.getDisplay();
-			event.item = null;
-			event.widget = this;
-			event.data = null;
-			event.time = originalEvent.time;
-			event.x = originalEvent.x;
-			event.y = originalEvent.y;
-
 			final SelectionEvent selEvent = new SelectionEvent(event);
 			listener.widgetSelected(selEvent);
 			if (!selEvent.doit) {

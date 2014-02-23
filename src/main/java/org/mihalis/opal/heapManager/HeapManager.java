@@ -12,8 +12,6 @@ package org.mihalis.opal.heapManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -85,18 +83,12 @@ public class HeapManager extends Composite {
 		updateContent();
 		createDefaultColors();
 
-		addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(HeapManager.this.barBorderColor);
-				SWTGraphicUtil.dispose(HeapManager.this.barInnerColor);
-				SWTGraphicUtil.dispose(HeapManager.this.barGradientColorTopStart);
-				SWTGraphicUtil.dispose(HeapManager.this.barGradientColorTopEnd);
-				SWTGraphicUtil.dispose(HeapManager.this.barGradientColorMiddleStart);
-				SWTGraphicUtil.dispose(HeapManager.this.barTextColor);
-			}
-		});
+		SWTGraphicUtil.addDisposer(this, this.barBorderColor);
+		SWTGraphicUtil.addDisposer(this, this.barInnerColor);
+		SWTGraphicUtil.addDisposer(this, this.barGradientColorTopStart);
+		SWTGraphicUtil.addDisposer(this, this.barGradientColorTopEnd);
+		SWTGraphicUtil.addDisposer(this, this.barGradientColorMiddleStart);
+		SWTGraphicUtil.addDisposer(this, this.barTextColor);
 
 	}
 
@@ -111,7 +103,6 @@ public class HeapManager extends Composite {
 		this.bar.setLayoutData(gd);
 		this.heapMaxSize = (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024));
 		this.bar.addPaintListener(new PaintListener() {
-
 			@Override
 			public void paintControl(final PaintEvent e) {
 				drawBar(e);
@@ -160,10 +151,9 @@ public class HeapManager extends Composite {
 	 */
 	private void createButton() {
 		this.button = new Button(this, SWT.PUSH);
-		this.button.setImage(SWTGraphicUtil.createImage("images/trash.png"));
+		this.button.setImage(SWTGraphicUtil.createImageFromFile("images/trash.png"));
 		this.button.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
 		this.button.addSelectionListener(new SelectionAdapter() {
-
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
@@ -171,7 +161,6 @@ public class HeapManager extends Composite {
 			public void widgetSelected(final SelectionEvent e) {
 				System.gc();
 			}
-
 		});
 		this.button.setToolTipText(ResourceManager.getLabel(ResourceManager.PERFORM_GC));
 		this.button.pack();
@@ -182,7 +171,6 @@ public class HeapManager extends Composite {
 	 */
 	private void updateContent() {
 		getDisplay().timerExec(500, new Runnable() {
-
 			@Override
 			public void run() {
 				HeapManager.this.heapSize = (int) (Runtime.getRuntime().totalMemory() / (1024 * 1024));
@@ -194,7 +182,6 @@ public class HeapManager extends Composite {
 				}
 			}
 		});
-
 	}
 
 	/**
@@ -207,7 +194,6 @@ public class HeapManager extends Composite {
 		this.barGradientColorTopStart = new Color(getDisplay(), 175, 202, 237);
 		this.barGradientColorTopEnd = new Color(getDisplay(), 136, 177, 229);
 		this.barGradientColorMiddleStart = new Color(getDisplay(), 112, 161, 223);
-
 	}
 
 	/**

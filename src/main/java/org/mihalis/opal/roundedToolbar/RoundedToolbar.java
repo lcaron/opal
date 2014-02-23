@@ -51,9 +51,9 @@ public class RoundedToolbar extends Canvas {
 	private final List<RoundedToolItem> items;
 	private boolean multiSelection;
 	private int cornerRadius;
-	private static Color START_GRADIENT_COLOR_DEFAULT = SWTGraphicUtil.createDisposableColor(245, 245, 245);
-	private static Color END_GRADIENT_COLOR_DEFAULT = SWTGraphicUtil.createDisposableColor(185, 185, 185);
-	static Color BORDER_COLOR = SWTGraphicUtil.createDisposableColor(66, 66, 66);
+	private static Color START_GRADIENT_COLOR_DEFAULT = SWTGraphicUtil.getColorSafely(245, 245, 245);
+	private static Color END_GRADIENT_COLOR_DEFAULT = SWTGraphicUtil.getColorSafely(185, 185, 185);
+	static Color BORDER_COLOR = SWTGraphicUtil.getColorSafely(66, 66, 66);
 	
 	private Color START_GRADIENT_COLOR = START_GRADIENT_COLOR_DEFAULT;
 	private Color END_GRADIENT_COLOR = END_GRADIENT_COLOR_DEFAULT;

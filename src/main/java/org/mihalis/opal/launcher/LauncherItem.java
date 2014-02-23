@@ -17,7 +17,7 @@ package org.mihalis.opal.launcher;
 class LauncherItem {
 	String title;
 	String image;
-	LLabel label;
+	LauncherLabel label;
 
 	/**
 	 * Constructor

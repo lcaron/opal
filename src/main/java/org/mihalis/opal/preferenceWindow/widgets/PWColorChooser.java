@@ -75,7 +75,7 @@ public class PWColorChooser extends PWWidget {
 				final ColorDialog dialog = new ColorDialog(button.getShell());
 				final RGB result = dialog.open();
 				if (result != null) {
-					SWTGraphicUtil.dispose(PWColorChooser.this.color);
+					SWTGraphicUtil.safeDispose(PWColorChooser.this.color);
 					PWColorChooser.this.color = new Color(button.getDisplay(), result);
 					drawButton(button);
 					PreferenceWindow.getInstance().setValue(getPropertyKey(), result);
@@ -87,7 +87,7 @@ public class PWColorChooser extends PWWidget {
 
 			@Override
 			public void handleEvent(final Event event) {
-				SWTGraphicUtil.dispose(PWColorChooser.this.color);
+				SWTGraphicUtil.safeDispose(PWColorChooser.this.color);
 			}
 		});
 

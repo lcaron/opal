@@ -12,8 +12,6 @@ package org.mihalis.opal.gradientComposite;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -77,16 +75,9 @@ public class GradientComposite extends Composite {
 			}
 		});
 
-		parent.addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(GradientComposite.this.oldImage);
-				SWTGraphicUtil.dispose(GradientComposite.this.gradientEnd);
-				SWTGraphicUtil.dispose(GradientComposite.this.gradientStart);
-			}
-
-		});
+		SWTGraphicUtil.addDisposer(this, this.oldImage);
+		SWTGraphicUtil.addDisposer(this, this.gradientStart);
+		SWTGraphicUtil.addDisposer(this, this.gradientEnd);
 
 		this.gradientEnd = new Color(this.getDisplay(), 110, 110, 110);
 		this.gradientStart = new Color(this.getDisplay(), 0, 0, 0);
@@ -104,12 +95,10 @@ public class GradientComposite extends Composite {
 		final GC gc = new GC(newImage);
 		gc.setForeground(this.gradientStart);
 		gc.setBackground(this.gradientEnd);
-
 		gc.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height / 2, true);
 
 		gc.setForeground(this.gradientEnd);
 		gc.setBackground(this.gradientStart);
-
 		gc.fillGradientRectangle(rect.x, rect.height / 2, rect.width, rect.height / 2, true);
 		gc.dispose();
 
@@ -133,7 +122,6 @@ public class GradientComposite extends Composite {
 	 * @param gradientEnd the gradientEnd color to set
 	 */
 	public void setGradientEnd(final Color gradientEnd) {
-		SWTGraphicUtil.dispose(this.gradientEnd);
 		this.gradientEnd = gradientEnd;
 	}
 
@@ -148,7 +136,6 @@ public class GradientComposite extends Composite {
 	 * @param gradientStart the gradientStart color to set
 	 */
 	public void setGradientStart(final Color gradientStart) {
-		SWTGraphicUtil.dispose(this.gradientStart);
 		this.gradientStart = gradientStart;
 	}
 }

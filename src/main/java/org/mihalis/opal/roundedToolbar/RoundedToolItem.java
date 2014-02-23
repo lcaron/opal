@@ -41,8 +41,8 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 public class RoundedToolItem extends Item {
 
 	private static final int MARGIN = 4;
-	private static Color START_GRADIENT_COLOR = SWTGraphicUtil.createDisposableColor(70, 70, 70);
-	private static Color END_GRADIENT_COLOR = SWTGraphicUtil.createDisposableColor(116, 116, 116);
+	private static Color START_GRADIENT_COLOR = SWTGraphicUtil.getColorSafely(70, 70, 70);
+	private static Color END_GRADIENT_COLOR = SWTGraphicUtil.getColorSafely(116, 116, 116);
 
 	private final RoundedToolbar parentToolbar;
 	private final List<SelectionListener> selectionListeners;

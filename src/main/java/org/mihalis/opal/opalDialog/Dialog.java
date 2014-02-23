@@ -2,7 +2,8 @@
  * Copyright (c) 2011 Laurent CARON All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
+ * Contributors: 
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
  *******************************************************************************/
 package org.mihalis.opal.opalDialog;
 
@@ -17,6 +18,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instances of this class are dialog box
+ * This component was inspired by the Oxbow Project (http://code.google.com/p/oxbow/) by Eugene Ryzhikov
  */
 public class Dialog {
 
@@ -140,7 +142,7 @@ public class Dialog {
 		final int centerY;
 
 		if (this.centerPolicy == CenterOption.CENTER_ON_SCREEN || this.shell.getParent() == null) {
-			final Rectangle monitorBounds = SWTGraphicUtil.getBoundsOfMonitorThatRuns(this.shell);
+			final Rectangle monitorBounds = SWTGraphicUtil.getBoundsOfMonitorOnWhichShellIsDisplayed(this.shell);
 			centerX = (monitorBounds.width - preferredSize.x) / 2;
 			centerY = (monitorBounds.height - preferredSize.y) / 2;
 		} else {
@@ -237,7 +239,6 @@ public class Dialog {
 		dialog.getMessageArea().setTitle(title).setText(text).setIcon(Display.getCurrent().getSystemImage(SWT.ICON_INFORMATION));
 		dialog.setButtonType(OpalDialogType.CLOSE);
 		dialog.show();
-
 	}
 
 	/**

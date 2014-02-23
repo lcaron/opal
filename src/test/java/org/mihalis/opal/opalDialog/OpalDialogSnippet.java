@@ -344,7 +344,7 @@ public class OpalDialogSnippet {
 		dialog.setButtonType(OpalDialogType.OK);
 		dialog.getFooterArea().setExpanded(false).addCheckBox("Don't show me this error next time", true).setDetailText("More explanations to come...");
 		dialog.getFooterArea().setFooterText("Your application crashed because a developer forgot to write a unit test").//
-				setIcon(SWTGraphicUtil.createImage("org/mihalis/opal/OpalDialog/warning.png"));
+				setIcon(SWTGraphicUtil.createImageFromFile("org/mihalis/opal/OpalDialog/warning.png"));
 		dialog.show();
 
 	}

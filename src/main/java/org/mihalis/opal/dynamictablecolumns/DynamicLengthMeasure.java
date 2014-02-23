@@ -16,10 +16,9 @@ package org.mihalis.opal.dynamictablecolumns;
  * 
  */
 public enum DynamicLengthMeasure {
-	
-	PIXEL("px"),
-	PERCENTAGE("%");
-	
+
+	PIXEL("px"), PERCENTAGE("%");
+
 	private String id;
 
 	/**
@@ -29,16 +28,15 @@ public enum DynamicLengthMeasure {
 	private DynamicLengthMeasure(final String id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Dynamic Length Measure
 	 * @param id String
 	 * @return LengthMeasure
 	 */
-	public static DynamicLengthMeasure fromId(final String id)	{
-		for (final DynamicLengthMeasure measure : DynamicLengthMeasure.values())
-		{
-			if (measure.getId().equals(id))	{
+	public static DynamicLengthMeasure fromId(final String id) {
+		for (final DynamicLengthMeasure measure : DynamicLengthMeasure.values()) {
+			if (measure.getId().equals(id)) {
 				return measure;
 			}
 		}
@@ -50,7 +48,7 @@ public enum DynamicLengthMeasure {
 	 * @return String
 	 */
 	public String getId() {
-		return id;
+		return this.id;
 	}
-	
+
 }

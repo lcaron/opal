@@ -34,9 +34,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.mihalis.opal.opalDialog.Dialog;
@@ -200,13 +198,7 @@ public class LoginDialog {
 		label.setLayoutData(gridData);
 		final Font bold = SWTGraphicUtil.buildFontFrom(label, SWT.BOLD);
 		label.setFont(bold);
-		label.addListener(SWT.Dispose, new Listener() {
-
-			@Override
-			public void handleEvent(final Event event) {
-				SWTGraphicUtil.dispose(bold);
-			}
-		});
+		SWTGraphicUtil.addDisposer(label, bold);
 
 		if (this.description == null || this.description.trim().equals("")) {
 			label.setText(" ");
@@ -228,38 +220,46 @@ public class LoginDialog {
 
 		if (this.autorizedLogin != null && !this.autorizedLogin.isEmpty()) {
 			// Combo
-			final Combo combo = new Combo(this.shell, SWT.BORDER | SWT.READ_ONLY);
-
-			combo.setLayoutData(new GridData(GridData.FILL, GridData.END, true, false, 3, 1));
-			for (final String loginToAdd : this.autorizedLogin) {
-				combo.add(loginToAdd);
-			}
-			combo.setText(this.login == null ? "" : this.login);
-			combo.setFocus();
-			combo.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(final ModifyEvent e) {
-					LoginDialog.this.login = combo.getText();
-					changeButtonOkState();
-				}
-			});
+			buildLoginCombo();
 		} else {
 			// Text
-			final Text text = new Text(this.shell, SWT.BORDER);
-			text.setText(this.login == null ? "" : this.login);
-			text.setLayoutData(new GridData(GridData.FILL, GridData.END, true, false, 3, 1));
-			text.setFocus();
-			text.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(final ModifyEvent e) {
-					LoginDialog.this.login = text.getText();
-					changeButtonOkState();
-				}
-			});
+			buildLoginText();
 		}
 
+	}
+
+	private void buildLoginCombo() {
+		final Combo combo = new Combo(this.shell, SWT.BORDER | SWT.READ_ONLY);
+
+		combo.setLayoutData(new GridData(GridData.FILL, GridData.END, true, false, 3, 1));
+		for (final String loginToAdd : this.autorizedLogin) {
+			combo.add(loginToAdd);
+		}
+		combo.setText(this.login == null ? "" : this.login);
+		combo.setFocus();
+		combo.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(final ModifyEvent e) {
+				LoginDialog.this.login = combo.getText();
+				changeButtonOkState();
+			}
+		});
+	}
+
+	private void buildLoginText() {
+		final Text text = new Text(this.shell, SWT.BORDER);
+		text.setText(this.login == null ? "" : this.login);
+		text.setLayoutData(new GridData(GridData.FILL, GridData.END, true, false, 3, 1));
+		text.setFocus();
+		text.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(final ModifyEvent e) {
+				LoginDialog.this.login = text.getText();
+				changeButtonOkState();
+			}
+		});
 	}
 
 	/**
@@ -283,7 +283,6 @@ public class LoginDialog {
 				changeButtonOkState();
 			}
 		});
-
 	}
 
 	/**
@@ -294,7 +293,6 @@ public class LoginDialog {
 		final boolean loginEntered = this.login != null && !this.login.trim().equals("");
 		final boolean passwordEntered = this.password != null && !this.password.trim().equals("");
 		this.buttonOk.setEnabled(loginEntered && passwordEntered);
-
 	}
 
 	/**
@@ -307,13 +305,17 @@ public class LoginDialog {
 		checkbox.setLayoutData(gridData);
 		checkbox.setText(ResourceManager.getLabel(ResourceManager.REMEMBER_PASSWORD));
 		checkbox.setSelection(this.rememberPassword);
-
 	}
 
 	/**
 	 * Build the buttons
 	 */
 	private void buildButtons() {
+		buildOkButton();
+		buildCancelButton();
+	}
+
+	private void buildOkButton() {
 		this.buttonOk = new Button(this.shell, SWT.PUSH);
 		final GridData gdOk = new GridData(GridData.END, GridData.CENTER, true, false, 3, 1);
 		gdOk.verticalIndent = 60;
@@ -323,7 +325,6 @@ public class LoginDialog {
 		this.buttonOk.setEnabled(false);
 
 		this.buttonOk.addSelectionListener(new SelectionAdapter() {
-
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
@@ -341,12 +342,12 @@ public class LoginDialog {
 							break;
 						}
 					}
-
 				}
 			}
-
 		});
+	}
 
+	private void buildCancelButton() {
 		final Button buttonCancel = new Button(this.shell, SWT.PUSH);
 		final GridData gdCancel = new GridData(GridData.FILL, GridData.CENTER, false, false);
 		gdCancel.widthHint = 80;
@@ -354,7 +355,6 @@ public class LoginDialog {
 		buttonCancel.setLayoutData(gdCancel);
 		buttonCancel.setText(ResourceManager.getLabel(ResourceManager.CANCEL));
 		buttonCancel.addSelectionListener(new SelectionAdapter() {
-
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
@@ -363,9 +363,7 @@ public class LoginDialog {
 				LoginDialog.this.returnedValue = false;
 				LoginDialog.this.shell.dispose();
 			}
-
 		});
-
 	}
 
 	/**
@@ -376,7 +374,6 @@ public class LoginDialog {
 		this.shell.pack();
 		this.shell.open();
 		SWTGraphicUtil.centerShell(this.shell);
-
 		while (!this.shell.isDisposed()) {
 			if (!this.shell.getDisplay().readAndDispatch()) {
 				this.shell.getDisplay().sleep();

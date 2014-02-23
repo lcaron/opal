@@ -5,13 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
- *     Peter Weishapl - Inspiration
+ * Contributor:
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.promptSupport;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.FocusEvent;
@@ -19,15 +17,12 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.mihalis.opal.promptSupport.PromptSupport.FocusBehavior;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Abstract class that contains code for the FocusLost, FocusGained and
  * ControlResized events
- * 
  */
 abstract class BaseFocusControlListener implements FocusListener, ControlListener {
 
@@ -36,6 +31,8 @@ abstract class BaseFocusControlListener implements FocusListener, ControlListene
 	private Font initialFont;
 	private Color initialBackgroundColor;
 	private Color initialForegroundColor;
+
+	protected static final String EMPTY_STRING = "";
 
 	/**
 	 * Constructor
@@ -126,12 +123,7 @@ abstract class BaseFocusControlListener implements FocusListener, ControlListene
 	private void applyFontStyle() {
 		final Font font = SWTGraphicUtil.buildFontFrom(this.control, PromptSupport.getFontStyle(this.control));
 		this.control.setFont(font);
-		this.control.addListener(SWT.Dispose, new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				SWTGraphicUtil.dispose(font);
-			}
-		});
+		SWTGraphicUtil.addDisposer(this.control, font);
 	}
 
 	/**

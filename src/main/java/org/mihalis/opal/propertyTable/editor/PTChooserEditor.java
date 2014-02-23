@@ -73,7 +73,7 @@ public abstract class PTChooserEditor extends PTEditor {
 			if (item instanceof TreeItem) {
 				((TreeItem) item).setBackground(1, bgColor);
 			}
-			SWTGraphicUtil.dispose(item, bgColor);
+			SWTGraphicUtil.addDisposer(item, bgColor);
 		}
 
 		ControlEditor editor;

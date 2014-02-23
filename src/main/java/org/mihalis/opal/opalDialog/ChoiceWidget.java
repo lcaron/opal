@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
- *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
  *******************************************************************************/
 package org.mihalis.opal.opalDialog;
 
@@ -16,8 +15,6 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -114,7 +111,7 @@ public class ChoiceWidget extends Composite {
 	 */
 	private void buildGreenArrow() {
 		this.image = new Label(this, SWT.NONE);
-		this.image.setImage(SWTGraphicUtil.createImage("images/arrowGreenRight.png"));
+		this.image.setImage(SWTGraphicUtil.createImageFromFile("images/arrowGreenRight.png"));
 		this.image.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		this.image.setLayoutData(new GridData(GridData.CENTER, GridData.BEGINNING, false, false, 1, 2));
 	}
@@ -124,13 +121,8 @@ public class ChoiceWidget extends Composite {
 	 */
 	private void buildInstruction() {
 		final Color color = new Color(Display.getCurrent(), 35, 107, 178);
-		addDisposeListener(new DisposeListener() {
+		SWTGraphicUtil.addDisposer(this, color);
 
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(color);
-			}
-		});
 		this.instruction = new Label(this, SWT.NONE);
 		this.instruction.setForeground(color);
 		this.instruction.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));

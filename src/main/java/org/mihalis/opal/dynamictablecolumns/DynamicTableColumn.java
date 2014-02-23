@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.TableColumn;
  * 
  */
 public class DynamicTableColumn extends TableColumn {
-	
-	private boolean	originalResizable = false;
+
+	private boolean originalResizable = false;
 
 	/**
 	 * Constructor
@@ -31,7 +31,7 @@ public class DynamicTableColumn extends TableColumn {
 	 */
 	public DynamicTableColumn(final DynamicTable parent, final int style) {
 		super(parent, style);
-		
+
 		// Config the preferred length of columns.
 		addListener(SWT.Resize, new Listener() {
 			@Override
@@ -41,7 +41,7 @@ public class DynamicTableColumn extends TableColumn {
 					final DynamicColumnData data = dynamicLayout.getColumnData(DynamicTableColumn.this);
 					final DynamicLength preferredfLength = data.getPreferredLength();
 					if (preferredfLength.getMeasure() == DynamicLengthMeasure.PIXEL) {
-						preferredfLength.setValue((double)getWidth());
+						preferredfLength.setValue((double) getWidth());
 					}
 					getParent().layout();
 				}
@@ -58,7 +58,7 @@ public class DynamicTableColumn extends TableColumn {
 	public DynamicTableColumn(final DynamicTable parent, final int style, final int index) {
 		super(parent, style, index);
 	}
-	
+
 	/**
 	 * Set width
 	 * @param preferredLength String
@@ -75,25 +75,25 @@ public class DynamicTableColumn extends TableColumn {
 	public void setWidth(final String preferredLength, final String minLength) {
 		final DynamicColumnData columnData = new DynamicColumnData(this, preferredLength, minLength);
 		getParent().getLayout().setColumnData(columnData);
-		setResizable(originalResizable);
+		setResizable(this.originalResizable);
 	}
-	
+
 	@Override
 	public void setResizable(final boolean resizable) {
 		this.originalResizable = resizable;
 		final DynamicTableColumnLayout dynamicLayout = getParent().getLayout();
 		final DynamicColumnData data = dynamicLayout.getColumnData(DynamicTableColumn.this);
-		super.setResizable(originalResizable && data.getPreferredLength().getMeasure() != DynamicLengthMeasure.PERCENTAGE);
+		super.setResizable(this.originalResizable && data.getPreferredLength().getMeasure() != DynamicLengthMeasure.PERCENTAGE);
 	}
-	
+
 	@Override
 	public DynamicTable getParent() {
-		return (DynamicTable)super.getParent();
+		return (DynamicTable) super.getParent();
 	}
-	
+
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components.
 	}
-	
+
 }

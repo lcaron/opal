@@ -2,7 +2,8 @@
  * Copyright (c) 2011 Laurent CARON All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
+ * Contributors: 
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation
  *******************************************************************************/
 package org.mihalis.opal.opalDialog;
 
@@ -31,6 +32,11 @@ import org.mihalis.opal.utils.StringUtil;
  * Instances of this class are message areas
  */
 public class MessageArea extends DialogArea {
+	private static final int DEFAULT_MIN_HEIGHT_FOR_EXCEPTIONS = 300;
+
+	private static final int INDENT_NO_ICON = 8;
+	private static final int DEFAULT_MARGIN = 10;
+
 	// Main composite
 	private Composite composite;
 
@@ -178,10 +184,10 @@ public class MessageArea extends DialogArea {
 
 		final GridLayout gridLayout = new GridLayout(numberOfColumns, false);
 		gridLayout.marginHeight = gridLayout.marginWidth = 0;
-		gridLayout.marginRight = 10;
-		gridLayout.marginLeft = 10;
-		gridLayout.marginTop = 10;
-		gridLayout.marginBottom = 10;
+		gridLayout.marginRight = DEFAULT_MARGIN;
+		gridLayout.marginLeft = DEFAULT_MARGIN;
+		gridLayout.marginTop = DEFAULT_MARGIN;
+		gridLayout.marginBottom = DEFAULT_MARGIN;
 		this.composite.setLayout(gridLayout);
 
 		if (hasIcon) {
@@ -244,10 +250,10 @@ public class MessageArea extends DialogArea {
 		final GridData gd = new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false, 1, 1);
 
 		if (hasIcon) {
-			gd.horizontalIndent = 8;
+			gd.horizontalIndent = INDENT_NO_ICON;
 		} else {
-			gd.horizontalIndent = 10;
-			gd.verticalIndent = 10;
+			gd.horizontalIndent = DEFAULT_MARGIN;
+			gd.verticalIndent = DEFAULT_MARGIN;
 		}
 
 		label.setLayoutData(gd);
@@ -272,13 +278,13 @@ public class MessageArea extends DialogArea {
 		}
 
 		if (hasIcon) {
-			gd.horizontalIndent = 8;
+			gd.horizontalIndent = INDENT_NO_ICON;
 		} else {
-			gd.horizontalIndent = 20;
+			gd.horizontalIndent = DEFAULT_MARGIN * 2;
 			if (hasTitle) {
-				gd.verticalIndent = 8;
+				gd.verticalIndent = INDENT_NO_ICON;
 			} else {
-				gd.verticalIndent = 20;
+				gd.verticalIndent = DEFAULT_MARGIN * 2;
 			}
 		}
 
@@ -311,7 +317,7 @@ public class MessageArea extends DialogArea {
 
 			button.setSelection(i == this.radioDefaultSelection);
 			final GridData gd = new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false, 1, 1);
-			gd.horizontalIndent = 10;
+			gd.horizontalIndent = DEFAULT_MARGIN;
 			button.setLayoutData(gd);
 		}
 	}
@@ -324,7 +330,7 @@ public class MessageArea extends DialogArea {
 		this.textException.setText(StringUtil.stackStraceAsString(this.exception));
 		this.textException.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
-		gd.minimumHeight = 300;
+		gd.minimumHeight = DEFAULT_MIN_HEIGHT_FOR_EXCEPTIONS;
 		this.textException.setLayoutData(gd);
 	}
 
@@ -417,7 +423,6 @@ public class MessageArea extends DialogArea {
 	void hideException() {
 		this.textException.dispose();
 		this.parent.pack();
-
 	}
 
 	/**

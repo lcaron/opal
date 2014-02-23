@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
- *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
  *******************************************************************************/
 package org.mihalis.opal.opalDialog;
 
@@ -32,6 +31,7 @@ import org.mihalis.opal.utils.ResourceManager;
  * Instances of this class are message areas
  */
 public class FooterArea extends DialogArea {
+	private static final int BUTTON_WIDTH = 70;
 	private Image icon;
 	private String footerText;
 
@@ -141,8 +141,8 @@ public class FooterArea extends DialogArea {
 			button.setText(this.buttonLabels.get(i));
 
 			final GridData gd = new GridData(GridData.END, GridData.CENTER, i == 0, false);
-			gd.minimumWidth = 70;
-			gd.widthHint = 70;
+			gd.minimumWidth = BUTTON_WIDTH;
+			gd.widthHint = BUTTON_WIDTH;
 			button.setLayoutData(gd);
 
 			if (i == this.defaultButtonIndex) {

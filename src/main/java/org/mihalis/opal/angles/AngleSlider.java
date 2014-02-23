@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
- *     inspired by the Swing AngleSlider by Jeremy (http://javagraphics.blogspot.com/2008/05/angles-need-gui-widget-for-angles.html)
  *******************************************************************************/
 package org.mihalis.opal.angles;
 
@@ -32,6 +31,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 /**
  * Instances of this class provide a selectable user interface object that can
  * be used to pick angles.
+ * Inspired by the Swing AngleSlider by Jeremy (http://javagraphics.blogspot.com/2008/05/angles-need-gui-widget-for-angles.html)
  * <p>
  * <dl>
  * <dt><b>Styles:</b></dt>
@@ -56,8 +56,7 @@ public class AngleSlider extends Canvas {
 	/**
 	 * Constructs a new instance of this class given its parent.
 	 * 
-	 * @param parent a widget which will be the parent of the new instance
-	 *            (cannot be null)
+	 * @param parent a widget which will be the parent of the new instance (cannot be null)
 	 * @param style not used
 	 * 
 	 * @exception IllegalArgumentException <ul>
@@ -71,12 +70,22 @@ public class AngleSlider extends Canvas {
 	public AngleSlider(final Composite parent, final int style) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 
-		this.backgroundImage = new Image(getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/angleBackground.png"));
+		this.backgroundImage = new Image(getDisplay(), getClass().getClassLoader().getResourceAsStream("images/angleBackground.png"));
 
-		this.buttonFocus = new Image(getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/angleButtonFocus.png"));
-		this.buttonNoFocus = new Image(getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/angleButtonFocusLost.png"));
+		this.buttonFocus = new Image(getDisplay(), getClass().getClassLoader().getResourceAsStream("images/angleButtonFocus.png"));
+		this.buttonNoFocus = new Image(getDisplay(), getClass().getClassLoader().getResourceAsStream("images/angleButtonFocusLost.png"));
 
-		this.addListener(SWT.Paint, new Listener() {
+		addListeners();
+
+		this.selection = 0;
+		this.selectionListeners = new ArrayList<SelectionListener>();
+	}
+
+	/**
+	 * Add listeners
+	 */
+	private void addListeners() {
+		addListener(SWT.Paint, new Listener() {
 
 			@Override
 			public void handleEvent(final Event event) {
@@ -84,23 +93,22 @@ public class AngleSlider extends Canvas {
 			}
 		});
 
-		this.addDisposeListener(new DisposeListener() {
+		addDisposeListener(new DisposeListener() {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent arg0) {
-				SWTGraphicUtil.dispose(AngleSlider.this.backgroundImage);
-				SWTGraphicUtil.dispose(AngleSlider.this.buttonFocus);
-				SWTGraphicUtil.dispose(AngleSlider.this.buttonNoFocus);
+				SWTGraphicUtil.safeDispose(AngleSlider.this.backgroundImage);
+				SWTGraphicUtil.safeDispose(AngleSlider.this.buttonFocus);
+				SWTGraphicUtil.safeDispose(AngleSlider.this.buttonNoFocus);
 			}
 		});
 
-		this.addListener(SWT.MouseDown, createMouseListener());
-		this.addListener(SWT.MouseUp, createMouseListener());
-		this.addListener(SWT.MouseMove, createMouseListener());
-		this.addListener(SWT.KeyDown, createKeyListener());
+		final int[] listeners = new int[] { SWT.MouseDown, SWT.MouseUp, SWT.MouseMove };
 
-		this.selection = 0;
-		this.selectionListeners = new ArrayList<SelectionListener>();
+		for (final int listener : listeners) {
+			addListener(listener, createMouseListener());
+		}
+		addListener(SWT.KeyDown, createKeyListener());
 
 	}
 
@@ -150,7 +158,7 @@ public class AngleSlider extends Canvas {
 					final double angle = Math.atan2(deltaX, deltaY);
 					AngleSlider.this.selection = 360 - (int) (360 * angle / (2 * Math.PI) + 360) % 360;
 
-					AngleSlider.this.redraw();
+					redraw();
 				}
 				if (event.type == SWT.MouseUp) {
 					AngleSlider.this.mousePressed = false;
@@ -164,7 +172,6 @@ public class AngleSlider extends Canvas {
 		for (final SelectionListener selectionListener : this.selectionListeners) {
 			selectionListener.widgetSelected(new SelectionEvent(event));
 		}
-
 	}
 
 	private Listener createKeyListener() {

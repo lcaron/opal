@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Laurent CARON.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
+ *******************************************************************************/
 package org.mihalis.opal.header;
 
 import org.eclipse.swt.SWT;
@@ -72,6 +82,20 @@ public class Header extends Composite {
 	public Header(final Composite parent, final int style) {
 		super(parent, style);
 
+		initFontAndColors();
+
+		addDisposer();
+		setBackgroundMode(SWT.INHERIT_FORCE);
+
+		this.addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				redrawComposite();
+			}
+		});
+	}
+
+	private void initFontAndColors() {
 		final FontData[] fontData = getFont().getFontData();
 		if (fontData != null && fontData.length > 0) {
 			final FontData fd = fontData[0];
@@ -83,30 +107,18 @@ public class Header extends Composite {
 		}
 
 		this.titleColor = new Color(getDisplay(), 0, 88, 150);
-
 		this.gradientEnd = new Color(this.getDisplay(), 239, 239, 239);
 		this.gradientStart = new Color(this.getDisplay(), 255, 255, 255);
 		this.separatorColor = new Color(this.getDisplay(), 229, 229, 229);
+	}
 
-		this.addListener(SWT.Resize, new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				redrawComposite();
-			}
-		});
-
-		this.addListener(SWT.Dispose, new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				SWTGraphicUtil.dispose(Header.this.titleColor);
-				SWTGraphicUtil.dispose(Header.this.titleFont);
-				SWTGraphicUtil.dispose(Header.this.oldImage);
-				SWTGraphicUtil.dispose(Header.this.gradientEnd);
-				SWTGraphicUtil.dispose(Header.this.gradientStart);
-				SWTGraphicUtil.dispose(Header.this.separatorColor);
-			}
-		});
-		setBackgroundMode(SWT.INHERIT_FORCE);
+	private void addDisposer() {
+		SWTGraphicUtil.addDisposer(this, this.titleColor);
+		SWTGraphicUtil.addDisposer(this, this.titleFont);
+		SWTGraphicUtil.addDisposer(this, this.oldImage);
+		SWTGraphicUtil.addDisposer(this, this.gradientEnd);
+		SWTGraphicUtil.addDisposer(this, this.gradientStart);
+		SWTGraphicUtil.addDisposer(this, this.separatorColor);
 	}
 
 	/**
@@ -162,7 +174,6 @@ public class Header extends Composite {
 	private void createImage() {
 
 		int numberOfLines = 1;
-
 		if (this.title != null && this.description != null) {
 			numberOfLines++;
 		}

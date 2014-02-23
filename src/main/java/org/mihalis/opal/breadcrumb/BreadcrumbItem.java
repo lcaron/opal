@@ -5,7 +5,8 @@
  * and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
+ * Contributors: 
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.breadcrumb;
 
@@ -40,7 +41,7 @@ public class BreadcrumbItem extends Item {
 
 	private static final int MIN_WIDTH = 40;
 	private static final int MARGIN = 4;
-	private static Color SELECTED_COLOR = SWTGraphicUtil.createDisposableColor(223, 220, 213);
+	private static Color SELECTED_COLOR = SWTGraphicUtil.getColorSafely(223, 220, 213);
 
 	private final Breadcrumb parentBreadcrumb;
 	private final List<SelectionListener> selectionListeners;
@@ -57,10 +58,10 @@ public class BreadcrumbItem extends Item {
 	private String tooltipText;
 	private GC gc;
 	private int toolbarHeight;
-	private boolean isLast;
+	private boolean isLastItemOfTheBreadCrumb;
 
 	/**
-	 * Constructs a new instance of this class given its parent (which must be a <code>ToolBar</code>) 
+	 * Constructs a new instance of this class given its parent (which must be a <code>Breadcrumb</code>) 
 	 * and a style value describing its behavior and appearance. The item is added to the end of the 
 	 * items maintained by its parent.
 	 * <p>
@@ -88,7 +89,7 @@ public class BreadcrumbItem extends Item {
 	}
 
 	/**
-	 * Constructs a new instance of this class given its parent (which must be a <code>ToolBar</code>) 
+	 * Constructs a new instance of this class given its parent (which must be a <code>Breadcrumb</code>) 
 	 * and a style value describing its behavior and appearance. The item is added to the end of the 
 	 * items maintained by its parent.
 	 * <p>
@@ -117,23 +118,23 @@ public class BreadcrumbItem extends Item {
 	public BreadcrumbItem(final Breadcrumb parent, final int style) {
 		super(parent, checkStyle(style));
 		parent.addItem(this);
-		parentBreadcrumb = parent;
-		textColor = parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
-		textColorSelected = parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
-		enabled = true;
+		this.parentBreadcrumb = parent;
+		this.textColor = parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		this.textColorSelected = parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		this.enabled = true;
 
 		if ((style & SWT.LEFT) != 0) {
-			alignment = SWT.LEFT;
+			this.alignment = SWT.LEFT;
 		}
 		if ((style & SWT.CENTER) != 0) {
-			alignment = SWT.CENTER;
+			this.alignment = SWT.CENTER;
 		}
 		if ((style & SWT.RIGHT) != 0) {
-			alignment = SWT.RIGHT;
+			this.alignment = SWT.RIGHT;
 		}
 
-		selectionListeners = new ArrayList<SelectionListener>();
-		width = height = -1;
+		this.selectionListeners = new ArrayList<SelectionListener>();
+		this.width = this.height = -1;
 	}
 
 	private static int checkStyle(int style) {
@@ -144,7 +145,7 @@ public class BreadcrumbItem extends Item {
 		return style;
 	}
 
-	static int checkBits(int style, final int int0, final int int1, final int int2) {
+	private static int checkBits(int style, final int int0, final int int1, final int int2) {
 		final int mask = int0 | int1 | int2;
 		if ((style & mask) == 0) {
 			style |= int0;
@@ -192,230 +193,24 @@ public class BreadcrumbItem extends Item {
 	}
 
 	/**
-	 * @return the default size of the item
-	 */
-	Point computeDefaultSize() {
-		final Point sizeOfTextAndImages = computeSizeOfTextAndImages();
-		return new Point(2 * MARGIN + sizeOfTextAndImages.x, 2 * MARGIN + sizeOfTextAndImages.y);
-	}
-
-	private Point computeSizeOfTextAndImages() {
-		int width = 0, height = 0;
-		final boolean textNotEmpty = getText() != null && !getText().equals("");
-
-		if (textNotEmpty) {
-			final GC gc = new GC(parentBreadcrumb);
-			gc.setFont(parentBreadcrumb.getFont());
-			final Point extent = gc.stringExtent(getText());
-			gc.dispose();
-			width += extent.x;
-			height = extent.y;
-		}
-
-		final Point imageSize = new Point(-1, -1);
-		computeImageSize(getImage(), imageSize);
-		computeImageSize(selectionImage, imageSize);
-		computeImageSize(disabledImage, imageSize);
-
-		if (imageSize.x != -1) {
-			width += imageSize.x;
-			height = Math.max(imageSize.y, height);
-			if (textNotEmpty) {
-				width += MARGIN;
-			}
-		}
-		return new Point(width, height);
-	}
-
-	private void computeImageSize(final Image image, final Point imageSize) {
-		if (image == null) {
-			return;
-		}
-		final Rectangle imageBounds = image.getBounds();
-		imageSize.x = Math.max(imageBounds.width, imageSize.x);
-		imageSize.y = Math.max(imageBounds.height, imageSize.y);
-	}
-
-	/**
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */
 	@Override
 	public void dispose() {
 		getParent().removeItem(this);
-		bounds = null;
-		if (disabledImage != null) {
-			disabledImage.dispose();
-		}
-		disabledImage = null;
-		if (selectionImage != null) {
-			selectionImage.dispose();
-		}
-		selectionImage = null;
-		if (textColor != null) {
-			textColor.dispose();
-		}
-		textColor = null;
-		if (textColorSelected != null) {
-			textColorSelected.dispose();
-		}
-		textColorSelected = null;
+		this.bounds = null;
+		SWTGraphicUtil.safeDispose(this.disabledImage);
+		this.disabledImage = null;
+
+		SWTGraphicUtil.safeDispose(this.selectionImage);
+		this.selectionImage = null;
+
+		SWTGraphicUtil.safeDispose(this.textColor);
+		this.textColor = null;
+
+		SWTGraphicUtil.safeDispose(this.textColorSelected);
+		this.textColorSelected = null;
 		super.dispose();
-	}
-
-	void drawButton(final GC gc, final int x, final int toolbarHeight, final boolean isLast) {
-		this.gc = gc;
-		this.toolbarHeight = toolbarHeight;
-		this.isLast = isLast;
-
-		if (selection) {
-			drawBackground(x);
-		}
-		if (!isLast) {
-			drawTriangles(x);
-		}
-
-		int xPosition = computeStartingPosition(x);
-
-		xPosition += drawImage(x + xPosition);
-		drawText(x + xPosition);
-
-		bounds = new Rectangle(x, 0, getWidth(), toolbarHeight);
-	}
-
-	private void drawBackground(final int x) {
-		gc.setAdvanced(true);
-		gc.setAntialias(SWT.ON);
-
-		gc.setForeground(SELECTED_COLOR);
-		gc.setBackground(SELECTED_COLOR);
-
-		final boolean hasBorder = parentBreadcrumb.hasBorder;
-		final boolean isFirst = parentBreadcrumb.indexOf(this) == 0;
-		final int borderWidth = hasBorder ? 1 : 0;
-
-		int leftSide;
-		if (isFirst) {
-			leftSide = 0;
-		} else {
-			leftSide = 5 + (hasBorder ? 0 : 1);
-		}
-
-		final int xUpperLeft = x + borderWidth + leftSide;
-		final int yUpperLeft = borderWidth;
-		final int rectWidth = getWidth() - borderWidth - leftSide - (isLast && hasBorder ? 1 : 0);
-		final int rectHeight = getHeight() - 2 * borderWidth;
-		gc.fillRectangle(xUpperLeft, yUpperLeft, rectWidth, rectHeight);
-
-		if (!isFirst) {
-			gc.fillPolygon(new int[] { xUpperLeft - 5, yUpperLeft, //
-					xUpperLeft, yUpperLeft, //
-					xUpperLeft, yUpperLeft + toolbarHeight / 2 //
-			});
-			gc.fillPolygon(new int[] { xUpperLeft - 5, yUpperLeft + rectHeight, //
-					xUpperLeft, yUpperLeft + rectHeight, //
-					xUpperLeft, yUpperLeft + toolbarHeight / 2 //
-			});
-
-		}
-
-		if (!isLast) {
-			gc.fillPolygon(new int[] { xUpperLeft + rectWidth, yUpperLeft + 1, //
-					xUpperLeft + rectWidth, yUpperLeft + getHeight(), //
-					xUpperLeft + rectWidth + 5, yUpperLeft + toolbarHeight / 2 //
-			});
-		}
-
-		gc.setClipping((Rectangle) null);
-	}
-
-	private void drawTriangles(final int x) {
-		gc.setForeground(Breadcrumb.BORDER_COLOR);
-		drawTriangle(x + getWidth());
-
-		gc.setAlpha(127);
-		gc.setForeground(Breadcrumb.BORDER_COLOR_1);
-		drawTriangle(x + getWidth() + 1);
-
-		gc.setForeground(Breadcrumb.BORDER_COLOR_2);
-		drawTriangle(x + getWidth() + 2);
-
-		gc.setForeground(Breadcrumb.BORDER_COLOR_3);
-		drawTriangle(x + getWidth() + 3);
-
-		gc.setAlpha(255);
-		if (parentBreadcrumb.hasBorder) {
-			gc.setForeground(Breadcrumb.BORDER_COLOR);
-			gc.drawLine(x + getWidth(), 0, x + getWidth() + 3, 0);
-			gc.drawLine(x + getWidth(), toolbarHeight - 1, x + getWidth() + 3, toolbarHeight - 1);
-		}
-	}
-
-	private void drawTriangle(final int x) {
-		gc.drawLine(x, 0, x + 5, toolbarHeight / 2);
-		gc.drawLine(x + 5, toolbarHeight / 2, x, toolbarHeight);
-
-	}
-
-	private int computeStartingPosition(final int x) {
-		final int widthOfTextAndImage = computeSizeOfTextAndImages().x;
-		switch (alignment) {
-			case SWT.CENTER:
-				return (getWidth() - widthOfTextAndImage) / 2;
-			case SWT.RIGHT:
-				return getWidth() - widthOfTextAndImage - MARGIN;
-			default:
-				return MARGIN;
-		}
-	}
-
-	void fireSelectionEvent() {
-		final Event event = new Event();
-		event.widget = parentBreadcrumb;
-		event.display = getDisplay();
-		event.item = this;
-		event.type = SWT.Selection;
-		for (final SelectionListener selectionListener : selectionListeners) {
-			selectionListener.widgetSelected(new SelectionEvent(event));
-		}
-	}
-
-	private int drawImage(final int xPosition) {
-		Image image;
-		if (!isEnabled()) {
-			image = disabledImage;
-		} else if (selection) {
-			image = selectionImage;
-		} else {
-			image = getImage();
-		}
-
-		if (image == null) {
-			return 0;
-		}
-
-		final int yPosition = (toolbarHeight - image.getBounds().height) / 2;
-		gc.drawImage(image, xPosition, yPosition);
-		return image.getBounds().width + MARGIN;
-	}
-
-	private void drawText(final int xPosition) {
-		gc.setFont(parentBreadcrumb.getFont());
-		if (selection) {
-			gc.setForeground(textColorSelected);
-		} else {
-			gc.setForeground(textColor);
-		}
-
-		final Point textSize = gc.stringExtent(getText());
-		final int yPosition = (toolbarHeight - textSize.y) / 2;
-
-		int padding;
-		if (parentBreadcrumb.indexOf(this) == 0 || isLast) {
-			padding = 0;
-		} else {
-			padding = 5;
-		}
-		gc.drawText(getText(), xPosition + padding, yPosition, true);
 	}
 
 	/**
@@ -431,7 +226,7 @@ public class BreadcrumbItem extends Item {
 	 */
 	public int getAlignment() {
 		checkWidget();
-		return alignment;
+		return this.alignment;
 	}
 
 	/**
@@ -484,7 +279,7 @@ public class BreadcrumbItem extends Item {
 	}
 
 	/**
-	 * Returns the whole height of the widget.
+	 * Returns the whole height of the item.
 	 * 
 	 * @return the receiver's height
 	 * 
@@ -496,13 +291,21 @@ public class BreadcrumbItem extends Item {
 	public int getHeight() {
 		checkWidget();
 		if (this.height == -1) {
-			return this.computeDefaultSize().y;
+			return computeDefaultSize().y;
 		}
 		return this.height;
 	}
 
 	/**
-	 * Returns the receiver's parent, which must be a <code>RoundedToolBar</code>.
+	 * @return the default size of the item
+	 */
+	private Point computeDefaultSize() {
+		final Point sizeOfTextAndImages = computeSizeOfTextAndImages();
+		return new Point(2 * MARGIN + sizeOfTextAndImages.x, 2 * MARGIN + sizeOfTextAndImages.y);
+	}
+
+	/**
+	 * Returns the receiver's parent, which must be a <code>Breadcrumb</code>.
 	 * 
 	 * @return the receiver's parent
 	 * 
@@ -556,7 +359,7 @@ public class BreadcrumbItem extends Item {
 	 */
 	public Color getTextColor() {
 		checkWidget();
-		return textColor;
+		return this.textColor;
 	}
 
 	/**
@@ -572,7 +375,7 @@ public class BreadcrumbItem extends Item {
 
 	public Color getTextColorSelected() {
 		checkWidget();
-		return textColorSelected;
+		return this.textColorSelected;
 	}
 
 	/**
@@ -587,11 +390,11 @@ public class BreadcrumbItem extends Item {
 	 */
 	public String getTooltipText() {
 		checkWidget();
-		return tooltipText;
+		return this.tooltipText;
 	}
 
 	/**
-	 * Returns the whole height of the widget.
+	 * Returns the whole width of the item.
 	 * 
 	 * @return the receiver's height
 	 * 
@@ -603,7 +406,7 @@ public class BreadcrumbItem extends Item {
 	public int getWidth() {
 		checkWidget();
 		if (this.width == -1) {
-			return Math.max(this.computeDefaultSize().x, MIN_WIDTH);
+			return Math.max(computeDefaultSize().x, MIN_WIDTH);
 		}
 		return Math.max(this.width, MIN_WIDTH);
 	}
@@ -686,7 +489,7 @@ public class BreadcrumbItem extends Item {
 	 */
 	public void setBounds(final Rectangle rectangle) {
 		checkWidget();
-		if (bounds == null) {
+		if (this.bounds == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 		this.bounds = new Rectangle(Math.max(0, rectangle.x), //
@@ -858,4 +661,214 @@ public class BreadcrumbItem extends Item {
 		checkWidget();
 		this.width = Math.max(0, width);
 	}
+
+	// --------------------------------------------- Package visibility section
+	void fireSelectionEvent() {
+		final Event event = new Event();
+		event.widget = this.parentBreadcrumb;
+		event.display = getDisplay();
+		event.item = this;
+		event.type = SWT.Selection;
+		for (final SelectionListener selectionListener : this.selectionListeners) {
+			selectionListener.widgetSelected(new SelectionEvent(event));
+		}
+	}
+
+	void drawButtonAtPosition(final int x) {
+
+		if (this.selection) {
+			drawBackgroundAtPosition(x);
+		}
+		if (!this.isLastItemOfTheBreadCrumb) {
+			drawTrianglesAtPosition(x);
+		}
+
+		int xPosition = computeGap();
+		final Image drawnedImage = drawImageAtPosition(x + xPosition);
+		if (drawnedImage != null) {
+			xPosition += drawnedImage.getBounds().width + MARGIN;
+		}
+		drawTextAtPosition(x + xPosition);
+
+		this.bounds = new Rectangle(x, 0, getWidth(), this.toolbarHeight);
+	}
+
+	private void drawBackgroundAtPosition(final int x) {
+		this.gc.setAdvanced(true);
+		this.gc.setAntialias(SWT.ON);
+
+		this.gc.setForeground(SELECTED_COLOR);
+		this.gc.setBackground(SELECTED_COLOR);
+
+		final boolean hasBorder = this.parentBreadcrumb.hasBorder;
+		final boolean isFirst = this.parentBreadcrumb.indexOf(this) == 0;
+		final int borderWidth = hasBorder ? 1 : 0;
+
+		int leftSide;
+		if (isFirst) {
+			leftSide = 0;
+		} else {
+			leftSide = 5 + (hasBorder ? 0 : 1);
+		}
+
+		final int xUpperLeft = x + borderWidth + leftSide;
+		final int yUpperLeft = borderWidth;
+		final int rectWidth = getWidth() - borderWidth - leftSide - (this.isLastItemOfTheBreadCrumb && hasBorder ? 1 : 0);
+		final int rectHeight = getHeight() - 2 * borderWidth;
+		this.gc.fillRectangle(xUpperLeft, yUpperLeft, rectWidth, rectHeight);
+
+		if (!isFirst) {
+			this.gc.fillPolygon(new int[] { xUpperLeft - 5, yUpperLeft, //
+					xUpperLeft, yUpperLeft, //
+					xUpperLeft, yUpperLeft + this.toolbarHeight / 2 //
+			});
+			this.gc.fillPolygon(new int[] { xUpperLeft - 5, yUpperLeft + rectHeight, //
+					xUpperLeft, yUpperLeft + rectHeight, //
+					xUpperLeft, yUpperLeft + this.toolbarHeight / 2 //
+			});
+
+		}
+
+		if (!this.isLastItemOfTheBreadCrumb) {
+			this.gc.fillPolygon(new int[] { xUpperLeft + rectWidth, yUpperLeft + 1, //
+					xUpperLeft + rectWidth, yUpperLeft + getHeight(), //
+					xUpperLeft + rectWidth + 5, yUpperLeft + this.toolbarHeight / 2 //
+			});
+		}
+
+		this.gc.setClipping((Rectangle) null);
+	}
+
+	private void drawTrianglesAtPosition(final int x) {
+		this.gc.setForeground(Breadcrumb.BORDER_COLOR);
+		drawTriangleAtPosition(x + getWidth());
+
+		this.gc.setAlpha(127);
+		this.gc.setForeground(Breadcrumb.BORDER_COLOR_1);
+		drawTriangleAtPosition(x + getWidth() + 1);
+
+		this.gc.setForeground(Breadcrumb.BORDER_COLOR_2);
+		drawTriangleAtPosition(x + getWidth() + 2);
+
+		this.gc.setForeground(Breadcrumb.BORDER_COLOR_3);
+		drawTriangleAtPosition(x + getWidth() + 3);
+
+		this.gc.setAlpha(255);
+		if (this.parentBreadcrumb.hasBorder) {
+			this.gc.setForeground(Breadcrumb.BORDER_COLOR);
+			this.gc.drawLine(x + getWidth(), 0, x + getWidth() + 3, 0);
+			this.gc.drawLine(x + getWidth(), this.toolbarHeight - 1, x + getWidth() + 3, this.toolbarHeight - 1);
+		}
+	}
+
+	private void drawTriangleAtPosition(final int x) {
+		this.gc.drawLine(x, 0, x + 5, this.toolbarHeight / 2);
+		this.gc.drawLine(x + 5, this.toolbarHeight / 2, x, this.toolbarHeight);
+
+	}
+
+	private int computeGap() {
+		final int widthOfTextAndImage = computeSizeOfTextAndImages().x;
+		switch (this.alignment) {
+			case SWT.CENTER:
+				return (getWidth() - widthOfTextAndImage) / 2;
+			case SWT.RIGHT:
+				return getWidth() - widthOfTextAndImage - MARGIN;
+			default:
+				return MARGIN;
+		}
+	}
+
+	private Point computeSizeOfTextAndImages() {
+		int width = 0, height = 0;
+		final boolean textISNotEmpty = getText() != null && !getText().equals("");
+
+		if (textISNotEmpty) {
+			final GC gc = new GC(this.parentBreadcrumb);
+			gc.setFont(this.parentBreadcrumb.getFont());
+			final Point extent = gc.stringExtent(getText());
+			gc.dispose();
+			width += extent.x;
+			height = extent.y;
+		}
+
+		final Point imageSize = computeMaxWidthAndHeightForImages(getImage(), this.selectionImage, this.disabledImage);
+
+		if (imageSize.x != -1) {
+			width += imageSize.x;
+			height = Math.max(imageSize.y, height);
+			if (textISNotEmpty) {
+				width += MARGIN;
+			}
+		}
+		return new Point(width, height);
+	}
+
+	private Point computeMaxWidthAndHeightForImages(final Image... images) {
+		final Point imageSize = new Point(-1, -1);
+		for (final Image image : images) {
+			if (image == null) {
+				continue;
+			}
+			final Rectangle imageBounds = image.getBounds();
+			imageSize.x = Math.max(imageBounds.width, imageSize.x);
+			imageSize.y = Math.max(imageBounds.height, imageSize.y);
+		}
+		return imageSize;
+	}
+
+	private Image drawImageAtPosition(final int xPosition) {
+		Image image;
+		if (!isEnabled()) {
+			image = this.disabledImage;
+		} else if (this.selection) {
+			image = this.selectionImage;
+		} else {
+			image = getImage();
+		}
+
+		if (image == null) {
+			return null;
+		}
+
+		final int yPosition = (this.toolbarHeight - image.getBounds().height) / 2;
+		this.gc.drawImage(image, xPosition, yPosition);
+		return image;
+	}
+
+	private void drawTextAtPosition(final int xPosition) {
+		this.gc.setFont(this.parentBreadcrumb.getFont());
+		if (this.selection) {
+			this.gc.setForeground(this.textColorSelected);
+		} else {
+			this.gc.setForeground(this.textColor);
+		}
+
+		final Point textSize = this.gc.stringExtent(getText());
+		final int yPosition = (this.toolbarHeight - textSize.y) / 2;
+
+		int padding;
+		if (this.parentBreadcrumb.indexOf(this) == 0 || this.isLastItemOfTheBreadCrumb) {
+			padding = 0;
+		} else {
+			padding = 5;
+		}
+		this.gc.drawText(getText(), xPosition + padding, yPosition, true);
+	}
+
+	BreadcrumbItem setGc(final GC gc) {
+		this.gc = gc;
+		return this;
+	}
+
+	BreadcrumbItem setToolbarHeight(final int toolbarHeight) {
+		this.toolbarHeight = toolbarHeight;
+		return this;
+	}
+
+	BreadcrumbItem setIsLastItemOfTheBreadCrumb(final boolean isLastItemOfTheBreadCrumb) {
+		this.isLastItemOfTheBreadCrumb = isLastItemOfTheBreadCrumb;
+		return this;
+	}
+
 }

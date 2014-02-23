@@ -5,7 +5,8 @@
  * and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
+ * Contributors: 
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.breadcrumb;
 
@@ -32,7 +33,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * bar items displayed in a bread crumb.
  * <p>
  * The item children that may be added to instances of this class
- * must be of type <code>RoundedToolItem</code>.
+ * must be of type <code>BreadcrumbItem</code>.
  * </p>
  * <p>
  * <dl>
@@ -47,12 +48,12 @@ public class Breadcrumb extends Canvas {
 
 	private static final String IS_BUTTON_PRESSED = Breadcrumb.class.toString() + "_pressed";
 	private final List<BreadcrumbItem> items;
-	private static Color START_GRADIENT_COLOR = SWTGraphicUtil.createDisposableColor(255, 255, 255);
-	private static Color END_GRADIENT_COLOR = SWTGraphicUtil.createDisposableColor(224, 224, 224);
-	static Color BORDER_COLOR = SWTGraphicUtil.createDisposableColor(128, 128, 128);
-	static Color BORDER_COLOR_1 = SWTGraphicUtil.createDisposableColor(212, 212, 212);
-	static Color BORDER_COLOR_2 = SWTGraphicUtil.createDisposableColor(229, 229, 229);
-	static Color BORDER_COLOR_3 = SWTGraphicUtil.createDisposableColor(243, 243, 243);
+	private static Color START_GRADIENT_COLOR = SWTGraphicUtil.getColorSafely(255, 255, 255);
+	private static Color END_GRADIENT_COLOR = SWTGraphicUtil.getColorSafely(224, 224, 224);
+	static Color BORDER_COLOR = SWTGraphicUtil.getColorSafely(128, 128, 128);
+	static Color BORDER_COLOR_1 = SWTGraphicUtil.getColorSafely(212, 212, 212);
+	static Color BORDER_COLOR_2 = SWTGraphicUtil.getColorSafely(229, 229, 229);
+	static Color BORDER_COLOR_3 = SWTGraphicUtil.getColorSafely(243, 243, 243);
 	boolean hasBorder = false;
 
 	/**
@@ -83,8 +84,8 @@ public class Breadcrumb extends Canvas {
 	 */
 	public Breadcrumb(final Composite parent, final int style) {
 		super(parent, checkStyle(style) | SWT.DOUBLE_BUFFERED);
-		items = new ArrayList<BreadcrumbItem>();
-		hasBorder = (style & SWT.BORDER) != 0;
+		this.items = new ArrayList<BreadcrumbItem>();
+		this.hasBorder = (style & SWT.BORDER) != 0;
 		addListeners();
 	}
 
@@ -96,10 +97,22 @@ public class Breadcrumb extends Canvas {
 	}
 
 	private void addListeners() {
+		addMouseDownListener();
+		addMouseUpListener();
+		addMouseHoverListener();
+		addPaintListener(new PaintListener() {
+			@Override
+			public void paintControl(final PaintEvent e) {
+				Breadcrumb.this.paintControl(e);
+			}
+		});
+	}
+
+	private void addMouseDownListener() {
 		addListener(SWT.MouseDown, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				for (final BreadcrumbItem item : items) {
+				for (final BreadcrumbItem item : Breadcrumb.this.items) {
 					if (item.getBounds().contains(event.x, event.y)) {
 						final boolean isToggle = (item.getStyle() & SWT.TOGGLE) != 0;
 						final boolean isPush = (item.getStyle() & SWT.PUSH) != 0;
@@ -114,11 +127,13 @@ public class Breadcrumb extends Canvas {
 				}
 			}
 		});
+	}
 
+	private void addMouseUpListener() {
 		addListener(SWT.MouseUp, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				for (final BreadcrumbItem item : items) {
+				for (final BreadcrumbItem item : Breadcrumb.this.items) {
 					if (item.getBounds().contains(event.x, event.y)) {
 						if (item.getData(IS_BUTTON_PRESSED) == null) {
 							// The button was not pressed
@@ -140,11 +155,13 @@ public class Breadcrumb extends Canvas {
 				}
 			}
 		});
+	}
 
+	private void addMouseHoverListener() {
 		addListener(SWT.MouseHover, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				for (final BreadcrumbItem item : items) {
+				for (final BreadcrumbItem item : Breadcrumb.this.items) {
 					if (item.getBounds().contains(event.x, event.y)) {
 						setToolTipText(item.getTooltipText() == null ? "" : item.getTooltipText());
 						return;
@@ -152,27 +169,57 @@ public class Breadcrumb extends Canvas {
 				}
 			}
 		});
+	}
 
-		addPaintListener(new PaintListener() {
-			@Override
-			public void paintControl(final PaintEvent e) {
-				Breadcrumb.this.paintControl(e);
-			}
-		});
+	/**
+	 * Paint the component
+	 * @param e event
+	 */
+	private void paintControl(final PaintEvent e) {
+		final GC gc = e.gc;
+		gc.setAdvanced(true);
+		gc.setAntialias(SWT.ON);
+
+		final int width = getSize().x;
+		final int height = getSize().y;
+
+		drawBackground(gc, width, height);
+		final Iterator<BreadcrumbItem> it = this.items.iterator();
+		int x = 0;
+		while (it.hasNext()) {
+			final BreadcrumbItem item = it.next();
+			item.setGc(gc).setToolbarHeight(height).setIsLastItemOfTheBreadCrumb(!it.hasNext());
+			item.drawButtonAtPosition(x);
+			x += item.getWidth();
+		}
+	}
+
+	private void drawBackground(final GC gc, final int width, final int height) {
+		gc.setForeground(START_GRADIENT_COLOR);
+		gc.setBackground(END_GRADIENT_COLOR);
+		gc.fillGradientRectangle(0, 0, width, height, true);
+
+		if (this.hasBorder) {
+			gc.setForeground(BORDER_COLOR);
+			gc.drawRectangle(0, 0, width - 1, height - 1);
+		}
 	}
 
 	/**
 	 * Add an item to the toolbar
-	 * @param roundedToolItem roundedToolItem to add
+	 * @param item roundedToolItem to add
 	 */
-	void addItem(final BreadcrumbItem roundedToolItem) {
-		items.add(roundedToolItem);
+	void addItem(final BreadcrumbItem item) {
+		this.items.add(item);
 	}
 
+	/** 
+	 * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
+	 */
 	@Override
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
 		int width = 0, height = 0;
-		for (final BreadcrumbItem item : items) {
+		for (final BreadcrumbItem item : this.items) {
 			width += item.getWidth();
 			height = Math.max(height, item.getHeight());
 		}
@@ -196,10 +243,10 @@ public class Breadcrumb extends Canvas {
 	 */
 	public BreadcrumbItem getItem(final int index) {
 		checkWidget();
-		if (index < 0 || index > items.size()) {
+		if (index < 0 || index > this.items.size()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
-		return items.get(index);
+		return this.items.get(index);
 	}
 
 	/**
@@ -220,7 +267,7 @@ public class Breadcrumb extends Canvas {
 	 */
 	public BreadcrumbItem getItem(final Point point) {
 		checkWidget();
-		for (final BreadcrumbItem item : items) {
+		for (final BreadcrumbItem item : this.items) {
 			if (item.getBounds().contains(point)) {
 				return item;
 			}
@@ -240,11 +287,11 @@ public class Breadcrumb extends Canvas {
 	 */
 	public int getItemCount() {
 		checkWidget();
-		return items.size();
+		return this.items.size();
 	}
 
 	/**
-	 * Returns an array of <code>RoundedToolItem</code>s which are the items
+	 * Returns an array of <code>BreadcrumbItem</code>s which are the items
 	 * in the receiver. 
 	 * <p>
 	 * Note: This is not the actual structure used by the receiver
@@ -261,7 +308,7 @@ public class Breadcrumb extends Canvas {
 	 */
 	public BreadcrumbItem[] getItems() {
 		checkWidget();
-		return items.toArray(new BreadcrumbItem[items.size()]);
+		return this.items.toArray(new BreadcrumbItem[this.items.size()]);
 	}
 
 	/**
@@ -274,8 +321,8 @@ public class Breadcrumb extends Canvas {
 	 * @return the index of the item
 	 *
 	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the tool item is null</li>
-	 *    <li>ERROR_INVALID_ARGUMENT - if the tool item has been disposed</li>
+	 *    <li>ERROR_NULL_ARGUMENT - if the item is null</li>
+	 *    <li>ERROR_INVALID_ARGUMENT - if the item has been disposed</li>
 	 * </ul>
 	 * @exception SWTException <ul>
 	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -284,48 +331,15 @@ public class Breadcrumb extends Canvas {
 	 */
 	public int indexOf(final BreadcrumbItem item) {
 		checkWidget();
-		return items.indexOf(item);
+		return this.items.indexOf(item);
 	}
 
 	/**
-	 * Paint the component
-	 * @param e event
+	 * Remove an item to the toolbar
+	 * @param item item to remove
 	 */
-	protected void paintControl(final PaintEvent e) {
-		final GC gc = e.gc;
-		gc.setAdvanced(true);
-		gc.setAntialias(SWT.ON);
-
-		final int width = getSize().x;
-		final int height = getSize().y;
-
-		drawBackground(gc, width, height);
-		final Iterator<BreadcrumbItem> it = items.iterator();
-		int x = 0;
-		while (it.hasNext()) {
-			final BreadcrumbItem item = it.next();
-			item.drawButton(gc, x, height, !it.hasNext());
-			x += item.getWidth();
-		}
-	}
-
-	private void drawBackground(final GC gc, final int width, final int height) {
-		gc.setForeground(START_GRADIENT_COLOR);
-		gc.setBackground(END_GRADIENT_COLOR);
-		gc.fillGradientRectangle(0, 0, width, height, true);
-
-		if (hasBorder) {
-			gc.setForeground(BORDER_COLOR);
-			gc.drawRectangle(0, 0, width - 1, height - 1);
-		}
-	}
-
-	/**
-	 * Add an item to the toolbar
-	 * @param roundedToolItem roundedToolItem to add
-	 */
-	void removeItem(final BreadcrumbItem roundedToolItem) {
-		items.remove(roundedToolItem);
+	public void removeItem(final BreadcrumbItem item) {
+		this.items.remove(item);
 	}
 
 }

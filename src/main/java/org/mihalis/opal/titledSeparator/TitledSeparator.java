@@ -96,8 +96,8 @@ public class TitledSeparator extends Composite {
 		this.addListener(SWT.Dispose, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				SWTGraphicUtil.dispose(originalColor);
-				SWTGraphicUtil.dispose(originalFont);
+				SWTGraphicUtil.safeDispose(originalColor);
+				SWTGraphicUtil.safeDispose(originalFont);
 			}
 		});
 

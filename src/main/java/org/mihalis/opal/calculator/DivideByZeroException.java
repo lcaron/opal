@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Hermant (http://www.javabeginner.com/java-swing/java-swing-calculator) - Initial Version in SWING
- *     Laurent CARON (laurent.caron at gmail dot com) - Port to SWT, improvements
+ *     Laurent CARON (laurent.caron at gmail dot com) - Initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.calculator;
 
@@ -24,9 +23,9 @@ class DivideByZeroException extends Exception {
 	/**
 	 * Constructor
 	 * 
-	 * @param s error message
+	 * @param errorMessage error message
 	 */
-	public DivideByZeroException(final String s) {
-		super(s);
+	public DivideByZeroException(final String errorMessage) {
+		super(errorMessage);
 	}
 }

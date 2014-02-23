@@ -6,7 +6,6 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Peter Weishapl - Inspiration
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.promptSupport;
@@ -21,8 +20,8 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * This utility class allows the user to add a prompt to a text or combo
- * component (see http://designinginterfaces.com/Input_Prompt)
- * 
+ * component (see http://designinginterfaces.com/Input_Prompt).<br/>
+ * This class is inspired by work of Peter Weishapl
  */
 public class PromptSupport {
 	public static enum FocusBehavior {
@@ -211,9 +210,9 @@ public class PromptSupport {
 		}
 		control.setData(PROMPT, promptText);
 
-		final BaseFocusControlListener bfl = FocusControlListenerFactory.getFocusControlListenerFor(control);
-		control.addFocusListener(bfl);
-		control.addControlListener(bfl);
+		final BaseFocusControlListener focusControlListener = FocusControlListenerFactory.getFocusControlListenerFor(control);
+		control.addFocusListener(focusControlListener);
+		control.addControlListener(focusControlListener);
 		control.setData(SET, true);
 	}
 

@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
- *     Romain Guy - Original Swing Implementation (http://www.curious-creature.org/2005/07/09/a-music-shelf-in-java2d/)
  *******************************************************************************/
 package org.mihalis.opal.imageSelector;
 
@@ -17,8 +16,6 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -46,6 +43,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
+ * Work inspired by Romain Guy's work (http://www.curious-creature.org/2005/07/09/a-music-shelf-in-java2d/)
  */
 public class ImageSelector extends Canvas {
 	private List<ISItem> items;
@@ -64,6 +62,9 @@ public class ImageSelector extends Canvas {
 	private double animationStep = -1d;
 	private static final int TIMER_INTERVAL = 50;
 	private int pageIncrement = 5;
+
+	private Image cachedImage;
+	private GC cachedGC;
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -94,31 +95,119 @@ public class ImageSelector extends Canvas {
 		super(parent, style | SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
 		this.font = new Font(this.getDisplay(), "Lucida Sans", 24, SWT.NONE);
 
-		this.addDisposeListener(new DisposeListener() {
+		SWTGraphicUtil.addDisposer(this, this.font);
+		SWTGraphicUtil.addDisposer(this, this.gradientStart);
+		SWTGraphicUtil.addDisposer(this, this.gradientEnd);
+		SWTGraphicUtil.addDisposer(this, this.cachedGC);
+		SWTGraphicUtil.addDisposer(this, this.cachedImage);
 
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(ImageSelector.this.font);
-				SWTGraphicUtil.dispose(ImageSelector.this.gradientStart);
-				SWTGraphicUtil.dispose(ImageSelector.this.gradientEnd);
-			}
+		setSigma(0.5);
+		this.gradientStart = new Color(getDisplay(), 0, 0, 0);
+		this.gradientEnd = new Color(getDisplay(), 110, 110, 110);
 
-		});
+		addListeners();
+	}
+
+	private void addListeners() {
+		addKeyListener();
+		addMouseListeners();
 
 		addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(final PaintEvent e) {
 				ImageSelector.this.paintControl(e);
 			}
-
 		});
 
-		addKeyListener();
-		addMouseListeners();
+		addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				if (ImageSelector.this.cachedGC == null) {
+					return;
+				}
+				ImageSelector.this.cachedGC.dispose();
+				ImageSelector.this.cachedImage.dispose();
+				ImageSelector.this.cachedImage = new Image(getDisplay(), getClientArea());
+				ImageSelector.this.cachedGC = new GC(ImageSelector.this.cachedImage);
+				ImageSelector.this.cachedGC.setAntialias(SWT.ON);
+			}
+		});
+	}
 
-		setSigma(0.5);
-		this.gradientStart = new Color(getDisplay(), 0, 0, 0);
-		this.gradientEnd = new Color(getDisplay(), 110, 110, 110);
+	/**
+	 * Add the key listener
+	 */
+	private void addKeyListener() {
+		this.addKeyListener(new KeyAdapter() {
+			/**
+			 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
+			 */
+			@Override
+			public void keyReleased(final KeyEvent e) {
+				switch (e.keyCode) {
+					case SWT.ARROW_LEFT:
+					case SWT.ARROW_UP:
+						scrollAndAnimateBy(-1);
+						break;
+					case SWT.ARROW_RIGHT:
+					case SWT.ARROW_DOWN:
+						scrollAndAnimateBy(1);
+						break;
+					case SWT.HOME:
+						scrollBy(-1 * ImageSelector.this.index);
+						break;
+					case SWT.END:
+						scrollBy(ImageSelector.this.index);
+						break;
+					case SWT.PAGE_UP:
+						scrollBy(-1 * ImageSelector.this.pageIncrement);
+						break;
+					case SWT.PAGE_DOWN:
+						scrollBy(ImageSelector.this.pageIncrement);
+						break;
+				}
+			}
+		});
+	}
+
+	/**
+	 * Add mouse listeners
+	 */
+	private void addMouseListeners() {
+		addMouseMoveListener(new MouseMoveListener() {
+			@Override
+			public void mouseMove(final MouseEvent e) {
+				for (final ISItem item : ImageSelector.this.items) {
+					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y && e.y <= item.getLowerRightCorner().y) {
+						setCursor(getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+						return;
+					}
+				}
+				setCursor(getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
+			}
+		});
+
+		addMouseListener(new MouseAdapter() {
+			/**
+			 * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
+			 */
+			@Override
+			public void mouseUp(final MouseEvent e) {
+				for (final ISItem item : ImageSelector.this.items) {
+					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y && e.y <= item.getLowerRightCorner().y) {
+						scrollAndAnimateBy(ImageSelector.this.originalItems.indexOf(item) - ImageSelector.this.index);
+						return;
+					}
+				}
+			}
+		});
+
+		addListener(SWT.MouseWheel, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				scrollBy(-1 * event.count);
+			}
+		});
 	}
 
 	/**
@@ -133,14 +222,6 @@ public class ImageSelector extends Canvas {
 		this.rho = computeModifierUnbounded(0.0);
 		computeEquationParts();
 		redraw();
-	}
-
-	/**
-	 * Computer both members of the equation
-	 */
-	private void computeEquationParts() {
-		this.expMultiplier = Math.sqrt(2.0 * Math.PI) / this.sigma / this.rho;
-		this.expMember = 4.0 * this.sigma * this.sigma;
 	}
 
 	/**
@@ -170,36 +251,39 @@ public class ImageSelector extends Canvas {
 	}
 
 	/**
+	 * Computer both members of the equation
+	 */
+	private void computeEquationParts() {
+		this.expMultiplier = Math.sqrt(2.0 * Math.PI) / this.sigma / this.rho;
+		this.expMember = 4.0 * this.sigma * this.sigma;
+	}
+
+	/**
 	 * Draw the widget
 	 * 
 	 * @param e the paintEvent
 	 */
 	private void paintControl(final PaintEvent e) {
 
-		// Create the image to fill the canvas
-		final Image image = new Image(getDisplay(), getClientArea());
-
-		// Set up the offscreen gc
-		final GC gc = new GC(image);
+		if (this.cachedImage == null) {
+			this.cachedImage = new Image(getDisplay(), getClientArea());
+			this.cachedGC = new GC(this.cachedImage);
+			this.cachedGC.setAntialias(SWT.ON);
+		}
 
 		// Draw gradient
-		drawBackground(gc);
+		drawBackground();
 
 		// Draw the items
-		drawItems(gc);
+		drawItems();
 
 		// Draw the title
 		if (this.animationStep < 0d) {
-			drawTitle(gc);
+			drawTitle();
 		}
 
 		// Draw the offscreen buffer to the screen
-		e.gc.drawImage(image, 0, 0);
-
-		// Clean up
-		image.dispose();
-		gc.dispose();
-
+		e.gc.drawImage(this.cachedImage, 0, 0);
 	}
 
 	/**
@@ -207,16 +291,16 @@ public class ImageSelector extends Canvas {
 	 * 
 	 * @param gc graphical context
 	 */
-	private void drawBackground(final GC gc) {
+	private void drawBackground() {
 		final Rectangle rect = getClientArea();
 
-		gc.setForeground(this.gradientStart);
-		gc.setBackground(this.gradientEnd);
-		gc.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height / 2, true);
+		this.cachedGC.setForeground(this.gradientStart);
+		this.cachedGC.setBackground(this.gradientEnd);
+		this.cachedGC.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height / 2, true);
 
-		gc.setForeground(this.gradientEnd);
-		gc.setBackground(this.gradientStart);
-		gc.fillGradientRectangle(rect.x, rect.height / 2, rect.width, rect.height / 2, true);
+		this.cachedGC.setForeground(this.gradientEnd);
+		this.cachedGC.setBackground(this.gradientStart);
+		this.cachedGC.fillGradientRectangle(rect.x, rect.height / 2, rect.width, rect.height / 2, true);
 	}
 
 	/**
@@ -224,8 +308,7 @@ public class ImageSelector extends Canvas {
 	 * 
 	 * @param gc graphical context
 	 */
-	private void drawItems(final GC gc) {
-
+	private void drawItems() {
 		if (this.animationStep < 0d) {
 			this.items.clear();
 			this.items.addAll(this.originalItems);
@@ -233,22 +316,20 @@ public class ImageSelector extends Canvas {
 				final ISItem item = this.items.get(i);
 				item.setzPosition((i - this.index) * this.spacing);
 			}
-
 			Collections.sort(this.items);
 		}
 
 		for (final ISItem item : this.items) {
-			drawItem(gc, item);
+			drawItem(item);
 		}
 	}
 
 	/**
 	 * Draw a given item
 	 * 
-	 * @param gc graphical context
 	 * @param item item to draw
 	 */
-	private void drawItem(final GC gc, final ISItem item) {
+	private void drawItem(final ISItem item) {
 
 		final int size = computeSize(item);
 		final int centerX = computeZPosition(item);
@@ -262,12 +343,12 @@ public class ImageSelector extends Canvas {
 		final int alpha = computeAlpha(item);
 
 		final Image newImage = SWTGraphicUtil.createReflectedResizedImage(item.getImage(), size, size);
-		gc.setAlpha(alpha);
+		this.cachedGC.setAlpha(alpha);
 
 		final int x = centerX - newImage.getBounds().width / 2;
 		final int y = centerY - newImage.getBounds().height / 2;
 
-		gc.drawImage(newImage, x, y);
+		this.cachedGC.drawImage(newImage, x, y);
 
 		item.setUpperLeftCorner(x, y);
 		item.setLowerRightCorner(x + newImage.getBounds().width, (int) (y + newImage.getBounds().height / 1.5));
@@ -312,62 +393,23 @@ public class ImageSelector extends Canvas {
 	 * 
 	 * @param gc graphical context
 	 */
-	private void drawTitle(final GC gc) {
+	private void drawTitle() {
 		final String title = this.originalItems.get(this.index).getText();
 		if (title == null || title.trim().equals("")) {
 			return;
 		}
-		gc.setFont(getFont());
-		final Point textSize = gc.stringExtent(title);
+		this.cachedGC.setFont(getFont());
+		final Point textSize = this.cachedGC.stringExtent(title);
 
-		gc.setAntialias(SWT.ON);
-		gc.setFont(getFont());
-		gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		gc.setAlpha(255);
+		this.cachedGC.setFont(getFont());
+		this.cachedGC.setForeground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		this.cachedGC.setAlpha(255);
 
 		final int centerX = this.getClientArea().width / 2;
 		final int centerY = (this.getClientArea().height + this.maxItemWidth) / 2;
 
-		gc.drawString(title, centerX - textSize.x / 2, (centerY - textSize.y / 2), true);
+		this.cachedGC.drawString(title, centerX - textSize.x / 2, (centerY - textSize.y / 2), true);
 
-	}
-
-	/**
-	 * Add the key listener
-	 */
-	private void addKeyListener() {
-		this.addKeyListener(new KeyAdapter() {
-
-			/**
-			 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
-			 */
-			@Override
-			public void keyReleased(final KeyEvent e) {
-				switch (e.keyCode) {
-				case SWT.ARROW_LEFT:
-				case SWT.ARROW_UP:
-					scrollAndAnimateBy(-1);
-					break;
-				case SWT.ARROW_RIGHT:
-				case SWT.ARROW_DOWN:
-					scrollAndAnimateBy(1);
-					break;
-				case SWT.HOME:
-					scrollBy(-1 * ImageSelector.this.index);
-					break;
-				case SWT.END:
-					scrollBy(ImageSelector.this.index);
-					break;
-				case SWT.PAGE_UP:
-					scrollBy(-1 * ImageSelector.this.pageIncrement);
-					break;
-				case SWT.PAGE_DOWN:
-					scrollBy(ImageSelector.this.pageIncrement);
-					break;
-				}
-			}
-
-		});
 	}
 
 	/**
@@ -405,7 +447,10 @@ public class ImageSelector extends Canvas {
 
 			@Override
 			public void run() {
+				startAnimation(increment, step);
+			}
 
+			private void startAnimation(final int increment, final double step) {
 				ImageSelector.this.items.clear();
 				ImageSelector.this.items.addAll(ImageSelector.this.originalItems);
 				for (int i = 0; i < ImageSelector.this.items.size(); i++) {
@@ -427,51 +472,6 @@ public class ImageSelector extends Canvas {
 						getDisplay().timerExec(TIMER_INTERVAL, this);
 					}
 				}
-
-			}
-		});
-
-	}
-
-	/**
-	 * Add mouse listeners
-	 */
-	private void addMouseListeners() {
-		addMouseMoveListener(new MouseMoveListener() {
-
-			@Override
-			public void mouseMove(final MouseEvent e) {
-				for (final ISItem item : ImageSelector.this.items) {
-					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y && e.y <= item.getLowerRightCorner().y) {
-						setCursor(getDisplay().getSystemCursor(SWT.CURSOR_HAND));
-						return;
-					}
-				}
-				setCursor(getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
-			}
-		});
-
-		addMouseListener(new MouseAdapter() {
-
-			/**
-			 * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
-			 */
-			@Override
-			public void mouseUp(final MouseEvent e) {
-				for (final ISItem item : ImageSelector.this.items) {
-					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y && e.y <= item.getLowerRightCorner().y) {
-						scrollAndAnimateBy(ImageSelector.this.originalItems.indexOf(item) - ImageSelector.this.index);
-						return;
-					}
-				}
-			}
-		});
-
-		addListener(SWT.MouseWheel, new Listener() {
-
-			@Override
-			public void handleEvent(final Event event) {
-				scrollBy(-1 * event.count);
 			}
 		});
 
@@ -507,7 +507,6 @@ public class ImageSelector extends Canvas {
 	 */
 	@Override
 	public void setFont(final Font font) {
-		SWTGraphicUtil.dispose(this.font);
 		this.font = font;
 		redraw();
 	}
@@ -575,7 +574,6 @@ public class ImageSelector extends Canvas {
 	 * @param gradientStart the the gradient start color to set
 	 */
 	public void setGradientStart(final Color gradientStart) {
-		SWTGraphicUtil.dispose(this.gradientStart);
 		this.gradientStart = gradientStart;
 		redraw();
 	}
@@ -591,7 +589,6 @@ public class ImageSelector extends Canvas {
 	 * @param gradientEnd the the gradient end color to set
 	 */
 	public void setGradientEnd(final Color gradientEnd) {
-		SWTGraphicUtil.dispose(this.gradientEnd);
 		this.gradientEnd = gradientEnd;
 		redraw();
 	}

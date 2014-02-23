@@ -125,21 +125,44 @@ public class MultiChoice<T> extends Composite {
 		this.arrow = new Button(this, SWT.ARROW | SWT.RIGHT);
 		this.arrow.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
 
+		createGlobalListener();
+		addListeners();
+
+		this.filter = new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				final Shell shell = ((Control) event.widget).getShell();
+				if (shell == MultiChoice.this.getShell()) {
+					handleFocusEvents(SWT.FocusOut);
+				}
+			}
+		};
+
+		this.selection = new LinkedHashSet<T>();
+		this.elements = elements;
+		this.separator = ",";
+		this.labelProvider = new MultiChoiceDefaultLabelProvider();
+
+		createPopup();
+		setLabel();
+	}
+
+	private void createGlobalListener() {
 		this.listener = new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
 				if (MultiChoice.this.popup == event.widget) {
-					popupEvent(event);
+					handlePopupEvent(event);
 					return;
 				}
 
 				if (MultiChoice.this.arrow == event.widget) {
-					buttonEvent(event);
+					handleButtonEvent(event);
 					return;
 				}
 
 				if (MultiChoice.this == event.widget) {
-					multiChoiceEvent(event);
+					handleMultiChoiceEvents(event);
 					return;
 				}
 
@@ -150,19 +173,22 @@ public class MultiChoice<T> extends Composite {
 							if (isDisposed()) {
 								return;
 							}
-							handleFocus(SWT.FocusOut);
+							handleFocusEvents(SWT.FocusOut);
 						}
 					});
 				}
 			}
 		};
+	}
+
+	private void addListeners() {
 
 		final int[] multiChoiceEvent = { SWT.Dispose, SWT.Move, SWT.Resize };
 		for (final int element : multiChoiceEvent) {
 			this.addListener(element, this.listener);
 		}
 
-		if ((style & SWT.READ_ONLY) == 0) {
+		if ((getStyle() & SWT.READ_ONLY) == 0) {
 			final Listener validationListener = new Listener() {
 
 				@Override
@@ -179,24 +205,6 @@ public class MultiChoice<T> extends Composite {
 		for (final int buttonEvent : buttonEvents) {
 			this.arrow.addListener(buttonEvent, this.listener);
 		}
-
-		this.filter = new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				final Shell shell = ((Control) event.widget).getShell();
-				if (shell == MultiChoice.this.getShell()) {
-					handleFocus(SWT.FocusOut);
-				}
-			}
-		};
-
-		this.selection = new LinkedHashSet<T>();
-		this.elements = elements;
-		this.separator = ",";
-		this.labelProvider = new MultiChoiceDefaultLabelProvider();
-
-		createPopup();
-		setLabel();
 	}
 
 	protected void validateEntry() {
@@ -239,7 +247,6 @@ public class MultiChoice<T> extends Composite {
 			messageToDisplay = String.format(ResourceManager.getLabel(ResourceManager.MULTICHOICE_MESSAGE_PLURAL), sb.toString());
 		}
 		getDisplay().asyncExec(new Runnable() {
-
 			@Override
 			public void run() {
 				final MessageBox mb = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR);
@@ -883,7 +890,7 @@ public class MultiChoice<T> extends Composite {
 			return;
 		}
 
-		if (this.popup == null || this.popup.isDisposed() || checkboxes == null) {
+		if (this.popup == null || this.popup.isDisposed() || this.checkboxes == null) {
 			return;
 		}
 
@@ -1001,7 +1008,7 @@ public class MultiChoice<T> extends Composite {
 	 * 
 	 * @param type type of the event to handle
 	 */
-	private void handleFocus(final int type) {
+	private void handleFocusEvents(final int type) {
 		if (isDisposed()) {
 			return;
 		}
@@ -1046,7 +1053,7 @@ public class MultiChoice<T> extends Composite {
 	 * 
 	 * @param event event to handle
 	 */
-	private void multiChoiceEvent(final Event event) {
+	private void handleMultiChoiceEvents(final Event event) {
 		switch (event.type) {
 			case SWT.Dispose:
 				if (this.popup != null && !this.popup.isDisposed()) {
@@ -1060,11 +1067,11 @@ public class MultiChoice<T> extends Composite {
 				this.arrow = null;
 				break;
 			case SWT.Move:
-				dropDown(false);
+				changeVisibilityOfPopupWindow(false);
 				break;
 			case SWT.Resize:
 				if (isDropped()) {
-					dropDown(false);
+					changeVisibilityOfPopupWindow(false);
 				}
 				break;
 		}
@@ -1076,14 +1083,14 @@ public class MultiChoice<T> extends Composite {
 	 * 
 	 * @param event event to hangle
 	 */
-	private void buttonEvent(final Event event) {
+	private void handleButtonEvent(final Event event) {
 		switch (event.type) {
 			case SWT.FocusIn: {
-				handleFocus(SWT.FocusIn);
+				handleFocusEvents(SWT.FocusIn);
 				break;
 			}
 			case SWT.Selection: {
-				dropDown(!isDropped());
+				changeVisibilityOfPopupWindow(!isDropped());
 				break;
 			}
 		}
@@ -1101,7 +1108,7 @@ public class MultiChoice<T> extends Composite {
 	 * 
 	 * @param event event to handle
 	 */
-	private void popupEvent(final Event event) {
+	private void handlePopupEvent(final Event event) {
 		switch (event.type) {
 			case SWT.Paint:
 				final Rectangle listRect = this.popup.getBounds();
@@ -1111,10 +1118,10 @@ public class MultiChoice<T> extends Composite {
 				break;
 			case SWT.Close:
 				event.doit = false;
-				dropDown(false);
+				changeVisibilityOfPopupWindow(false);
 				break;
 			case SWT.Deactivate:
-				dropDown(false);
+				changeVisibilityOfPopupWindow(false);
 				break;
 			case SWT.Dispose:
 				if (this.checkboxes != null) {
@@ -1129,14 +1136,14 @@ public class MultiChoice<T> extends Composite {
 	/**
 	 * Display/Hide the popup window
 	 * 
-	 * @param drop if <code>true</code>, displays the popup window. If <code>false</code>, hide the popup window
+	 * @param show if <code>true</code>, displays the popup window. If <code>false</code>, hide the popup window
 	 */
-	private void dropDown(final boolean drop) {
-		if (drop == isDropped()) {
+	private void changeVisibilityOfPopupWindow(final boolean show) {
+		if (show == isDropped()) {
 			return;
 		}
 
-		if (!drop) {
+		if (!show) {
 			this.popup.setVisible(false);
 			if (!isDisposed()) {
 				this.text.setFocus();

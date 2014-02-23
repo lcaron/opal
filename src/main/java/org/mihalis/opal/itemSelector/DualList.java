@@ -15,8 +15,6 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -47,11 +45,20 @@ import org.mihalis.opal.utils.SimpleSelectionAdapter;
 
 public class DualList extends Composite {
 
+	private static final String DOUBLE_DOWN_IMAGE = "double_down.png";
+	private static final String DOUBLE_UP_IMAGE = "double_up.png";
+	private static final String DOUBLE_LEFT_IMAGE = "double_left.png";
+	private static final String DOUBLE_RIGHT_IMAGE = "double_right.png";
+	private static final String ARROW_DOWN_IMAGE = "arrow_down.png";
+	private static final String ARROW_LEFT_IMAGE = "arrow_left.png";
+	private static final String ARROW_UP_IMAGE = "arrow_up.png";
+	private static final String ARROW_RIGHT_IMAGE = "arrow_right.png";
+
 	private final List<DLItem> items;
 	private final List<DLItem> selection;
 
-	private final Table itemsTable;
-	private final Table selectionTable;
+	private Table itemsTable;
+	private Table selectionTable;
 
 	private List<SelectionListener> eventTable;
 
@@ -86,9 +93,21 @@ public class DualList extends Composite {
 		this.selection = new ArrayList<DLItem>();
 
 		this.setLayout(new GridLayout(4, false));
+		createItemsTable();
+		createButtonSelectAll();
+		createSelectionTable();
+		createButtonMoveFirst();
+		createButtonSelect();
+		createButtonMoveUp();
+		createButtonDeselect();
+		createButtonMoveDown();
+		createButtonDeselectAll();
+		createButtonMoveLast();
+	}
+
+	private void createItemsTable() {
 		this.itemsTable = this.createTable();
 		this.itemsTable.addMouseListener(new MouseAdapter() {
-
 			/**
 			 * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
 			 */
@@ -96,20 +115,25 @@ public class DualList extends Composite {
 			public void mouseDoubleClick(final MouseEvent event) {
 				DualList.this.selectItem();
 			}
-
 		});
-		final Button buttonSelectAll = this.createButton("double_right.png", true, GridData.END);
-		buttonSelectAll.addSelectionListener(new SimpleSelectionAdapter() {
+	}
 
+	private void createButtonSelectAll() {
+		final Button buttonSelectAll = this.createButton(DOUBLE_RIGHT_IMAGE, true, GridData.END);
+		buttonSelectAll.addSelectionListener(new SimpleSelectionAdapter() {
+			/**
+			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
+			 */
 			@Override
 			public void handle(final SelectionEvent e) {
 				DualList.this.selectAll();
 			}
 		});
+	}
 
+	private void createSelectionTable() {
 		this.selectionTable = this.createTable();
 		this.selectionTable.addMouseListener(new MouseAdapter() {
-
 			/**
 			 * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
 			 */
@@ -117,72 +141,98 @@ public class DualList extends Composite {
 			public void mouseDoubleClick(final MouseEvent event) {
 				DualList.this.deselectItem();
 			}
-
 		});
+	}
 
-		final Button buttonMoveFirst = this.createButton("double_up.png", true, GridData.END);
+	private void createButtonMoveFirst() {
+		final Button buttonMoveFirst = this.createButton(DOUBLE_UP_IMAGE, true, GridData.END);
 		buttonMoveFirst.addSelectionListener(new SimpleSelectionAdapter() {
-
+			/**
+			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
+			 */
 			@Override
 			public void handle(final SelectionEvent e) {
 				DualList.this.moveSelectionToFirstPosition();
 			}
 		});
+	}
 
-		final Button buttonSelect = this.createButton("arrow_right.png", false, GridData.CENTER);
+	private void createButtonSelect() {
+		final Button buttonSelect = this.createButton(ARROW_RIGHT_IMAGE, false, GridData.CENTER);
 		buttonSelect.addSelectionListener(new SimpleSelectionAdapter() {
-
+			/**
+			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
+			 */
 			@Override
 			public void handle(final SelectionEvent e) {
 				DualList.this.selectItem();
 			}
 		});
+	}
 
-		final Button buttonMoveUp = this.createButton("arrow_up.png", false, GridData.CENTER);
+	private void createButtonMoveUp() {
+		final Button buttonMoveUp = this.createButton(ARROW_UP_IMAGE, false, GridData.CENTER);
 		buttonMoveUp.addSelectionListener(new SimpleSelectionAdapter() {
-
+			/**
+			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
+			 */
 			@Override
 			public void handle(final SelectionEvent e) {
 				DualList.this.moveUpItem();
 			}
 		});
+	}
 
-		final Button buttonDeselect = this.createButton("arrow_left.png", false, GridData.CENTER);
+	private void createButtonDeselect() {
+		final Button buttonDeselect = this.createButton(ARROW_LEFT_IMAGE, false, GridData.CENTER);
 		buttonDeselect.addSelectionListener(new SimpleSelectionAdapter() {
-
+			/**
+			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
+			 */
 			@Override
 			public void handle(final SelectionEvent e) {
 				DualList.this.deselectItem();
 			}
 		});
+	}
 
-		final Button buttonMoveDown = this.createButton("arrow_down.png", false, GridData.CENTER);
+	private void createButtonMoveDown() {
+		final Button buttonMoveDown = this.createButton(ARROW_DOWN_IMAGE, false, GridData.CENTER);
 		buttonMoveDown.addSelectionListener(new SimpleSelectionAdapter() {
-
+			/**
+			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
+			 */
 			@Override
 			public void handle(final SelectionEvent e) {
 				DualList.this.moveDownItem();
 			}
 		});
+	}
 
-		final Button buttonDeselectAll = this.createButton("double_left.png", false, GridData.BEGINNING);
+	private void createButtonDeselectAll() {
+		final Button buttonDeselectAll = this.createButton(DOUBLE_LEFT_IMAGE, false, GridData.BEGINNING);
 		buttonDeselectAll.addSelectionListener(new SimpleSelectionAdapter() {
-
+			/**
+			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
+			 */
 			@Override
 			public void handle(final SelectionEvent e) {
 				DualList.this.deselectAll();
 			}
 		});
+	}
 
-		final Button buttonMoveLast = this.createButton("double_down.png", true, GridData.BEGINNING);
+	private void createButtonMoveLast() {
+		final Button buttonMoveLast = this.createButton(DOUBLE_DOWN_IMAGE, true, GridData.BEGINNING);
 		buttonMoveLast.addSelectionListener(new SimpleSelectionAdapter() {
-
+			/**
+			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
+			 */
 			@Override
 			public void handle(final SelectionEvent e) {
 				DualList.this.moveSelectionToLastPosition();
 			}
 		});
-
 	}
 
 	/**
@@ -215,13 +265,7 @@ public class DualList extends Composite {
 		final Image image = new Image(this.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/" + fileName));
 		button.setImage(image);
 		button.setLayoutData(new GridData(GridData.CENTER, alignment, false, verticalExpand));
-		button.addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SWTGraphicUtil.dispose(image);
-			}
-		});
+		SWTGraphicUtil.addDisposer(button, image);
 		return button;
 	}
 
@@ -1096,7 +1140,6 @@ public class DualList extends Composite {
 
 			tableItem.setText(1, item.getText());
 		}
-
 	}
 
 	/**
@@ -1203,7 +1246,6 @@ public class DualList extends Composite {
 		this.redrawTables();
 		this.selectionTable.select(newSelection);
 		this.selectionTable.forceFocus();
-
 	}
 
 	/**

@@ -44,6 +44,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * 
  */
 public class FlatButton extends Canvas {
+	private static final int DEFAULT_PADDING = 5;
 	private Image image;
 	private String text;
 	private boolean selection;
@@ -153,9 +154,9 @@ public class FlatButton extends Canvas {
 		this.selectedTextColor = getDisplay().getSystemColor(SWT.COLOR_WHITE);
 		this.mouseOverColor = new Color(getDisplay(), 235, 234, 226);
 
-		SWTGraphicUtil.dispose(this, this.selectedColor);
-		SWTGraphicUtil.dispose(this, this.mouseOverColor);
-		SWTGraphicUtil.dispose(this, this.image);
+		SWTGraphicUtil.addDisposer(this, this.selectedColor);
+		SWTGraphicUtil.addDisposer(this, this.mouseOverColor);
+		SWTGraphicUtil.addDisposer(this, this.image);
 	}
 
 	private void paintControl(final PaintEvent e) {
@@ -189,13 +190,13 @@ public class FlatButton extends Canvas {
 
 		int x;
 		if (this.alignment == SWT.LEFT) {
-			x = 5;
+			x = DEFAULT_PADDING;
 		} else if (this.alignment == SWT.RIGHT) {
-			x = rect.width - imageSize.x - 5;
+			x = rect.width - imageSize.x - DEFAULT_PADDING;
 		} else {
 			x = (rect.width - imageSize.x) / 2;
 		}
-		gc.drawImage(this.image, x, 5);
+		gc.drawImage(this.image, x, DEFAULT_PADDING);
 	}
 
 	private void drawText(final GC gc) {
@@ -212,16 +213,16 @@ public class FlatButton extends Canvas {
 		int x, y;
 
 		if (this.alignment == SWT.LEFT) {
-			x = 5;
+			x = DEFAULT_PADDING;
 		} else if (this.alignment == SWT.RIGHT) {
-			x = rect.width - textSize.x - 5;
+			x = rect.width - textSize.x - DEFAULT_PADDING;
 		} else {
 			x = (rect.width - textSize.x) / 2;
 		}
 		if (this.image == null) {
-			y = 5;
+			y = DEFAULT_PADDING;
 		} else {
-			y = 10 + this.image.getBounds().height;
+			y = 2 * DEFAULT_PADDING + this.image.getBounds().height;
 		}
 		gc.drawString(this.text, x, y, true);
 	}
@@ -233,14 +234,6 @@ public class FlatButton extends Canvas {
 	 * <p>
 	 * <code>widgetSelected</code> is called when the control is selected by the
 	 * user. <code>widgetDefaultSelected</code> is not called.
-	 * </p>
-	 * <p>
-	 * When the <code>SWT.RADIO</code> style bit is set, the
-	 * <code>widgetSelected</code> method is also called when the receiver loses
-	 * selection because another item in the same radio group was selected by
-	 * the user. During <code>widgetSelected</code> the application can use
-	 * <code>getSelection()</code> to determine the current selected state of
-	 * the receiver.
 	 * </p>
 	 * 
 	 * @param listener the listener which should be notified
@@ -269,7 +262,7 @@ public class FlatButton extends Canvas {
 	 */
 	@Override
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
-		int width = 10, height = 15;
+		int width = 2 * DEFAULT_PADDING, height = 3 * DEFAULT_PADDING;
 		if (this.image != null) {
 			final Rectangle bounds = this.image.getBounds();
 			width += bounds.width;
@@ -280,7 +273,7 @@ public class FlatButton extends Canvas {
 			final GC gc = new GC(this);
 			final Point extent = gc.stringExtent(this.text);
 			gc.dispose();
-			width = Math.max(width, extent.x + 10);
+			width = Math.max(width, extent.x + 2 * DEFAULT_PADDING);
 			height = height + extent.y;
 		}
 
@@ -417,8 +410,7 @@ public class FlatButton extends Canvas {
 	 * @return the receiver's text
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
@@ -438,8 +430,7 @@ public class FlatButton extends Canvas {
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
@@ -511,12 +502,10 @@ public class FlatButton extends Canvas {
 	 *            <code>null</code>)
 	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been
-	 *                disposed</li>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the image has been disposed</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
@@ -533,8 +522,7 @@ public class FlatButton extends Canvas {
 	 * @param color the new color
 	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the argument has been
-	 *                disposed</li>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -554,8 +542,7 @@ public class FlatButton extends Canvas {
 	 * @param color the new color
 	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the argument has been
-	 *                disposed</li>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
@@ -575,12 +562,10 @@ public class FlatButton extends Canvas {
 	 * @param color the new color
 	 * 
 	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the argument has been
-	 *                disposed</li>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the argument has been disposed</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
@@ -595,8 +580,7 @@ public class FlatButton extends Canvas {
 	 * @param selected the new selection state
 	 * 
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
@@ -617,8 +601,7 @@ public class FlatButton extends Canvas {
 	 *                <li>ERROR_NULL_ARGUMENT - if the text is null</li>
 	 *                </ul>
 	 * @exception SWTException <ul>
-	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>

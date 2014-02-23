@@ -4,8 +4,8 @@
  * Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Laurent CARON (laurent.caron at gmail dot com) - initial API
- * and implementation
+ * Contributors: 
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 
 package org.mihalis.opal.notify;
@@ -38,27 +38,27 @@ public class NotifierColorsFactory {
 	static NotifierColors getColorsForTheme(final NotifierTheme theme) {
 		final NotifierColors colors = new NotifierColors();
 		switch (theme) {
-		case BLUE_THEME:
-			colors.textColor = new Color(Display.getDefault(), 4, 64, 140);
-			colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-			colors.borderColor = new Color(Display.getDefault(), 153, 188, 232);
-			colors.leftColor = new Color(Display.getDefault(), 210, 225, 244);
-			colors.rightColor = new Color(Display.getDefault(), 182, 207, 238);
-			break;
-		case GRAY_THEME:
-			colors.textColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-			colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED);
-			colors.borderColor = new Color(Display.getDefault(), 208, 208, 208);
-			colors.leftColor = new Color(Display.getDefault(), 255, 255, 255);
-			colors.rightColor = new Color(Display.getDefault(), 208, 208, 208);
-			break;
-		default:
-			colors.textColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-			colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-			colors.borderColor = new Color(Display.getDefault(), 218, 178, 85);
-			colors.leftColor = new Color(Display.getDefault(), 220, 220, 160);
-			colors.rightColor = new Color(Display.getDefault(), 255, 255, 191);
-			break;
+			case BLUE_THEME:
+				colors.textColor = new Color(Display.getDefault(), 4, 64, 140);
+				colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+				colors.borderColor = new Color(Display.getDefault(), 153, 188, 232);
+				colors.leftColor = new Color(Display.getDefault(), 210, 225, 244);
+				colors.rightColor = new Color(Display.getDefault(), 182, 207, 238);
+				break;
+			case GRAY_THEME:
+				colors.textColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+				colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED);
+				colors.borderColor = new Color(Display.getDefault(), 208, 208, 208);
+				colors.leftColor = new Color(Display.getDefault(), 255, 255, 255);
+				colors.rightColor = new Color(Display.getDefault(), 208, 208, 208);
+				break;
+			default:
+				colors.textColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+				colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+				colors.borderColor = new Color(Display.getDefault(), 218, 178, 85);
+				colors.leftColor = new Color(Display.getDefault(), 220, 220, 160);
+				colors.rightColor = new Color(Display.getDefault(), 255, 255, 191);
+				break;
 		}
 		return colors;
 	}

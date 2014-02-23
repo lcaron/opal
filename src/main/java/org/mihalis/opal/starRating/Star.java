@@ -19,6 +19,14 @@ import org.eclipse.swt.widgets.Display;
  * Instances of this class represent a star displayed by the StarRating component
  */
 class Star {
+	private static final String SMALL_STAR_MARKED_FOCUS = "mark-focus16.png";
+	private static final String SMALL_STAR_MARKED = "mark16.png";
+	private static final String SMALL_STAR_FOCUS = "focus16.png";
+	private static final String SMALL_STAR = "16.png";
+	private static final String BIG_STAR_MARKED_FOCUS = "mark-focus32.png";
+	private static final String BIG_STAR_MARKED = "mark32.png";
+	private static final String BIG_STAR_FOCUS = "focus32.png";
+	private static final String BIG_STAR = "32.png";
 	boolean hover;
 	boolean marked;
 	Rectangle bounds;
@@ -29,53 +37,53 @@ class Star {
 	private StarRating parent;
 
 	void dispose() {
-		defaultImage.dispose();
-		hoverImage.dispose();
-		selectedImage.dispose();
-		selectedHoverImage.dispose();
+		this.defaultImage.dispose();
+		this.hoverImage.dispose();
+		this.selectedImage.dispose();
+		this.selectedHoverImage.dispose();
 	}
 
 	void draw(final GC gc, final int x, final int y) {
 		Image image;
-		if (!parent.isEnabled()) {
-			image = defaultImage;
+		if (!this.parent.isEnabled()) {
+			image = this.defaultImage;
 		} else {
-			if (marked) {
-				if (hover) {
-					image = selectedHoverImage;
+			if (this.marked) {
+				if (this.hover) {
+					image = this.selectedHoverImage;
 				} else {
-					image = selectedImage;
+					image = this.selectedImage;
 				}
 			} else {
-				if (hover) {
-					image = hoverImage;
+				if (this.hover) {
+					image = this.hoverImage;
 				} else {
-					image = defaultImage;
+					image = this.defaultImage;
 				}
 			}
 		}
 
 		gc.drawImage(image, x, y);
-		bounds = new Rectangle(x, y, image.getBounds().width, image.getBounds().height);
+		this.bounds = new Rectangle(x, y, image.getBounds().width, image.getBounds().height);
 	}
 
 	static Star initBig(final StarRating parent) {
 		final Star star = new Star();
 		star.parent = parent;
-		star.defaultImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/32.png"));
-		star.hoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/focus32.png"));
-		star.selectedImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/mark32.png"));
-		star.selectedHoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/mark-focus32.png"));
+		star.defaultImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + BIG_STAR));
+		star.hoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + BIG_STAR_FOCUS));
+		star.selectedImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + BIG_STAR_MARKED));
+		star.selectedHoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + BIG_STAR_MARKED_FOCUS));
 		return star;
 	}
 
 	static Star initSmall(final StarRating parent) {
 		final Star star = new Star();
 		star.parent = parent;
-		star.defaultImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/16.png"));
-		star.hoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/focus16.png"));
-		star.selectedImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/mark16.png"));
-		star.selectedHoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/mark-focus16.png"));
+		star.defaultImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + SMALL_STAR));
+		star.hoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + SMALL_STAR_FOCUS));
+		star.selectedImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + SMALL_STAR_MARKED));
+		star.selectedHoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + SMALL_STAR_MARKED_FOCUS));
 		return star;
 	}
 }

@@ -93,14 +93,8 @@ public class TitledSeparator extends Composite {
 			}
 		});
 
-		this.addListener(SWT.Dispose, new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				SWTGraphicUtil.safeDispose(originalColor);
-				SWTGraphicUtil.safeDispose(originalFont);
-			}
-		});
-
+		SWTGraphicUtil.addDisposer(this, originalColor);
+		SWTGraphicUtil.addDisposer(this, originalFont);
 	}
 
 	/**
@@ -117,6 +111,7 @@ public class TitledSeparator extends Composite {
 		if (this.text != null) {
 			numberOfColumns++;
 		}
+
 		if (this.image != null) {
 			numberOfColumns++;
 		}
@@ -148,7 +143,6 @@ public class TitledSeparator extends Composite {
 				createTitle();
 				break;
 		}
-
 	}
 
 	/**
@@ -164,7 +158,6 @@ public class TitledSeparator extends Composite {
 	 * Create the title
 	 */
 	private void createTitle() {
-
 		if (this.image != null) {
 			final Label imageLabel = createLabel();
 			imageLabel.setImage(this.image);
@@ -175,7 +168,6 @@ public class TitledSeparator extends Composite {
 			textLabel.setText(this.text);
 
 		}
-
 	}
 
 	/**

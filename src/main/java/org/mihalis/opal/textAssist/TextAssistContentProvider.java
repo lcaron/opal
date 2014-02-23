@@ -16,7 +16,6 @@ import java.util.List;
  * This class is a content provider for the TextAssist widget. When the user
  * types something, an instance returns an arraylist of proposition based on the
  * typed text.
- * 
  */
 public abstract class TextAssistContentProvider {
 	private TextAssist textAssist;

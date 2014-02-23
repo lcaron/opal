@@ -102,10 +102,24 @@ public class TextAssist extends Composite {
 		this.popup.setLayout(new FillLayout());
 		this.table = new Table(this.popup, SWT.SINGLE);
 
+		addTextListener();
+		addTableLittle();
+
+		getShell().addListener(SWT.Move, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				TextAssist.this.popup.setVisible(false);
+			}
+		});
+	}
+
+	private void addTextListener() {
 		this.text.addListener(SWT.KeyDown, createKeyDownListener());
 		this.text.addListener(SWT.Modify, createModifyListener());
 		this.text.addListener(SWT.FocusOut, createFocusOutListener());
+	}
 
+	private void addTableLittle() {
 		this.table.addListener(SWT.DefaultSelection, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
@@ -123,13 +137,6 @@ public class TextAssist extends Composite {
 		});
 
 		this.table.addListener(SWT.FocusOut, createFocusOutListener());
-
-		getShell().addListener(SWT.Move, new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				TextAssist.this.popup.setVisible(false);
-			}
-		});
 	}
 
 	/**
@@ -174,11 +181,11 @@ public class TextAssist extends Composite {
 		return new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				if (text.getData(SETTEXT_KEY) != null && Boolean.TRUE.equals(text.getData(SETTEXT_KEY))) {
-					text.setData(SETTEXT_KEY, null);
+				if (TextAssist.this.text.getData(SETTEXT_KEY) != null && Boolean.TRUE.equals(TextAssist.this.text.getData(SETTEXT_KEY))) {
+					TextAssist.this.text.setData(SETTEXT_KEY, null);
 					return;
 				}
-				text.setData(SETTEXT_KEY, null);
+				TextAssist.this.text.setData(SETTEXT_KEY, null);
 
 				final String string = TextAssist.this.text.getText();
 				if (string.length() == 0) {
@@ -257,7 +264,7 @@ public class TextAssist extends Composite {
 	@Override
 	public Color getBackground() {
 		checkWidget();
-		return text.getBackground();
+		return this.text.getBackground();
 	}
 
 	/**

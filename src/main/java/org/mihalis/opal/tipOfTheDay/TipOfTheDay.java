@@ -52,6 +52,10 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  */
 public class TipOfTheDay {
 
+	private static final String BLUE_LIGHT_BULB = "images/light1.png";
+	private static final String YELLOW_LIGHT_BULB = "images/light2.png";
+	private static final String DEFAULT_FONT = "Arial";
+
 	/**
 	 * Types of opal dialog
 	 */
@@ -81,7 +85,7 @@ public class TipOfTheDay {
 		if (fontData != null && fontData.length > 0) {
 			this.fontName = fontData[0].getName();
 		} else {
-			this.fontName = "Arial";
+			this.fontName = DEFAULT_FONT;
 		}
 		this.style = TipStyle.TWO_COLUMNS;
 
@@ -121,11 +125,11 @@ public class TipOfTheDay {
 			@Override
 			public void handleEvent(final Event event) {
 				switch (event.detail) {
-				case SWT.TRAVERSE_ESCAPE:
-					TipOfTheDay.this.shell.dispose();
-					event.detail = SWT.TRAVERSE_NONE;
-					event.doit = false;
-					break;
+					case SWT.TRAVERSE_ESCAPE:
+						TipOfTheDay.this.shell.dispose();
+						event.detail = SWT.TRAVERSE_NONE;
+						event.doit = false;
+						break;
 				}
 			}
 		});
@@ -141,16 +145,9 @@ public class TipOfTheDay {
 		header.setLayoutData(gd);
 		header.setTitle(ResourceManager.getLabel(ResourceManager.DID_YOU_KNOW));
 		if (this.image == null) {
-			final Image img = SWTGraphicUtil.createImageFromFile("images/light2.png");
+			final Image img = SWTGraphicUtil.createImageFromFile(YELLOW_LIGHT_BULB);
 			header.setImage(img);
-			this.shell.addListener(SWT.Dispose, new Listener() {
-
-				@Override
-				public void handleEvent(final Event event) {
-					img.dispose();
-
-				}
-			});
+			SWTGraphicUtil.addDisposer(this.shell, img);
 		} else {
 			header.setImage(this.image);
 		}
@@ -173,15 +170,9 @@ public class TipOfTheDay {
 		composite.setLayout(compositeLayout);
 		final Label label = new Label(composite, SWT.NONE);
 		if (this.image == null) {
-			final Image img = SWTGraphicUtil.createImageFromFile("images/light1.png");
+			final Image img = SWTGraphicUtil.createImageFromFile(BLUE_LIGHT_BULB);
 			label.setImage(img);
-			this.shell.addListener(SWT.Dispose, new Listener() {
-
-				@Override
-				public void handleEvent(final Event event) {
-					img.dispose();
-				}
-			});
+			SWTGraphicUtil.addDisposer(this.shell, img);
 		} else {
 			label.setImage(this.image);
 		}
@@ -211,13 +202,8 @@ public class TipOfTheDay {
 			final Font tempFont = SWTGraphicUtil.buildFontFrom(title, SWT.BOLD, 16);
 			title.setText(ResourceManager.getLabel(ResourceManager.TIP_OF_THE_DAY));
 			title.setFont(tempFont);
-			this.shell.addListener(SWT.Dispose, new Listener() {
+			SWTGraphicUtil.addDisposer(this.shell, tempFont);
 
-				@Override
-				public void handleEvent(final Event event) {
-					tempFont.dispose();
-				}
-			});
 			final Label separator = new Label(this.shell, SWT.SEPARATOR | SWT.HORIZONTAL);
 			separator.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
@@ -240,8 +226,11 @@ public class TipOfTheDay {
 	 * Fill the tip area with the selected tip
 	 */
 	private void fillTipArea() {
-		this.tipArea.setText("<html><body bgcolor=\"#ffffff\" text=\"#000000\"><p style=\"font-family:" + this.fontName + ";font-size=12px\">" //
-				+ this.tips.get(this.index) + "</p></body></html>");
+		this.tipArea.setText("<html><body bgcolor=\"#ffffff\" text=\"#000000\"><p style=\"font-family:" + //
+				this.fontName + //
+				";font-size=12px\">" + //
+				this.tips.get(this.index) + //
+				"</p></body></html>");
 	}
 
 	/**

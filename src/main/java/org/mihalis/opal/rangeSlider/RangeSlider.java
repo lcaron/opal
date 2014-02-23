@@ -117,21 +117,15 @@ public class RangeSlider extends Canvas {
 			this.orientation = SWT.HORIZONTAL;
 		}
 
-		addListener(SWT.Dispose, new Listener() {
+		SWTGraphicUtil.addDisposer(this, this.slider);
+		SWTGraphicUtil.addDisposer(this, this.sliderHover);
+		SWTGraphicUtil.addDisposer(this, this.sliderDrag);
+		SWTGraphicUtil.addDisposer(this, this.sliderSelected);
 
-			@Override
-			public void handleEvent(final Event event) {
-				SWTGraphicUtil.safeDispose(RangeSlider.this.slider);
-				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderHover);
-				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderDrag);
-				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderSelected);
-
-				SWTGraphicUtil.safeDispose(RangeSlider.this.vSlider);
-				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderHover);
-				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderDrag);
-				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderSelected);
-			}
-		});
+		SWTGraphicUtil.addDisposer(this, this.vSlider);
+		SWTGraphicUtil.addDisposer(this, this.vSliderHover);
+		SWTGraphicUtil.addDisposer(this, this.vSliderDrag);
+		SWTGraphicUtil.addDisposer(this, this.vSliderSelected);
 
 		addMouseListeners();
 		addListener(SWT.KeyDown, new Listener() {

@@ -15,8 +15,6 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
@@ -31,6 +29,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instances of this class are simple switch button.
@@ -168,17 +167,11 @@ public class SwitchButton extends Canvas {
 
 		this.listOfSelectionListeners = new ArrayList<SelectionListener>();
 
-		this.addDisposeListener(new DisposeListener() {
-
-			@Override
-			public void widgetDisposed(final DisposeEvent e) {
-				SwitchButton.this.selectedBackgroundColor.dispose();
-				SwitchButton.this.unselectedBackgroundColor.dispose();
-				SwitchButton.this.buttonBorderColor.dispose();
-				SwitchButton.this.buttonBackgroundColor1.dispose();
-				SwitchButton.this.buttonBackgroundColor2.dispose();
-			}
-		});
+		SWTGraphicUtil.addDisposer(this, this.selectedBackgroundColor);
+		SWTGraphicUtil.addDisposer(this, this.unselectedBackgroundColor);
+		SWTGraphicUtil.addDisposer(this, this.buttonBorderColor);
+		SWTGraphicUtil.addDisposer(this, this.buttonBackgroundColor1);
+		SWTGraphicUtil.addDisposer(this, this.buttonBackgroundColor2);
 
 		this.addPaintListener(new PaintListener() {
 			@Override

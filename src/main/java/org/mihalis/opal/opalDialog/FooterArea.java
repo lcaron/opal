@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.mihalis.opal.utils.ResourceManager;
 
 /**
@@ -53,7 +54,7 @@ public class FooterArea extends DialogArea {
 	private String checkBoxLabel;
 	private boolean checkBoxValue;
 
-	private Label expandedPanel;
+	private Text expandedPanel;
 	private Composite composite;
 
 	/**
@@ -303,7 +304,7 @@ public class FooterArea extends DialogArea {
 	 * @param numberOfColumns
 	 */
 	private void createExpandedPanel(final int numberOfColumns) {
-		this.expandedPanel = new Label(this.composite, SWT.BORDER);
+		this.expandedPanel = new Text(this.composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		this.expandedPanel.setText(this.detailText);
 		this.expandedPanel.setBackground(this.getGreyColor());
 		final GridData gd = new GridData(GridData.FILL, GridData.FILL, false, false, numberOfColumns, 1);

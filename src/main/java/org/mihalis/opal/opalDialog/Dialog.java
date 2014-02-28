@@ -80,6 +80,9 @@ public class Dialog {
 			this.shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | (resizable ? SWT.RESIZE : SWT.NONE));
 		} else {
 			this.shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | (resizable ? SWT.RESIZE : SWT.NONE));
+			if (parent.getImage() != null) {
+				this.shell.setImage(parent.getImage());
+			}
 		}
 		this.messageArea = new MessageArea(this);
 		this.footerArea = new FooterArea(this);

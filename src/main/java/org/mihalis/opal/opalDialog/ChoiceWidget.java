@@ -112,7 +112,6 @@ public class ChoiceWidget extends Composite {
 	private void buildGreenArrow() {
 		this.image = new Label(this, SWT.NONE);
 		this.image.setImage(SWTGraphicUtil.createImageFromFile("images/arrowGreenRight.png"));
-		this.image.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		this.image.setLayoutData(new GridData(GridData.CENTER, GridData.BEGINNING, false, false, 1, 2));
 	}
 

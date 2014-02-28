@@ -104,7 +104,7 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 */
 	private void buildSortButton(final Composite parent, final boolean sorted) {
 		final Button sortButton = new Button(parent, SWT.FLAT | SWT.TOGGLE);
-		sortButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/sort.gif")));
+		sortButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/sort.png")));
 		sortButton.setSelection(sorted);
 		sortButton.setToolTipText(ResourceManager.getLabel(ResourceManager.SORT_SHORT_DESCRIPTION));
 		sortButton.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1));
@@ -127,7 +127,7 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 */
 	private void buildCategoryButton(final Composite parent, final boolean showAsCategory) {
 		final Button categoryButton = new Button(parent, SWT.FLAT | SWT.TOGGLE);
-		categoryButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/category.gif")));
+		categoryButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/category.png")));
 		categoryButton.setSelection(showAsCategory);
 		categoryButton.setToolTipText(ResourceManager.getLabel(ResourceManager.CATEGORY_SHORT_DESCRIPTION));
 		categoryButton.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1));
@@ -154,7 +154,7 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 */
 	private void buildDescriptionButton(final Composite parent, final boolean showDescription) {
 		final Button descriptionButton = new Button(parent, SWT.FLAT | SWT.TOGGLE);
-		descriptionButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/description.gif")));
+		descriptionButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/description.png")));
 		descriptionButton.setSelection(showDescription);
 		descriptionButton.setToolTipText(ResourceManager.getLabel(ResourceManager.DESCRIPTION_SHORT_DESCRIPTION));
 		descriptionButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL, true, false, 1, 1));

@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 /**
- * Instances of this class are used to convert HTML content of a styled text
+ * Instances of this class are used to convert pseudo-HTML content of a styled text
  * into style ranges
  */
 public class HTMLStyledTextParser {
@@ -51,7 +51,7 @@ public class HTMLStyledTextParser {
 		this.listOfStyles = new ArrayList<StyleRange>();
 		this.stack = new LinkedList<StyleRange>();
 		final FontData data = styledText.getFont().getFontData()[0];
-		defaultHeight = data.getHeight();
+		this.defaultHeight = data.getHeight();
 	}
 
 	private static Map<String, Integer[]> initHTMLCode() {
@@ -233,18 +233,18 @@ public class HTMLStyledTextParser {
 			} else if (currentChar == '>') {
 				inTag = false;
 				handleTag();
-				currentTag.delete(0, currentTag.length());
+				this.currentTag.delete(0, this.currentTag.length());
 			} else {
 				if (inTag) {
-					currentTag.append(currentChar);
+					this.currentTag.append(currentChar);
 				} else {
-					currentPosition++;
-					output.append(currentChar);
+					this.currentPosition++;
+					this.output.append(currentChar);
 				}
 			}
 		}
-		this.styledText.setText(output.toString());
-		this.styledText.setStyleRanges(listOfStyles.toArray(new StyleRange[listOfStyles.size()]));
+		this.styledText.setText(this.output.toString());
+		this.styledText.setStyleRanges(this.listOfStyles.toArray(new StyleRange[this.listOfStyles.size()]));
 	}
 
 	private void initBeforeParsing() {
@@ -252,14 +252,14 @@ public class HTMLStyledTextParser {
 		this.currentTag = new StringBuilder();
 		this.listOfStyles.clear();
 		this.stack.clear();
-		currentPosition = 0;
+		this.currentPosition = 0;
 	}
 
 	private void handleTag() {
-		final String tag = currentTag.toString().toLowerCase();
+		final String tag = this.currentTag.toString().toLowerCase();
 		if ("br".equals(tag) || "br/".equals(tag)) {
-			output.append("\n");
-			currentPosition++;
+			this.output.append("\n");
+			this.currentPosition++;
 			return;
 		}
 
@@ -301,62 +301,62 @@ public class HTMLStyledTextParser {
 
 	private void processBeginBold() {
 		final StyleRange currentStyleRange = new StyleRange();
-		currentStyleRange.start = currentPosition;
+		currentStyleRange.start = this.currentPosition;
 		currentStyleRange.length = 0;
 		currentStyleRange.fontStyle = SWT.BOLD;
 		currentStyleRange.data = "</b>";
-		stack.push(currentStyleRange);
+		this.stack.push(currentStyleRange);
 	}
 
 	private void processEndTag(final String expectedTag) {
-		final StyleRange currentStyleRange = stack.pop();
+		final StyleRange currentStyleRange = this.stack.pop();
 		final String wholeExpectedTag = "<" + expectedTag + ">";
 		if (!wholeExpectedTag.equals(currentStyleRange.data)) {
 			final StringBuilder sb = new StringBuilder();
-			sb.append("Error at position #").append(currentPosition).append(" - closing ").append(wholeExpectedTag).append(" tag found but ");
+			sb.append("Error at position #").append(this.currentPosition).append(" - closing ").append(wholeExpectedTag).append(" tag found but ");
 			sb.append(currentStyleRange.data).append(" tag expected !");
 			throw new RuntimeException(sb.toString());
 		}
-		currentStyleRange.length = currentPosition - currentStyleRange.start;
-		listOfStyles.add(currentStyleRange);
+		currentStyleRange.length = this.currentPosition - currentStyleRange.start;
+		this.listOfStyles.add(currentStyleRange);
 
 	}
 
 	private void processBeginItalic() {
 		final StyleRange currentStyleRange = new StyleRange();
-		currentStyleRange.start = currentPosition;
+		currentStyleRange.start = this.currentPosition;
 		currentStyleRange.length = 0;
 		currentStyleRange.fontStyle = SWT.ITALIC;
 		currentStyleRange.data = "</i>";
-		stack.push(currentStyleRange);
+		this.stack.push(currentStyleRange);
 	}
 
 	private void processBeginUnderline() {
 		final StyleRange currentStyleRange = new StyleRange();
-		currentStyleRange.start = currentPosition;
+		currentStyleRange.start = this.currentPosition;
 		currentStyleRange.length = 0;
 		currentStyleRange.fontStyle = SWT.NONE;
 		currentStyleRange.underline = true;
 		currentStyleRange.data = "</u>";
-		stack.push(currentStyleRange);
+		this.stack.push(currentStyleRange);
 	}
 
 	private void processBeginSize() {
 		final StyleRange currentStyleRange = new StyleRange();
-		currentStyleRange.start = currentPosition;
+		currentStyleRange.start = this.currentPosition;
 		currentStyleRange.length = 0;
 		currentStyleRange.fontStyle = SWT.NONE;
 		currentStyleRange.font = computeFont();
 		currentStyleRange.data = "</size>";
-		stack.push(currentStyleRange);
+		this.stack.push(currentStyleRange);
 	}
 
 	private Font computeFont() {
-		final String fontSize = currentTag.toString().toLowerCase().replace("size=", "");
+		final String fontSize = this.currentTag.toString().toLowerCase().replace("size=", "");
 		if (fontSize.length() == 0) {
 			throw new RuntimeException("Argument size is empty !");
 		}
-		int newSize = defaultHeight;
+		int newSize = this.defaultHeight;
 		if (fontSize.startsWith("+")) {
 			final int delta = Integer.valueOf(fontSize.substring(1));
 			newSize += delta;
@@ -365,9 +365,9 @@ public class HTMLStyledTextParser {
 			newSize -= delta;
 		}
 
-		final FontData fd = styledText.getFont().getFontData()[0];
-		final Font newFont = new Font(styledText.getDisplay(), fd.getName(), newSize, SWT.NONE);
-		styledText.addListener(SWT.Dispose, new Listener() {
+		final FontData fd = this.styledText.getFont().getFontData()[0];
+		final Font newFont = new Font(this.styledText.getDisplay(), fd.getName(), newSize, SWT.NONE);
+		this.styledText.addListener(SWT.Dispose, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
 				newFont.dispose();
@@ -378,16 +378,16 @@ public class HTMLStyledTextParser {
 
 	private void processBeginColor() {
 		final StyleRange currentStyleRange = new StyleRange();
-		currentStyleRange.start = currentPosition;
+		currentStyleRange.start = this.currentPosition;
 		currentStyleRange.length = 0;
 		currentStyleRange.fontStyle = SWT.NONE;
 		currentStyleRange.foreground = computeColor();
 		currentStyleRange.data = "</color>";
-		stack.push(currentStyleRange);
+		this.stack.push(currentStyleRange);
 	}
 
 	private Color computeColor() {
-		final String fontColor = currentTag.toString().toLowerCase().replace("color=", "").replace("background", "");
+		final String fontColor = this.currentTag.toString().toLowerCase().replace("color=", "").replace("background", "");
 		if (fontColor.length() == 0) {
 			throw new RuntimeException("Argument color is empty !");
 		}
@@ -429,8 +429,8 @@ public class HTMLStyledTextParser {
 				blue = rgb[2];
 			}
 		}
-		final Color color = new Color(styledText.getDisplay(), red, green, blue);
-		styledText.addListener(SWT.Dispose, new Listener() {
+		final Color color = new Color(this.styledText.getDisplay(), red, green, blue);
+		this.styledText.addListener(SWT.Dispose, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
 				color.dispose();
@@ -441,12 +441,12 @@ public class HTMLStyledTextParser {
 
 	private void processBeginBackgroundColor() {
 		final StyleRange currentStyleRange = new StyleRange();
-		currentStyleRange.start = currentPosition;
+		currentStyleRange.start = this.currentPosition;
 		currentStyleRange.length = 0;
 		currentStyleRange.fontStyle = SWT.NONE;
 		currentStyleRange.background = computeColor();
 		currentStyleRange.data = "</backgroundcolor>";
-		stack.push(currentStyleRange);
+		this.stack.push(currentStyleRange);
 	}
 
 }

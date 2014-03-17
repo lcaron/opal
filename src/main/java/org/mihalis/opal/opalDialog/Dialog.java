@@ -146,8 +146,8 @@ public class Dialog {
 
 		if (this.centerPolicy == CenterOption.CENTER_ON_SCREEN || this.shell.getParent() == null) {
 			final Rectangle monitorBounds = SWTGraphicUtil.getBoundsOfMonitorOnWhichShellIsDisplayed(this.shell);
-			centerX = (monitorBounds.width - preferredSize.x) / 2;
-			centerY = (monitorBounds.height - preferredSize.y) / 2;
+			centerX = monitorBounds.x + (monitorBounds.width - preferredSize.x) / 2;
+			centerY = monitorBounds.y + (monitorBounds.height - preferredSize.y) / 2;
 		} else {
 			final Shell parent = (Shell) this.shell.getParent();
 			centerX = parent.getLocation().x + (parent.getSize().x - preferredSize.x) / 2;

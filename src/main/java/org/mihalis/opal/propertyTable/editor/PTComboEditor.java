@@ -79,7 +79,7 @@ public class PTComboEditor extends PTEditor {
 		for (int i = 0; i < this.data.size(); i++) {
 			final Object datum = this.data.get(i);
 			combo.add(datum.toString());
-			if (datum.equals(property)) {
+			if (datum.equals(property.getValue())) {
 				combo.select(i);
 			}
 		}

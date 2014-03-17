@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -26,6 +27,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -60,6 +62,7 @@ public class MultiChoice<T> extends Composite {
 	private Text text;
 	private Button arrow;
 	private Shell popup;
+	private ScrolledComposite scrolledComposite;
 	private Listener listener, filter;
 	private int numberOfColumns = 2;
 	private List<T> elements;
@@ -72,6 +75,7 @@ public class MultiChoice<T> extends Composite {
 	private Font font;
 	private String separator;
 	private MultiChoiceLabelProvider labelProvider;
+	private int preferredHeightOfPopup;
 
 	/**
 	 * Constructs a new instance of this class given its parent.
@@ -924,9 +928,9 @@ public class MultiChoice<T> extends Composite {
 	 */
 	private void createPopup() {
 		this.popup = new Shell(getShell(), SWT.NO_TRIM | SWT.ON_TOP);
-		this.popup.setLayout(new GridLayout(this.numberOfColumns, true));
+		this.popup.setLayout(new FillLayout());
 
-		final int[] popupEvents = { SWT.Close, SWT.Paint, SWT.Deactivate, SWT.Dispose };
+		final int[] popupEvents = { SWT.Close, SWT.Deactivate, SWT.Dispose };
 		for (final int popupEvent : popupEvents) {
 			this.popup.addListener(popupEvent, this.listener);
 		}
@@ -935,9 +939,13 @@ public class MultiChoice<T> extends Composite {
 			return;
 		}
 
+		this.scrolledComposite = new ScrolledComposite(this.popup, SWT.BORDER | SWT.V_SCROLL);
+		final Composite content = new Composite(this.scrolledComposite, SWT.NONE);
+		content.setLayout(new GridLayout(this.numberOfColumns, true));
+
 		this.checkboxes = new ArrayList<Button>(this.elements.size());
 		for (final T o : this.elements) {
-			final Button checkBoxButton = new Button(this.popup, SWT.CHECK);
+			final Button checkBoxButton = new Button(content, SWT.CHECK);
 
 			if (this.font != null) {
 				checkBoxButton.setFont(this.font);
@@ -972,7 +980,12 @@ public class MultiChoice<T> extends Composite {
 			checkBoxButton.setSelection(this.selection.contains(o));
 			this.checkboxes.add(checkBoxButton);
 		}
-		this.popup.layout();
+
+		this.scrolledComposite.setContent(content);
+		this.scrolledComposite.setExpandHorizontal(false);
+		this.scrolledComposite.setExpandVertical(true);
+		content.pack();
+		this.preferredHeightOfPopup = content.getSize().y;
 	}
 
 	/**
@@ -1110,12 +1123,6 @@ public class MultiChoice<T> extends Composite {
 	 */
 	private void handlePopupEvent(final Event event) {
 		switch (event.type) {
-			case SWT.Paint:
-				final Rectangle listRect = this.popup.getBounds();
-				final Color black = getDisplay().getSystemColor(SWT.COLOR_BLACK);
-				event.gc.setForeground(black);
-				event.gc.drawRectangle(0, 0, listRect.width - 1, listRect.height - 1);
-				break;
 			case SWT.Close:
 				event.doit = false;
 				changeVisibilityOfPopupWindow(false);
@@ -1164,11 +1171,28 @@ public class MultiChoice<T> extends Composite {
 		final Rectangle displayRect = getMonitor().getClientArea();
 		final Rectangle parentRect = getDisplay().map(getParent(), null, getBounds());
 		this.popup.pack();
+
 		final int width = this.popup.getBounds().width;
-		final int height = this.popup.getBounds().height;
+
+		final int maxHeight = (2 * displayRect.height / 3);
+		int height = this.popup.getBounds().height;
+
+		if (height > maxHeight) {
+			height = maxHeight;
+			this.popup.setSize(width, height);
+			this.scrolledComposite.setMinHeight(this.preferredHeightOfPopup);
+			this.popup.layout(true);
+		}
 
 		if (y + height > displayRect.y + displayRect.height) {
 			y = parentRect.y - height;
+			if (y < 0) {
+				height += y;
+				y = parentRect.y - height + 5;
+				this.popup.setSize(width, height);
+				this.scrolledComposite.setMinHeight(this.preferredHeightOfPopup);
+				this.popup.layout(true);
+			}
 		}
 		if (x + width > displayRect.x + displayRect.width) {
 			x = displayRect.x + displayRect.width - width;

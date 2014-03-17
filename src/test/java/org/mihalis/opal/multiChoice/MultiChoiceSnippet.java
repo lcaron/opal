@@ -149,6 +149,25 @@ public class MultiChoiceSnippet {
 		mcModify.addAll(countryCodes);
 		addButons(mcModify);
 
+		drawLabel(shell, "Lot of data :");
+		final List<String> data = new ArrayList<String>();
+		for (int i = 0; i < 1000; i++) {
+			data.add("Data #" + i);
+		}
+		final MultiChoice<String> mcLotOfData = new MultiChoice<String>(shell, SWT.NONE);
+		mcLotOfData.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, true));
+		mcLotOfData.setLabelProvider(new MultiChoiceLabelProvider() {
+			@Override
+			public String getText(final Object element) {
+				if (element == null) {
+					return "";
+				}
+				return (String) element;
+			}
+		});
+		mcLotOfData.addAll(data);
+		addButons(mcLotOfData);
+
 		// display the shell...
 		shell.open();
 		shell.pack();

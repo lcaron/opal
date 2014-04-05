@@ -199,16 +199,9 @@ public class BreadcrumbItem extends Item {
 	public void dispose() {
 		getParent().removeItem(this);
 		this.bounds = null;
-		SWTGraphicUtil.safeDispose(this.disabledImage);
 		this.disabledImage = null;
-
-		SWTGraphicUtil.safeDispose(this.selectionImage);
 		this.selectionImage = null;
-
-		SWTGraphicUtil.safeDispose(this.textColor);
 		this.textColor = null;
-
-		SWTGraphicUtil.safeDispose(this.textColorSelected);
 		this.textColorSelected = null;
 		super.dispose();
 	}
@@ -686,7 +679,7 @@ public class BreadcrumbItem extends Item {
 		int xPosition = computeGap();
 		final Image drawnedImage = drawImageAtPosition(x + xPosition);
 		if (drawnedImage != null) {
-			xPosition += drawnedImage.getBounds().width + MARGIN;
+			xPosition += drawnedImage.getBounds().width + 2 * MARGIN;
 		}
 		drawTextAtPosition(x + xPosition);
 
@@ -798,9 +791,10 @@ public class BreadcrumbItem extends Item {
 			width += imageSize.x;
 			height = Math.max(imageSize.y, height);
 			if (textISNotEmpty) {
-				width += MARGIN;
+				width += MARGIN * 2;
 			}
 		}
+		width += MARGIN;
 		return new Point(width, height);
 	}
 
@@ -832,7 +826,7 @@ public class BreadcrumbItem extends Item {
 		}
 
 		final int yPosition = (this.toolbarHeight - image.getBounds().height) / 2;
-		this.gc.drawImage(image, xPosition, yPosition);
+		this.gc.drawImage(image, (int) (xPosition + MARGIN * 1.5), yPosition);
 		return image;
 	}
 

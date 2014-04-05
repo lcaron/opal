@@ -28,7 +28,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * composite
  */
 public class GradientComposite extends Composite {
-	private Image oldImage;
+	private Image previousGeneratedImage;
 	private Color gradientEnd;
 	private Color gradientStart;
 
@@ -75,13 +75,8 @@ public class GradientComposite extends Composite {
 			}
 		});
 
-		SWTGraphicUtil.addDisposer(this, this.oldImage);
-		SWTGraphicUtil.addDisposer(this, this.gradientStart);
-		SWTGraphicUtil.addDisposer(this, this.gradientEnd);
-
-		this.gradientEnd = new Color(this.getDisplay(), 110, 110, 110);
-		this.gradientStart = new Color(this.getDisplay(), 0, 0, 0);
-
+		this.gradientStart = getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		this.gradientEnd = SWTGraphicUtil.getDefaultColor(this, 110, 110, 110);
 	}
 
 	/**
@@ -103,10 +98,10 @@ public class GradientComposite extends Composite {
 		gc.dispose();
 
 		this.setBackgroundImage(newImage);
-		if (this.oldImage != null) {
-			this.oldImage.dispose();
+		if (this.previousGeneratedImage != null) {
+			this.previousGeneratedImage.dispose();
 		}
-		this.oldImage = newImage;
+		this.previousGeneratedImage = newImage;
 
 	}
 

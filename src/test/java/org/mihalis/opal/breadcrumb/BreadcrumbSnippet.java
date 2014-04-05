@@ -13,6 +13,7 @@ package org.mihalis.opal.breadcrumb;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -24,6 +25,8 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class BreadcrumbSnippet {
 
+	private static Image[] images;
+
 	/**
 	 * @param args
 	 */
@@ -33,8 +36,11 @@ public class BreadcrumbSnippet {
 		shell.setText("BreakCrumb Snippet");
 		shell.setLayout(new GridLayout(2, false));
 
+		createImages();
+
 		createLabelsBreadCrumb(shell);
 		createButtonsBreadCrumb(shell);
+		createButtonsIconsBreadCrumb(shell);
 		createToggleButtonsBreadCrumb(shell);
 
 		shell.open();
@@ -48,24 +54,37 @@ public class BreadcrumbSnippet {
 
 	}
 
+	private static void createImages() {
+		images = new Image[5];
+		final String[] fileNames = new String[] { "add.png", "bell.png", "feed.png", "house.png", "script.png" };
+		for (int i = 0; i < 5; i++) {
+			final Image image = new Image(Display.getCurrent(), BreadcrumbSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/breadcrumb/" + fileNames[i]));
+			images[i] = image;
+		}
+	}
+
 	private static void createLabelsBreadCrumb(final Shell shell) {
 		final Label label = new Label(shell, SWT.NONE);
 		label.setText("Label breadcrumb:");
 		label.setLayoutData(new GridData(GridData.END, GridData.CENTER, false, false));
 
-		createBreadcrumb(shell, SWT.BORDER, SWT.CENTER);
+		createBreadcrumb(shell, SWT.BORDER, SWT.CENTER, false);
 		new Label(shell, SWT.NONE);
 
-		createBreadcrumb(shell, SWT.NONE, SWT.CENTER);
+		createBreadcrumb(shell, SWT.NONE, SWT.CENTER, false);
 	}
 
-	private static void createBreadcrumb(final Shell shell, final int breadCrumbArgument, final int itemArgument) {
+	private static void createBreadcrumb(final Shell shell, final int breadCrumbArgument, final int itemArgument, final boolean showImages) {
 		final Breadcrumb bc = new Breadcrumb(shell, breadCrumbArgument);
 		bc.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false));
 
 		for (int i = 1; i < 5; i++) {
 			final BreadcrumbItem item = new BreadcrumbItem(bc, itemArgument);
-			item.setText(String.valueOf(i));
+			item.setText("Label " + String.valueOf(i));
+			if (showImages) {
+				item.setImage(images[i]);
+				item.setSelectionImage(images[i]);
+			}
 			item.addSelectionListener(new SelectionAdapter() {
 
 				@Override
@@ -82,10 +101,21 @@ public class BreadcrumbSnippet {
 		label.setText("Buttons breadcrumb:");
 		label.setLayoutData(new GridData(GridData.END, GridData.CENTER, false, false));
 
-		createBreadcrumb(shell, SWT.BORDER, SWT.CENTER | SWT.PUSH);
+		createBreadcrumb(shell, SWT.BORDER, SWT.CENTER | SWT.PUSH, false);
 		new Label(shell, SWT.NONE);
 
-		createBreadcrumb(shell, SWT.NONE, SWT.CENTER | SWT.PUSH);
+		createBreadcrumb(shell, SWT.NONE, SWT.CENTER | SWT.PUSH, false);
+	}
+
+	private static void createButtonsIconsBreadCrumb(final Shell shell) {
+		final Label label = new Label(shell, SWT.NONE);
+		label.setText("Buttons breadcrumb:");
+		label.setLayoutData(new GridData(GridData.END, GridData.CENTER, false, false));
+
+		createBreadcrumb(shell, SWT.BORDER, SWT.CENTER | SWT.PUSH, true);
+		new Label(shell, SWT.NONE);
+
+		createBreadcrumb(shell, SWT.NONE, SWT.CENTER | SWT.PUSH, true);
 	}
 
 	private static void createToggleButtonsBreadCrumb(final Shell shell) {
@@ -93,10 +123,10 @@ public class BreadcrumbSnippet {
 		label.setText("Toggle buttons breadcrumb:");
 		label.setLayoutData(new GridData(GridData.END, GridData.CENTER, false, false));
 
-		createBreadcrumb(shell, SWT.BORDER, SWT.CENTER | SWT.TOGGLE);
+		createBreadcrumb(shell, SWT.BORDER, SWT.CENTER | SWT.TOGGLE, false);
 		new Label(shell, SWT.NONE);
 
-		createBreadcrumb(shell, SWT.NONE, SWT.CENTER | SWT.TOGGLE);
+		createBreadcrumb(shell, SWT.NONE, SWT.CENTER | SWT.TOGGLE, false);
 	}
 
 }

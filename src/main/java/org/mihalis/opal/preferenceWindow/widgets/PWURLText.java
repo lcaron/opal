@@ -71,8 +71,14 @@ public class PWURLText extends PWText {
 				throw new UnsupportedOperationException("The property '" + getPropertyKey() + "' has to be a String because it is associated to a URL text box");
 			}
 
+			final String str = (String) value;
+			if (str.equals("")) {
+				PreferenceWindow.getInstance().setValue(getPropertyKey(), "");
+				return;
+			}
+
 			try {
-				new URL((String) value);
+				new URL(str);
 			} catch (final MalformedURLException e) {
 				throw new UnsupportedOperationException("The property '" + getPropertyKey() + "' has a value (" + value + ") that is not an URL");
 			}

@@ -93,19 +93,17 @@ public class ImageSelector extends Canvas {
 	 */
 	public ImageSelector(final Composite parent, final int style) {
 		super(parent, style | SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
-		this.font = new Font(this.getDisplay(), "Lucida Sans", 24, SWT.NONE);
-
-		SWTGraphicUtil.addDisposer(this, this.font);
-		SWTGraphicUtil.addDisposer(this, this.gradientStart);
-		SWTGraphicUtil.addDisposer(this, this.gradientEnd);
-		SWTGraphicUtil.addDisposer(this, this.cachedGC);
-		SWTGraphicUtil.addDisposer(this, this.cachedImage);
+		final Font defaultFont = new Font(this.getDisplay(), "Lucida Sans", 24, SWT.NONE);
+		this.font = defaultFont;
+		SWTGraphicUtil.addDisposer(this, defaultFont);
 
 		setSigma(0.5);
-		this.gradientStart = new Color(getDisplay(), 0, 0, 0);
-		this.gradientEnd = new Color(getDisplay(), 110, 110, 110);
+		this.gradientStart = getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		this.gradientEnd = SWTGraphicUtil.getDefaultColor(this, 110, 110, 110);
 
 		addListeners();
+		SWTGraphicUtil.addDisposer(this, this.cachedGC);
+		SWTGraphicUtil.addDisposer(this, this.cachedImage);
 	}
 
 	private void addListeners() {

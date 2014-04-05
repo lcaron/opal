@@ -18,6 +18,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -82,14 +83,6 @@ public class HeapManager extends Composite {
 		createButton();
 		updateContent();
 		createDefaultColors();
-
-		SWTGraphicUtil.addDisposer(this, this.barBorderColor);
-		SWTGraphicUtil.addDisposer(this, this.barInnerColor);
-		SWTGraphicUtil.addDisposer(this, this.barGradientColorTopStart);
-		SWTGraphicUtil.addDisposer(this, this.barGradientColorTopEnd);
-		SWTGraphicUtil.addDisposer(this, this.barGradientColorMiddleStart);
-		SWTGraphicUtil.addDisposer(this, this.barTextColor);
-
 	}
 
 	/**
@@ -151,7 +144,9 @@ public class HeapManager extends Composite {
 	 */
 	private void createButton() {
 		this.button = new Button(this, SWT.PUSH);
-		this.button.setImage(SWTGraphicUtil.createImageFromFile("images/trash.png"));
+		final Image image = SWTGraphicUtil.createImageFromFile("images/trash.png");
+		this.button.setImage(image);
+		SWTGraphicUtil.addDisposer(this.button, image);
 		this.button.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
 		this.button.addSelectionListener(new SelectionAdapter() {
 			/**
@@ -188,12 +183,12 @@ public class HeapManager extends Composite {
 	 * Creates the default colors
 	 */
 	private void createDefaultColors() {
-		this.barTextColor = new Color(getDisplay(), 57, 98, 149);
-		this.barInnerColor = new Color(getDisplay(), 219, 230, 243);
-		this.barBorderColor = new Color(getDisplay(), 101, 148, 207);
-		this.barGradientColorTopStart = new Color(getDisplay(), 175, 202, 237);
-		this.barGradientColorTopEnd = new Color(getDisplay(), 136, 177, 229);
-		this.barGradientColorMiddleStart = new Color(getDisplay(), 112, 161, 223);
+		this.barTextColor = SWTGraphicUtil.getDefaultColor(this, 57, 98, 149);
+		this.barInnerColor = SWTGraphicUtil.getDefaultColor(this, 219, 230, 243);
+		this.barBorderColor = SWTGraphicUtil.getDefaultColor(this, 101, 148, 207);
+		this.barGradientColorTopStart = SWTGraphicUtil.getDefaultColor(this, 175, 202, 237);
+		this.barGradientColorTopEnd = SWTGraphicUtil.getDefaultColor(this, 136, 177, 229);
+		this.barGradientColorMiddleStart = SWTGraphicUtil.getDefaultColor(this, 112, 161, 223);
 	}
 
 	/**

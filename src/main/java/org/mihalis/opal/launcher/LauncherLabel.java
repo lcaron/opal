@@ -75,7 +75,9 @@ class LauncherLabel extends Canvas {
 
 		final Font original = super.getFont();
 
-		this.font = new Font(getDisplay(), original.getFontData()[0].getName(), 18, SWT.BOLD);
+		final Font defaultFont = new Font(getDisplay(), original.getFontData()[0].getName(), 18, SWT.BOLD);
+		this.font = defaultFont;
+		SWTGraphicUtil.addDisposer(this, defaultFont);
 
 		addPaintListener(new PaintListener() {
 			@Override
@@ -83,9 +85,6 @@ class LauncherLabel extends Canvas {
 				onPaint(event);
 			}
 		});
-
-		SWTGraphicUtil.addDisposer(this, this.image);
-		SWTGraphicUtil.addDisposer(this, this.font);
 
 	}
 
@@ -235,7 +234,6 @@ class LauncherLabel extends Canvas {
 	 */
 	@Override
 	public void setFont(final Font font) {
-		SWTGraphicUtil.safeDispose(font);
 		this.font = font;
 	}
 

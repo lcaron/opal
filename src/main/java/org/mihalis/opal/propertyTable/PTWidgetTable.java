@@ -150,7 +150,6 @@ class PTWidgetTable extends AbstractPTWidget {
 						editor.getEditor().dispose();
 					}
 					editor.dispose();
-
 				}
 			});
 			if (!p.isEnabled()) {

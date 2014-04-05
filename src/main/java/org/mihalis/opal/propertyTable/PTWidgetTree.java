@@ -175,7 +175,6 @@ public class PTWidgetTree extends AbstractPTWidget {
 		for (final TreeItem treeItem : this.tree.getItems()) {
 			treeItem.dispose();
 		}
-
 		fillData();
 	}
 

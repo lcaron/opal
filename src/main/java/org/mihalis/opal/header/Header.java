@@ -49,7 +49,7 @@ public class Header extends Composite {
 	private Font titleFont;
 	private Color titleColor;
 
-	private Image oldImage;
+	private Image previousGeneratedImage;
 	private Color gradientEnd;
 	private Color gradientStart;
 	private Color separatorColor;
@@ -84,7 +84,6 @@ public class Header extends Composite {
 
 		initFontAndColors();
 
-		addDisposer();
 		setBackgroundMode(SWT.INHERIT_FORCE);
 
 		this.addListener(SWT.Resize, new Listener() {
@@ -96,29 +95,34 @@ public class Header extends Composite {
 	}
 
 	private void initFontAndColors() {
+		final Font defaultFont;
 		final FontData[] fontData = getFont().getFontData();
 		if (fontData != null && fontData.length > 0) {
 			final FontData fd = fontData[0];
 			fd.setStyle(SWT.BOLD);
 			fd.setHeight(fd.getHeight() + 2);
-			this.titleFont = new Font(getDisplay(), fd);
+			defaultFont = new Font(getDisplay(), fd);
 		} else {
-			this.titleFont = null;
+			defaultFont = null;
 		}
+		this.titleFont = defaultFont;
+		SWTGraphicUtil.addDisposer(this, defaultFont);
 
-		this.titleColor = new Color(getDisplay(), 0, 88, 150);
-		this.gradientEnd = new Color(this.getDisplay(), 239, 239, 239);
-		this.gradientStart = new Color(this.getDisplay(), 255, 255, 255);
-		this.separatorColor = new Color(this.getDisplay(), 229, 229, 229);
-	}
+		final Color defaultTitleColor = new Color(getDisplay(), 0, 88, 150);
+		this.titleColor = defaultTitleColor;
+		SWTGraphicUtil.addDisposer(this, defaultTitleColor);
 
-	private void addDisposer() {
-		SWTGraphicUtil.addDisposer(this, this.titleColor);
-		SWTGraphicUtil.addDisposer(this, this.titleFont);
-		SWTGraphicUtil.addDisposer(this, this.oldImage);
-		SWTGraphicUtil.addDisposer(this, this.gradientEnd);
-		SWTGraphicUtil.addDisposer(this, this.gradientStart);
-		SWTGraphicUtil.addDisposer(this, this.separatorColor);
+		final Color defaultGradientEndColor = new Color(this.getDisplay(), 239, 239, 239);
+		this.gradientEnd = defaultGradientEndColor;
+		SWTGraphicUtil.addDisposer(this, defaultGradientEndColor);
+
+		final Color defaultGradientStartColor = new Color(this.getDisplay(), 255, 255, 255);
+		this.gradientStart = defaultGradientStartColor;
+		SWTGraphicUtil.addDisposer(this, defaultGradientStartColor);
+
+		final Color defaultSeparatorColor = new Color(this.getDisplay(), 229, 229, 229);
+		this.separatorColor = defaultSeparatorColor;
+		SWTGraphicUtil.addDisposer(this, defaultSeparatorColor);
 	}
 
 	/**
@@ -215,10 +219,10 @@ public class Header extends Composite {
 		gc.dispose();
 
 		this.setBackgroundImage(newImage);
-		if (this.oldImage != null) {
-			this.oldImage.dispose();
+		if (this.previousGeneratedImage != null) {
+			this.previousGeneratedImage.dispose();
 		}
-		this.oldImage = newImage;
+		this.previousGeneratedImage = newImage;
 	}
 
 	/**

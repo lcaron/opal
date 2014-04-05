@@ -507,4 +507,17 @@ public class SWTGraphicUtil {
 		final String OS = System.getProperty("os.name").toLowerCase();
 		return OS.indexOf("mac") >= 0;
 	}
+
+	/**
+	 * @param control
+	 * @param red
+	 * @param green
+	 * @param blue
+	 * @return a color that will be disposed when <code>control</code> is disposed
+	 */
+	public static Color getDefaultColor(final Control control, final int red, final int green, final int blue) {
+		final Color defaultColor = new Color(control.getDisplay(), red, green, blue);
+		addDisposer(control, defaultColor);
+		return defaultColor;
+	}
 }

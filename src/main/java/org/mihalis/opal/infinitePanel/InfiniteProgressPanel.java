@@ -121,14 +121,12 @@ public class InfiniteProgressPanel {
 		this.fadeOutCounter = 0;
 
 		if (this.defaultColor == null) {
-			this.defaultColor = new Color(this.parent.getDisplay(), 200, 200, 200);
+			this.defaultColor = SWTGraphicUtil.getDefaultColor(this.parent, 200, 200, 200);
 		}
-		SWTGraphicUtil.addDisposer(this.parent, this.defaultColor);
 
 		if (this.selectionColor == null) {
-			this.selectionColor = new Color(this.parent.getDisplay(), 0, 0, 0);
+			this.selectionColor = this.parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
 		}
-		SWTGraphicUtil.addDisposer(this.parent, this.selectionColor);
 
 		createShell();
 		createAndRunAnimatorThread();
@@ -286,6 +284,7 @@ public class InfiniteProgressPanel {
 		gc.setLineWidth(this.lineWidth);
 		gc.setAntialias(SWT.ON);
 
+		final double angleStep = 2 * Math.PI / this.barsCount;
 		for (int i = 0; i < this.barsCount; i++) {
 			if (i == this.currentPosition) {
 				gc.setForeground(this.selectionColor);
@@ -296,7 +295,7 @@ public class InfiniteProgressPanel {
 					(int) (centerY - minRay * Math.sin(angle)), //
 					(int) (centerX + maxRay * Math.cos(angle)), //
 					(int) (centerY - maxRay * Math.sin(angle)));
-			angle -= 2 * Math.PI / this.barsCount;
+			angle -= angleStep;
 		}
 	}
 
@@ -526,7 +525,6 @@ public class InfiniteProgressPanel {
 	 */
 	public void setSelectionColor(final Color selectionColor) {
 		this.checkIfAnimationIsRunning();
-		SWTGraphicUtil.safeDispose(this.selectionColor);
 		this.selectionColor = selectionColor;
 	}
 
@@ -566,7 +564,6 @@ public class InfiniteProgressPanel {
 	 */
 	public void setTextColor(final Color textColor) {
 		this.checkIfAnimationIsRunning();
-		SWTGraphicUtil.safeDispose(this.textColor);
 		this.textColor = textColor;
 	}
 
@@ -587,9 +584,6 @@ public class InfiniteProgressPanel {
 	 */
 	public void setTextFont(final Font textFont) {
 		this.checkIfAnimationIsRunning();
-		if (this.textFont != null && !this.textFont.isDisposed()) {
-			this.textFont.dispose();
-		}
 		this.textFont = textFont;
 	}
 

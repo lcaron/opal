@@ -155,23 +155,16 @@ public class SwitchButton extends Canvas {
 		this.borderColor = null;
 		this.focusColor = this.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
 		this.selectedForegroundColor = this.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		this.selectedBackgroundColor = new Color(this.getDisplay(), 0, 112, 195);
+		this.selectedBackgroundColor = SWTGraphicUtil.getDefaultColor(this, 0, 112, 195);
 		this.unselectedForegroundColor = this.getDisplay().getSystemColor(SWT.COLOR_BLACK);
-		this.unselectedBackgroundColor = new Color(this.getDisplay(), 203, 203, 203);
-
-		this.buttonBorderColor = new Color(this.getDisplay(), 96, 96, 96);
-		this.buttonBackgroundColor1 = new Color(this.getDisplay(), 254, 254, 254);
-		this.buttonBackgroundColor2 = new Color(this.getDisplay(), 192, 192, 192);
+		this.unselectedBackgroundColor = SWTGraphicUtil.getDefaultColor(this, 203, 203, 203);
+		this.buttonBorderColor = SWTGraphicUtil.getDefaultColor(this, 96, 96, 96);
+		this.buttonBackgroundColor1 = SWTGraphicUtil.getDefaultColor(this, 254, 254, 254);
+		this.buttonBackgroundColor2 = SWTGraphicUtil.getDefaultColor(this, 192, 192, 192);
 
 		this.gap = 5;
 
 		this.listOfSelectionListeners = new ArrayList<SelectionListener>();
-
-		SWTGraphicUtil.addDisposer(this, this.selectedBackgroundColor);
-		SWTGraphicUtil.addDisposer(this, this.unselectedBackgroundColor);
-		SWTGraphicUtil.addDisposer(this, this.buttonBorderColor);
-		SWTGraphicUtil.addDisposer(this, this.buttonBackgroundColor1);
-		SWTGraphicUtil.addDisposer(this, this.buttonBackgroundColor2);
 
 		this.addPaintListener(new PaintListener() {
 			@Override

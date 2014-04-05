@@ -135,7 +135,6 @@ class PWTabContainer extends Composite {
 			final FlatButton button = new FlatButton(this.buttonContainer, SWT.NONE);
 			button.setText(tab.getText());
 			button.setImage(tab.getImage());
-			SWTGraphicUtil.addDisposer(button, tab.getImage());
 
 			final GridData gd;
 			if (i == this.tabs.size() - 1) {

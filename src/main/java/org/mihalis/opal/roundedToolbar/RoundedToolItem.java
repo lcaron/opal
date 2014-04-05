@@ -119,14 +119,14 @@ public class RoundedToolItem extends Item {
 	public RoundedToolItem(final RoundedToolbar parent, final int style) {
 		super(parent, style);
 		parent.addItem(this);
-		parentToolbar = parent;
-		textColor = parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
-		textColorSelected = parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		enabled = true;
-		alignment = SWT.CENTER;
-		selectionListeners = new ArrayList<SelectionListener>();
-		width = -1;
-		height = -1;
+		this.parentToolbar = parent;
+		this.textColor = parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		this.textColorSelected = parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		this.enabled = true;
+		this.alignment = SWT.CENTER;
+		this.selectionListeners = new ArrayList<SelectionListener>();
+		this.width = -1;
+		this.height = -1;
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class RoundedToolItem extends Item {
 		final boolean textNotEmpty = getText() != null && !getText().equals("");
 
 		if (textNotEmpty) {
-			final GC gc = new GC(parentToolbar);
+			final GC gc = new GC(this.parentToolbar);
 			final Point extent = gc.stringExtent(getText());
 			gc.dispose();
 			width += extent.x;
@@ -181,8 +181,8 @@ public class RoundedToolItem extends Item {
 
 		final Point imageSize = new Point(-1, -1);
 		computeImageSize(getImage(), imageSize);
-		computeImageSize(selectionImage, imageSize);
-		computeImageSize(disabledImage, imageSize);
+		computeImageSize(this.selectionImage, imageSize);
+		computeImageSize(this.disabledImage, imageSize);
 
 		if (imageSize.x != -1) {
 			width += imageSize.x;
@@ -208,18 +208,14 @@ public class RoundedToolItem extends Item {
 	 */
 	@Override
 	public void dispose() {
-		super.dispose();
-		selectionListeners.clear();
+		this.selectionListeners.clear();
 		getParent().removeItem(this);
-		bounds = null;
-		disabledImage.dispose();
-		disabledImage = null;
-		selectionImage.dispose();
-		selectionImage = null;
-		textColor.dispose();
-		textColor = null;
-		textColorSelected.dispose();
-		textColorSelected = null;
+		this.bounds = null;
+		this.disabledImage = null;
+		this.selectionImage = null;
+		this.textColor = null;
+		this.textColorSelected = null;
+		super.dispose();
 	}
 
 	void drawButton(final GC gc, final int x, final int toolbarHeight, final boolean isLast) {
@@ -227,7 +223,7 @@ public class RoundedToolItem extends Item {
 		this.toolbarHeight = toolbarHeight;
 		this.isLast = isLast;
 
-		if (selection) {
+		if (this.selection) {
 			drawBackground(x);
 		}
 		if (!isLast) {
@@ -239,37 +235,37 @@ public class RoundedToolItem extends Item {
 		xPosition += drawImage(x + xPosition);
 		drawText(x + xPosition);
 
-		bounds = new Rectangle(x, 0, getWidth(), toolbarHeight);
+		this.bounds = new Rectangle(x, 0, getWidth(), toolbarHeight);
 	}
 
 	private void drawBackground(final int x) {
 		final AdvancedPath path = new AdvancedPath(getDisplay());
 		final boolean isFirst = getParent().indexOf(this) == 0;
 		if (isFirst) {
-			path.addRoundRectangleStraightRight(x, 0, getWidth(), toolbarHeight, parentToolbar.getCornerRadius(), parentToolbar.getCornerRadius());
-		} else if (isLast) {
-			path.addRoundRectangleStraightLeft(x, 0, getWidth(), toolbarHeight, parentToolbar.getCornerRadius(), parentToolbar.getCornerRadius());
+			path.addRoundRectangleStraightRight(x, 0, getWidth(), this.toolbarHeight, this.parentToolbar.getCornerRadius(), this.parentToolbar.getCornerRadius());
+		} else if (this.isLast) {
+			path.addRoundRectangleStraightLeft(x, 0, getWidth(), this.toolbarHeight, this.parentToolbar.getCornerRadius(), this.parentToolbar.getCornerRadius());
 		} else {
-			path.addRectangle(x, 0, getWidth(), toolbarHeight);
+			path.addRectangle(x, 0, getWidth(), this.toolbarHeight);
 		}
 
-		gc.setClipping(path);
+		this.gc.setClipping(path);
 
-		gc.setForeground(START_GRADIENT_COLOR);
-		gc.setBackground(END_GRADIENT_COLOR);
-		gc.fillGradientRectangle(x, 0, getWidth() + parentToolbar.getCornerRadius(), toolbarHeight, true);
+		this.gc.setForeground(START_GRADIENT_COLOR);
+		this.gc.setBackground(END_GRADIENT_COLOR);
+		this.gc.fillGradientRectangle(x, 0, getWidth() + this.parentToolbar.getCornerRadius(), this.toolbarHeight, true);
 
-		gc.setClipping((Rectangle) null);
+		this.gc.setClipping((Rectangle) null);
 	}
 
 	private void drawRightLine(final int x) {
-		gc.setForeground(RoundedToolbar.BORDER_COLOR);
-		gc.drawLine(x + getWidth(), 0, x + getWidth(), toolbarHeight);
+		this.gc.setForeground(RoundedToolbar.BORDER_COLOR);
+		this.gc.drawLine(x + getWidth(), 0, x + getWidth(), this.toolbarHeight);
 	}
 
 	private int computeStartingPosition(final int x) {
 		final int widthOfTextAndImage = computeSizeOfTextAndImages().x;
-		switch (alignment) {
+		switch (this.alignment) {
 			case SWT.CENTER:
 				return (getWidth() - widthOfTextAndImage) / 2;
 			case SWT.RIGHT:
@@ -281,11 +277,11 @@ public class RoundedToolItem extends Item {
 
 	void fireSelectionEvent() {
 		final Event event = new Event();
-		event.widget = parentToolbar;
+		event.widget = this.parentToolbar;
 		event.display = getDisplay();
 		event.item = this;
 		event.type = SWT.Selection;
-		for (final SelectionListener selectionListener : selectionListeners) {
+		for (final SelectionListener selectionListener : this.selectionListeners) {
 			selectionListener.widgetSelected(new SelectionEvent(event));
 		}
 	}
@@ -293,9 +289,9 @@ public class RoundedToolItem extends Item {
 	private int drawImage(final int xPosition) {
 		Image image;
 		if (!isEnabled()) {
-			image = disabledImage;
-		} else if (selection) {
-			image = selectionImage;
+			image = this.disabledImage;
+		} else if (this.selection) {
+			image = this.selectionImage;
 		} else {
 			image = getImage();
 		}
@@ -304,23 +300,23 @@ public class RoundedToolItem extends Item {
 			return 0;
 		}
 
-		final int yPosition = (toolbarHeight - image.getBounds().height) / 2;
-		gc.drawImage(image, xPosition, yPosition);
+		final int yPosition = (this.toolbarHeight - image.getBounds().height) / 2;
+		this.gc.drawImage(image, xPosition, yPosition);
 		return image.getBounds().width + MARGIN;
 	}
 
 	private void drawText(final int xPosition) {
-		gc.setFont(parentToolbar.getFont());
-		if (selection) {
-			gc.setForeground(textColorSelected);
+		this.gc.setFont(this.parentToolbar.getFont());
+		if (this.selection) {
+			this.gc.setForeground(this.textColorSelected);
 		} else {
-			gc.setForeground(textColor);
+			this.gc.setForeground(this.textColor);
 		}
 
-		final Point textSize = gc.stringExtent(getText());
-		final int yPosition = (toolbarHeight - textSize.y) / 2;
+		final Point textSize = this.gc.stringExtent(getText());
+		final int yPosition = (this.toolbarHeight - textSize.y) / 2;
 
-		gc.drawText(getText(), xPosition, yPosition, true);
+		this.gc.drawText(getText(), xPosition, yPosition, true);
 	}
 
 	/**
@@ -336,7 +332,7 @@ public class RoundedToolItem extends Item {
 	 */
 	public int getAlignment() {
 		checkWidget();
-		return alignment;
+		return this.alignment;
 	}
 
 	/**
@@ -459,7 +455,7 @@ public class RoundedToolItem extends Item {
 	 */
 	public Color getTextColor() {
 		checkWidget();
-		return textColor;
+		return this.textColor;
 	}
 
 	/**
@@ -475,7 +471,7 @@ public class RoundedToolItem extends Item {
 
 	public Color getTextColorSelected() {
 		checkWidget();
-		return textColorSelected;
+		return this.textColorSelected;
 	}
 
 	/**
@@ -490,7 +486,7 @@ public class RoundedToolItem extends Item {
 	 */
 	public String getTooltipText() {
 		checkWidget();
-		return tooltipText;
+		return this.tooltipText;
 	}
 
 	/**
@@ -589,7 +585,7 @@ public class RoundedToolItem extends Item {
 	 */
 	public void setBounds(final Rectangle rectangle) {
 		checkWidget();
-		if (bounds == null) {
+		if (this.bounds == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 

@@ -44,6 +44,7 @@ public class BrushedMetalComposite extends Composite {
 	private boolean monochrome = true;
 	private Random randomNumbers;
 	private final PaletteData palette = new PaletteData(0xFF0000, 0x00FF00, 0x0000FF);
+	private ImageData imageData;
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -88,6 +89,7 @@ public class BrushedMetalComposite extends Composite {
 		this.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
+				createBrushedMetalBackground();
 				paintControl();
 			}
 		});
@@ -106,9 +108,7 @@ public class BrushedMetalComposite extends Composite {
 	 */
 	private void paintControl() {
 		final Display display = getDisplay();
-		final Rectangle rect = getClientArea();
-		final ImageData imageData = drawBrushedMetalBackground(Math.max(1, rect.width), Math.max(1, rect.width));
-		final Image newImage = new Image(display, imageData);
+		final Image newImage = new Image(display, this.imageData);
 
 		setBackgroundImage(newImage);
 		SWTGraphicUtil.safeDispose(this.oldImage);
@@ -118,15 +118,17 @@ public class BrushedMetalComposite extends Composite {
 	/**
 	 * Create a brushed metal background
 	 * 
-	 * @param width width of the panel
-	 * @param height height of the panel
 	 * @return an image data that contains the background
 	 */
-	private ImageData drawBrushedMetalBackground(final int width, final int height) {
+	private void createBrushedMetalBackground() {
+
+		final Rectangle rect = getClientArea();
+		final int width = Math.max(1, rect.width);
+		final int height = Math.max(1, rect.width);
 
 		final int[] inPixels = new int[width];
 
-		final ImageData data = new ImageData(width, height, 0x20, this.palette);
+		this.imageData = new ImageData(width, height, 0x20, this.palette);
 
 		this.randomNumbers = new Random(0);
 		final int a = this.color & 0xff000000;
@@ -153,19 +155,17 @@ public class BrushedMetalComposite extends Composite {
 			}
 
 			if (this.radius != 0) {
-				setDataElements(data, 0, y, width, 1, this.blur(inPixels, width, this.radius));
+				setDataElements(0, y, width, 1, this.blur(inPixels, width, this.radius));
 			} else {
-				setDataElements(data, 0, y, width, 1, inPixels);
+				setDataElements(0, y, width, 1, inPixels);
 			}
 		}
 
-		return data;
 	}
 
 	/**
 	 * Sets the data for a rectangle of pixels from a primitive array
 	 * 
-	 * @param data the source ImageData
 	 * @param posX The X coordinate of the upper left pixel location.
 	 * @param posY The Y coordinate of the upper left pixel location.
 	 * @param width Width of the pixel rectangle.
@@ -173,14 +173,14 @@ public class BrushedMetalComposite extends Composite {
 	 * @param pixels An array containing the pixel data to place between x,y and
 	 *            x+w-1, y+h-1.
 	 */
-	private void setDataElements(final ImageData data, final int posX, final int posY, final int width, final int height, final int[] pixels) {
+	private void setDataElements(final int posX, final int posY, final int width, final int height, final int[] pixels) {
 		int cpt = 0;
 		for (int y = posY; y < posY + height; y++) {
 			for (int x = posX; x < posX + width; x++) {
 				final int rgb = pixels[cpt++];
 				final int pixel = this.palette.getPixel(new RGB(rgb >> 16 & 0xFF, rgb >> 8 & 0xFF, rgb & 0xFF));
-				data.setPixel(x, y, pixel);
-				data.setAlpha(x, y, rgb >> 24 & 0xFF);
+				this.imageData.setPixel(x, y, pixel);
+				this.imageData.setAlpha(x, y, rgb >> 24 & 0xFF);
 			}
 		}
 	}
@@ -294,6 +294,7 @@ public class BrushedMetalComposite extends Composite {
 	 */
 	public void setRadius(final int radius) {
 		this.radius = radius;
+		createBrushedMetalBackground();
 		paintControl();
 	}
 
@@ -317,6 +318,7 @@ public class BrushedMetalComposite extends Composite {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.amount = amount;
+		createBrushedMetalBackground();
 		paintControl();
 	}
 
@@ -339,6 +341,8 @@ public class BrushedMetalComposite extends Composite {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 		this.color = 0xFF << 24 | color.getRed() << 16 | color.getGreen() << 8 | color.getBlue();
+		createBrushedMetalBackground();
+		;
 		paintControl();
 	}
 
@@ -361,6 +365,7 @@ public class BrushedMetalComposite extends Composite {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.shine = shine;
+		createBrushedMetalBackground();
 		paintControl();
 	}
 
@@ -376,6 +381,7 @@ public class BrushedMetalComposite extends Composite {
 	 */
 	public void setMonochrome(final boolean monochrome) {
 		this.monochrome = monochrome;
+		createBrushedMetalBackground();
 		paintControl();
 	}
 

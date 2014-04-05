@@ -117,15 +117,21 @@ public class RangeSlider extends Canvas {
 			this.orientation = SWT.HORIZONTAL;
 		}
 
-		SWTGraphicUtil.addDisposer(this, this.slider);
-		SWTGraphicUtil.addDisposer(this, this.sliderHover);
-		SWTGraphicUtil.addDisposer(this, this.sliderDrag);
-		SWTGraphicUtil.addDisposer(this, this.sliderSelected);
+		this.addListener(SWT.Dispose, new Listener() {
+			@Override
+			public void handleEvent(final Event event) {
+				SWTGraphicUtil.safeDispose(RangeSlider.this.slider);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderHover);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderDrag);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.sliderSelected);
 
-		SWTGraphicUtil.addDisposer(this, this.vSlider);
-		SWTGraphicUtil.addDisposer(this, this.vSliderHover);
-		SWTGraphicUtil.addDisposer(this, this.vSliderDrag);
-		SWTGraphicUtil.addDisposer(this, this.vSliderSelected);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.vSlider);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderHover);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderDrag);
+				SWTGraphicUtil.safeDispose(RangeSlider.this.vSliderSelected);
+
+			}
+		});
 
 		addMouseListeners();
 		addListener(SWT.KeyDown, new Listener() {
@@ -571,7 +577,6 @@ public class RangeSlider extends Canvas {
 			final Image temp = new Image(getDisplay(), image, SWT.IMAGE_DISABLE);
 			gc.drawImage(temp, getClientArea().width / 2 - 8, y + 2);
 			temp.dispose();
-
 		}
 		return new Point(getClientArea().width / 2 - 8, y + 2);
 	}

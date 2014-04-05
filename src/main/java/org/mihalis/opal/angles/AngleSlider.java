@@ -212,6 +212,14 @@ public class AngleSlider extends Canvas {
 		return new Point(WHOLE_RADIUS, WHOLE_RADIUS);
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		this.backgroundImage.dispose();
+		this.buttonFocus.dispose();
+		this.buttonNoFocus.dispose();
+	}
+
 	/**
 	 * @see org.eclipse.swt.widgets.Scale#getSelection()
 	 */

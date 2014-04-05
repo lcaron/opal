@@ -82,15 +82,6 @@ public class PWColorChooser extends PWWidget {
 				}
 			}
 		});
-
-		button.addListener(SWT.Dispose, new Listener() {
-
-			@Override
-			public void handleEvent(final Event event) {
-				SWTGraphicUtil.safeDispose(PWColorChooser.this.color);
-			}
-		});
-
 		return button;
 	}
 

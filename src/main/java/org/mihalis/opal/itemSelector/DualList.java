@@ -1174,7 +1174,9 @@ public class DualList extends Composite {
 			final DLItem item = (DLItem) tableItem.getData();
 			this.selection.add(item);
 			this.items.remove(item);
+			fireEvents(item);
 		}
+
 		this.redrawTables();
 	}
 
@@ -1217,6 +1219,7 @@ public class DualList extends Composite {
 			final DLItem item = (DLItem) tableItem.getData();
 			this.items.add(item);
 			this.selection.remove(item);
+			fireEvents(item);
 		}
 		this.redrawTables();
 	}

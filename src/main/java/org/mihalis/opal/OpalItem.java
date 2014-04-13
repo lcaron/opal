@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.mihalis.opal;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.Color;
@@ -30,129 +31,129 @@ import org.eclipse.swt.graphics.Image;
  */
 public abstract class OpalItem {
 
-    private Map<String, Object> data;
-    private Object datum;
-    private Color background;
-    private Font font;
-    private Color foreground;
-    private Image image;
-    private String text;
-    private int height = -1;
+	private final Map<String, Object> data = new HashMap<String, Object>();
+	private Object datum;
+	private Color background;
+	private Font font;
+	private Color foreground;
+	private Image image;
+	private String text;
+	private int height = -1;
 
-    /**
-     * @return the background color of the item
-     */
-    public Color getBackground() {
-        return this.background;
-    }
+	/**
+	 * @return the background color of the item
+	 */
+	public Color getBackground() {
+		return this.background;
+	}
 
-    /**
-     * @return the the data stored in this item
-     */
-    public Object getData() {
-        return this.datum;
-    }
+	/**
+	 * @return the the data stored in this item
+	 */
+	public Object getData() {
+		return this.datum;
+	}
 
-    /**
-     * @param key a key
-     * @return the the data stored in this item associated to this key
-     */
-    public Object getData(final String key) {
-        return this.data.get(key);
-    }
+	/**
+	 * @param key a key
+	 * @return the the data stored in this item associated to this key
+	 */
+	public Object getData(final String key) {
+		return this.data.get(key);
+	}
 
-    /**
-     * @return the font of the item
-     */
-    public Font getFont() {
-        return this.font;
-    }
+	/**
+	 * @return the font of the item
+	 */
+	public Font getFont() {
+		return this.font;
+	}
 
-    /**
-     * @return the foreground color of the item
-     */
-    public Color getForeground() {
-        return this.foreground;
-    }
+	/**
+	 * @return the foreground color of the item
+	 */
+	public Color getForeground() {
+		return this.foreground;
+	}
 
-    /**
-     * @return the height of the item
-     */
-    public int getHeight() {
-        return this.height;
-    }
+	/**
+	 * @return the height of the item
+	 */
+	public int getHeight() {
+		return this.height;
+	}
 
-    /**
-     * @return the image stored in this item
-     */
-    public Image getImage() {
-        return this.image;
-    }
+	/**
+	 * @return the image stored in this item
+	 */
+	public Image getImage() {
+		return this.image;
+	}
 
-    /**
-     * @return the text stored in this item
-     */
-    public String getText() {
-        return this.text;
-    }
+	/**
+	 * @return the text stored in this item
+	 */
+	public String getText() {
+		return this.text;
+	}
 
-    /**
-     * @param background set the background color of this item
-     */
-    public void setBackground(final Color background) {
-        this.background = background;
-    }
+	/**
+	 * @param background set the background color of this item
+	 */
+	public void setBackground(final Color background) {
+		this.background = background;
+	}
 
-    /**
-     * @param font set the font of this item
-     */
-    public void setFont(final Font font) {
-        this.font = font;
-    }
+	/**
+	 * @param font set the font of this item
+	 */
+	public void setFont(final Font font) {
+		this.font = font;
+	}
 
-    /**
-     * @param foreground set the foreground color of this item
-     */
-    public void setForeground(final Color foreground) {
-        this.foreground = foreground;
-    }
+	/**
+	 * @param foreground set the foreground color of this item
+	 */
+	public void setForeground(final Color foreground) {
+		this.foreground = foreground;
+	}
 
-    /**
-     * @param height set the height of this item
-     */
-    public void setHeight(final int height) {
-        this.height = height;
-    }
+	/**
+	 * @param height set the height of this item
+	 */
+	public void setHeight(final int height) {
+		this.height = height;
+	}
 
-    /**
-     * @param image set the image of this item
-     */
-    public void setImage(final Image image) {
-        this.image = image;
-    }
+	/**
+	 * @param image set the image of this item
+	 */
+	public void setImage(final Image image) {
+		this.image = image;
+	}
 
-    /**
-     * @param text set the text of this item
-     */
-    public void setText(final String text) {
-        this.text = text;
-    }
+	/**
+	 * @param text set the text of this item
+	 */
+	public void setText(final String text) {
+		this.text = text;
+	}
 
-    /**
-     * @param data set the data stored in this item
-     */
-    public void setData(final Object data) {
-        this.datum = data;
-    }
+	/**
+	 * @param data set the data stored in this item
+	 */
+	public void setData(final Object data) {
+		this.datum = data;
+	}
 
-    /**
-     * Store a data associated to a given key in this item
-     * 
-     * @param key key
-     * @param value value associated to this key
-     */
-    public void setData(final String key, final Object value) {
-        this.data.put(key, value);
-    }
+	/**
+	 * Store a data associated to a given key in this item
+	 * 
+	 * @param key key
+	 * @param value value associated to this key
+	 */
+	public void setData(final String key, final Object value) {
+		this.data.put(key, value);
+	}
 
 }

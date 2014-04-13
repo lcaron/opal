@@ -66,4 +66,9 @@ public interface ButtonRenderer {
 	 * @return the size of the button
 	 */
 	Point computeSize(OButton button, int wHint, int hHint, boolean changed);
+
+	/**
+	 * Create disabled image
+	 */
+	void createDisabledImage();
 }

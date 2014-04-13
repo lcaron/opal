@@ -45,6 +45,7 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	private Image imageDown;
 	private Image imageLeft;
 	private Image imageRight;
+	private Image disabledImage;
 	private static final int MARGIN = 5;
 	private static final int GAP_ON_CLIC = 2;
 
@@ -54,6 +55,7 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	protected AbstractButtonRenderer() {
 		initButtonConfiguration();
 		createArrows();
+		createDisabledImage();
 	}
 
 	private void initButtonConfiguration() {
@@ -133,21 +135,44 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	}
 
 	private void createArrows() {
-		imageUp = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_UP_IMAGE));
-		imageDown = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_DOWN_IMAGE));
-		imageLeft = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_LEFT_IMAGE));
-		imageRight = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_RIGHT_IMAGE));
+		this.imageUp = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_UP_IMAGE));
+		this.imageDown = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_DOWN_IMAGE));
+		this.imageLeft = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_LEFT_IMAGE));
+		this.imageRight = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_RIGHT_IMAGE));
 
 		Display.getCurrent().addListener(SWT.Dispose, new Listener() {
 
 			@Override
 			public void handleEvent(final Event event) {
-				imageUp.dispose();
-				imageDown.dispose();
-				imageLeft.dispose();
-				imageRight.dispose();
+				AbstractButtonRenderer.this.imageUp.dispose();
+				AbstractButtonRenderer.this.imageDown.dispose();
+				AbstractButtonRenderer.this.imageLeft.dispose();
+				AbstractButtonRenderer.this.imageRight.dispose();
 			}
 		});
+	}
+
+	/**
+	 * @see org.mihalis.opal.obutton.ButtonRenderer#createDisabledImage()
+	 */
+	@Override
+	public void createDisabledImage() {
+		if (this.disabledImage != null && !this.disabledImage.isDisposed()) {
+			this.disabledImage.dispose();
+		}
+		if (this.parent == null || this.parent.getImage() == null) {
+			this.disabledImage = null;
+		} else {
+			this.disabledImage = new Image(this.parent.getDisplay(), this.parent.getImage(), SWT.IMAGE_DISABLE);
+			this.parent.addListener(SWT.Dispose, new Listener() {
+				@Override
+				public void handleEvent(final Event e) {
+					if (!AbstractButtonRenderer.this.disabledImage.isDisposed()) {
+						AbstractButtonRenderer.this.disabledImage.dispose();
+					}
+				}
+			});
+		}
 	}
 
 	/**
@@ -175,32 +200,34 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 		drawBackground();
 		int xPosition = computeStartingPosition();
 		xPosition += drawImage(xPosition);
-		if (parent.getText() != null) {
+		if (this.parent.getText() != null) {
 			drawText(xPosition);
 		}
 	}
 
 	private void drawBackground() {
-		createClipping();
+		final AdvancedPath path = createClipping();
+		this.gc.setClipping(path);
 		this.gc.setForeground(this.configuration.getBackgroundColor());
 		this.gc.setBackground(this.configuration.getSecondBackgroundColor());
-		this.gc.fillGradientRectangle(0, this.gapOnClic, parent.getWidth(), parent.getHeight() - GAP_ON_CLIC, this.configuration.getGradientDirection() == SWT.VERTICAL);
+		this.gc.fillGradientRectangle(0, this.gapOnClic, this.parent.getWidth(), this.parent.getHeight() - GAP_ON_CLIC, this.configuration.getGradientDirection() == SWT.VERTICAL);
 		this.gc.setClipping((Rectangle) null);
+		path.dispose();
 	}
 
-	private void createClipping() {
-		final AdvancedPath path = new AdvancedPath(parent.getDisplay());
-		path.addRoundRectangle(0, this.gapOnClic, parent.getWidth(), parent.getHeight() - GAP_ON_CLIC, this.configuration.getCornerRadius(), this.configuration.getCornerRadius());
-		this.gc.setClipping(path);
+	private AdvancedPath createClipping() {
+		final AdvancedPath path = new AdvancedPath(this.parent.getDisplay());
+		path.addRoundRectangle(0, this.gapOnClic, this.parent.getWidth(), this.parent.getHeight() - GAP_ON_CLIC, this.configuration.getCornerRadius(), this.configuration.getCornerRadius());
+		return path;
 	}
 
 	private int computeStartingPosition() {
 		final int widthOfTextAndImage = computeSizeOfTextAndImages().x;
-		switch (parent.alignment) {
+		switch (this.parent.alignment) {
 			case SWT.CENTER:
-				return (parent.getWidth() - widthOfTextAndImage) / 2;
+				return (this.parent.getWidth() - widthOfTextAndImage) / 2;
 			case SWT.RIGHT:
-				return parent.getWidth() - widthOfTextAndImage - MARGIN;
+				return this.parent.getWidth() - widthOfTextAndImage - MARGIN;
 			default:
 				return MARGIN;
 		}
@@ -213,44 +240,36 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 			return 0;
 		}
 
-		final int yPosition = (parent.getHeight() - image.getBounds().height - GAP_ON_CLIC) / 2;
+		final int yPosition = (this.parent.getHeight() - image.getBounds().height - GAP_ON_CLIC) / 2;
 		this.gc.drawImage(image, xPosition, yPosition + this.gapOnClic);
 		return image.getBounds().width + MARGIN;
 	}
 
 	private Image extractImage() {
-		if ((parent.getStyle() & SWT.ARROW) != 0) {
-			if ((parent.getStyle() & SWT.DOWN) != 0) {
-				return imageDown;
+		if ((this.parent.getStyle() & SWT.ARROW) != 0) {
+			if ((this.parent.getStyle() & SWT.DOWN) != 0) {
+				return this.imageDown;
 			}
-			if ((parent.getStyle() & SWT.UP) != 0) {
-				return imageUp;
+			if ((this.parent.getStyle() & SWT.UP) != 0) {
+				return this.imageUp;
 			}
-			if ((parent.getStyle() & SWT.LEFT) != 0) {
-				return imageLeft;
+			if ((this.parent.getStyle() & SWT.LEFT) != 0) {
+				return this.imageLeft;
 			}
-			if ((parent.getStyle() & SWT.RIGHT) != 0) {
-				return imageRight;
+			if ((this.parent.getStyle() & SWT.RIGHT) != 0) {
+				return this.imageRight;
 			}
 		}
 
-		if (parent.getImage() == null) {
+		if (this.parent.getImage() == null) {
 			return null;
 		}
 
 		final Image image;
-		if (!parent.isEnabled()) {
-			image = new Image(parent.getDisplay(), parent.getImage(), SWT.IMAGE_DISABLE);
-			parent.addListener(SWT.Dispose, new Listener() {
-				@Override
-				public void handleEvent(final Event e) {
-					if (!image.isDisposed()) {
-						image.dispose();
-					}
-				}
-			});
+		if (!this.parent.isEnabled()) {
+			image = this.disabledImage;
 		} else {
-			image = parent.getImage();
+			image = this.parent.getImage();
 		}
 
 		return image;
@@ -260,10 +279,10 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 		this.gc.setFont(this.configuration.getFont());
 		this.gc.setForeground(this.configuration.getFontColor());
 
-		final Point textSize = this.gc.stringExtent(parent.getText());
-		final int yPosition = (parent.getHeight() - textSize.y - GAP_ON_CLIC) / 2;
+		final Point textSize = this.gc.stringExtent(this.parent.getText());
+		final int yPosition = (this.parent.getHeight() - textSize.y - GAP_ON_CLIC) / 2;
 
-		this.gc.drawText(parent.getText(), xPosition, yPosition + this.gapOnClic, true);
+		this.gc.drawText(this.parent.getText(), xPosition, yPosition + this.gapOnClic, true);
 	}
 
 	/**
@@ -319,24 +338,24 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	 */
 	@Override
 	public Point computeSize(final OButton button, final int wHint, final int hHint, final boolean changed) {
-		parent = button;
+		this.parent = button;
 		final Point sizeOfTextAndImages = computeSizeOfTextAndImages();
 		return new Point(2 * MARGIN + sizeOfTextAndImages.x, 2 * MARGIN + sizeOfTextAndImages.y + GAP_ON_CLIC);
 	}
 
 	private Point computeSizeOfTextAndImages() {
 		int width = 0, height = 0;
-		final boolean textNotEmpty = parent.getText() != null && !parent.getText().equals("");
+		final boolean textNotEmpty = this.parent.getText() != null && !this.parent.getText().equals("");
 
 		if (textNotEmpty) {
-			final GC gc = new GC(parent);
+			final GC gc = new GC(this.parent);
 			if (this.configuration == null) {
-				gc.setFont(parent.getFont());
+				gc.setFont(this.parent.getFont());
 			} else {
 				gc.setFont(this.configuration.getFont());
 			}
 
-			final Point extent = gc.stringExtent(parent.getText());
+			final Point extent = gc.stringExtent(this.parent.getText());
 			gc.dispose();
 			width += extent.x;
 			height = extent.y;
@@ -363,4 +382,5 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 		imageSize.x = Math.max(imageBounds.width, imageSize.x);
 		imageSize.y = Math.max(imageBounds.height, imageSize.y);
 	}
+
 }

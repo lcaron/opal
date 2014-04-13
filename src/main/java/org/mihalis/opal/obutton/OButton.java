@@ -467,6 +467,7 @@ public class OButton extends Canvas {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.image = image;
+		this.buttonRenderer.createDisabledImage();
 		redraw();
 		update();
 	}

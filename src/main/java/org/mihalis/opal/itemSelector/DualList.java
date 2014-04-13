@@ -118,6 +118,22 @@ public class DualList extends Composite {
 		});
 	}
 
+	/**
+	 * @return a table that will contain data
+	 */
+	private Table createTable() {
+		final Table table = new Table(this, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+		table.setLinesVisible(false);
+		table.setHeaderVisible(false);
+		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 4);
+		gd.widthHint = 200;
+		table.setLayoutData(gd);
+		new TableColumn(table, SWT.CENTER);
+		new TableColumn(table, SWT.LEFT);
+		table.setData(-1);
+		return table;
+	}
+
 	private void createButtonSelectAll() {
 		final Button buttonSelectAll = this.createButton(DOUBLE_RIGHT_IMAGE, true, GridData.END);
 		buttonSelectAll.addSelectionListener(new SimpleSelectionAdapter() {
@@ -233,22 +249,6 @@ public class DualList extends Composite {
 				DualList.this.moveSelectionToLastPosition();
 			}
 		});
-	}
-
-	/**
-	 * @return a table that will contain data
-	 */
-	private Table createTable() {
-		final Table table = new Table(this, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		table.setLinesVisible(false);
-		table.setHeaderVisible(false);
-		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 4);
-		gd.widthHint = 200;
-		table.setLayoutData(gd);
-		new TableColumn(table, SWT.CENTER);
-		new TableColumn(table, SWT.LEFT);
-		table.setData(-1);
-		return table;
 	}
 
 	/**
@@ -1118,6 +1118,7 @@ public class DualList extends Composite {
 	 * @param listOfData list of data
 	 */
 	private void fillData(final Table table, final List<DLItem> listOfData) {
+		final boolean itemsContainImage = this.itemsContainImage();
 		for (final DLItem item : listOfData) {
 			final TableItem tableItem = new TableItem(table, SWT.NONE);
 			tableItem.setData(item);
@@ -1137,8 +1138,8 @@ public class DualList extends Composite {
 			if (item.getFont() != null) {
 				tableItem.setFont(item.getFont());
 			}
-
-			tableItem.setText(1, item.getText());
+			final int textColumn = itemsContainImage ? 1 : 0;
+			tableItem.setText(textColumn, item.getText());
 		}
 	}
 

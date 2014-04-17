@@ -16,8 +16,6 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -25,6 +23,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.mihalis.opal.itemSelector.DLItem.LAST_ACTION;
 
 /**
  * A simple snipper for the ItemSelector Widget
@@ -41,17 +40,22 @@ public class DualListSnippet {
 
 		final DualList dl = new DualList(shell, SWT.NONE);
 		dl.setItems(createItems(shell));
-		dl.addSelectionListener(new SelectionListener() {
+
+		dl.addSelectionChangeListener(new SelectionChangeListener() {
 
 			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				System.out.println("Selection Listener called");
-
-			}
-
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent e) {
-
+			public void widgetSelected(final SelectionChangeEvent e) {
+				System.out.println("Selection Change Listener called");
+				for (final DLItem item : e.getItems()) {
+					final StringBuilder sb = new StringBuilder();
+					if (item.getLastAction() == LAST_ACTION.SELECTION) {
+						sb.append("[SELECTION] ");
+					} else {
+						sb.append("[DE-SELECTION] ");
+					}
+					sb.append(item.getText());
+					System.out.println(sb.toString());
+				}
 			}
 		});
 

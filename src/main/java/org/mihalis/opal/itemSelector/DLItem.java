@@ -20,13 +20,19 @@ import org.mihalis.opal.OpalItem;
  */
 public class DLItem extends OpalItem {
 
+	public enum LAST_ACTION {
+		NONE, SELECTION, DESELECTION
+	};
+
+	private LAST_ACTION lastAction;
+
 	/**
 	 * Constructor
 	 * 
 	 * @param text the text displayed in the DualList widget for this item
 	 */
 	public DLItem(final String text) {
-		this.setText(text);
+		this(text, null);
 	}
 
 	/**
@@ -36,8 +42,7 @@ public class DLItem extends OpalItem {
 	 * @param image the image displayed in the DualList widget for this item
 	 */
 	public DLItem(final String text, final Image image) {
-		this.setText(text);
-		this.setImage(image);
+		this(text, image, (Font) null, (Color) null);
 	}
 
 	/**
@@ -54,6 +59,7 @@ public class DLItem extends OpalItem {
 		this.setImage(image);
 		this.setFont(font);
 		this.setForeground(foregroundColor);
+		this.lastAction = LAST_ACTION.NONE;
 	}
 
 	/**
@@ -71,6 +77,7 @@ public class DLItem extends OpalItem {
 		this.setImage(image);
 		this.setForeground(foregroundColor);
 		this.setBackground(backgroundColor);
+		this.lastAction = LAST_ACTION.NONE;
 	}
 
 	/**
@@ -81,9 +88,7 @@ public class DLItem extends OpalItem {
 	 * @param font the font displayed in the DualList widget for this item
 	 */
 	public DLItem(final String text, final Image image, final Font font) {
-		this.setText(text);
-		this.setImage(image);
-		this.setFont(font);
+		this(text, image, font, null);
 	}
 
 	/**
@@ -100,6 +105,20 @@ public class DLItem extends OpalItem {
 	@Override
 	public void setHeight(final int height) {
 		throw new UnsupportedOperationException("DLItem does not support this method");
+	}
+
+	/**
+	 * @return the last action (NONE, SELECTION, DESELECTION)
+	 */
+	LAST_ACTION getLastAction() {
+		return this.lastAction;
+	}
+
+	/**
+	 * @param lastAction the last action performed on this DLItem
+	 */
+	void setLastAction(final LAST_ACTION lastAction) {
+		this.lastAction = lastAction;
 	}
 
 }

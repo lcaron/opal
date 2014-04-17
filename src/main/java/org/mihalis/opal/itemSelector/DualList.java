@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.mihalis.opal.itemSelector.DLItem.LAST_ACTION;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 import org.mihalis.opal.utils.SimpleSelectionAdapter;
 
@@ -60,7 +61,8 @@ public class DualList extends Composite {
 	private Table itemsTable;
 	private Table selectionTable;
 
-	private List<SelectionListener> eventTable;
+	private List<SelectionListener> selectionListeners;
+	private List<SelectionChangeListener> selectionChangeListeners;
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -356,10 +358,10 @@ public class DualList extends Composite {
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (this.eventTable == null) {
-			this.eventTable = new ArrayList<SelectionListener>();
+		if (this.selectionListeners == null) {
+			this.selectionListeners = new ArrayList<SelectionListener>();
 		}
-		this.eventTable.add(listener);
+		this.selectionListeners.add(listener);
 	}
 
 	/**
@@ -386,10 +388,72 @@ public class DualList extends Composite {
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (this.eventTable == null) {
+		if (this.selectionListeners == null) {
 			return;
 		}
-		this.eventTable.remove(listener);
+		this.selectionListeners.remove(listener);
+	}
+
+	/**
+	 * Adds the listener to the collection of listeners who will be notified
+	 * when the user changes the receiver's selection, by sending it one of the
+	 * messages defined in the <code>SelectionChangeListener</code> interface.
+	 * 
+	 * @param listener the listener which should be notified
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 * 
+	 * @see SelectionChangeListener
+	 * @see #removeSelectionChangeListener
+	 * @see SelectionChangeEvent
+	 */
+	public void addSelectionChangeListener(final SelectionChangeListener listener) {
+		this.checkWidget();
+		if (listener == null) {
+			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+		}
+		if (this.selectionChangeListeners == null) {
+			this.selectionChangeListeners = new ArrayList<SelectionChangeListener>();
+		}
+		this.selectionChangeListeners.add(listener);
+	}
+
+	/**
+	 * Removes the listener from the collection of listeners who will be
+	 * notified when the user changes the receiver's selection.
+	 * 
+	 * @param listener the listener which should no longer be notified
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 * 
+	 * @see SelectionChangeListener
+	 * @see #addSelectionChangeListener
+	 */
+	public void removeSelectionChangeListener(final SelectionChangeListener listener) {
+		this.checkWidget();
+		if (listener == null) {
+			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+		}
+		if (this.selectionChangeListeners == null) {
+			return;
+		}
+		this.selectionChangeListeners.remove(listener);
 	}
 
 	/**
@@ -411,7 +475,13 @@ public class DualList extends Composite {
 		if (index < 0 || index >= this.items.size()) {
 			return;
 		}
-		this.fireEvents(this.selection.remove(index));
+		final DLItem item = this.selection.remove(index);
+		this.fireSelectionEvent(item);
+
+		final List<DLItem> deselectedItems = new ArrayList<DLItem>();
+		item.setLastAction(LAST_ACTION.DESELECTION);
+		deselectedItems.add(item);
+		this.fireSelectionChangeEvent(deselectedItems);
 		this.redrawTables();
 	}
 
@@ -510,6 +580,14 @@ public class DualList extends Composite {
 	public void deselectAll() {
 		this.checkWidget();
 		this.items.addAll(this.selection);
+
+		final List<DLItem> deselectedItems = new ArrayList<DLItem>();
+		for (final DLItem item : this.selection) {
+			item.setLastAction(LAST_ACTION.DESELECTION);
+			deselectedItems.add(item);
+		}
+		fireSelectionChangeEvent(deselectedItems);
+
 		this.selection.clear();
 		this.redrawTables();
 	}
@@ -817,8 +895,13 @@ public class DualList extends Composite {
 		if (index < 0 || index >= this.items.size()) {
 			return;
 		}
-		this.selection.add(this.items.get(index));
-		this.fireEvents(this.items.get(index));
+		final List<DLItem> selectedItems = new ArrayList<DLItem>();
+		final DLItem item = this.items.get(index);
+		item.setLastAction(LAST_ACTION.SELECTION);
+		selectedItems.add(item);
+		this.selection.add(item);
+		this.fireSelectionEvent(item);
+		fireSelectionChangeEvent(selectedItems);
 		this.redrawTables();
 	}
 
@@ -849,13 +932,20 @@ public class DualList extends Composite {
 		if (indices == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
+
+		final List<DLItem> selectedItems = new ArrayList<DLItem>();
 		for (final int index : indices) {
 			if (index < 0 || index >= this.items.size()) {
 				continue;
 			}
-			this.selection.add(this.items.get(index));
-			this.fireEvents(this.items.get(index));
+			final DLItem item = this.items.get(index);
+			item.setLastAction(LAST_ACTION.SELECTION);
+			selectedItems.add(item);
+
+			this.selection.add(item);
+			this.fireSelectionEvent(item);
 		}
+		fireSelectionChangeEvent(selectedItems);
 		this.redrawTables();
 	}
 
@@ -886,13 +976,18 @@ public class DualList extends Composite {
 		if (start > end) {
 			SWT.error(SWT.ERROR_INVALID_RANGE);
 		}
+		final List<DLItem> selectedItems = new ArrayList<DLItem>();
 		for (int index = start; index <= end; index++) {
 			if (index < 0 || index >= this.items.size()) {
 				continue;
 			}
-			this.selection.add(this.items.get(index));
-			this.fireEvents(this.items.get(index));
+			final DLItem item = this.items.get(index);
+			item.setLastAction(LAST_ACTION.SELECTION);
+			selectedItems.add(item);
+			this.selection.add(item);
+			this.fireSelectionEvent(item);
 		}
+		fireSelectionChangeEvent(selectedItems);
 		this.redrawTables();
 	}
 
@@ -911,8 +1006,16 @@ public class DualList extends Composite {
 		this.checkWidget();
 		this.selection.addAll(this.items);
 		for (final DLItem item : this.items) {
-			this.fireEvents(item);
+			this.fireSelectionEvent(item);
 		}
+
+		final List<DLItem> selectedItems = new ArrayList<DLItem>();
+		for (final DLItem item : this.items) {
+			item.setLastAction(LAST_ACTION.SELECTION);
+			selectedItems.add(item);
+		}
+		fireSelectionChangeEvent(selectedItems);
+
 		this.items.clear();
 		this.redrawTables();
 	}
@@ -1170,12 +1273,16 @@ public class DualList extends Composite {
 		if (this.itemsTable.getSelectionCount() == 0) {
 			return;
 		}
+		final List<DLItem> selectedItems = new ArrayList<DLItem>();
 		for (final TableItem tableItem : this.itemsTable.getSelection()) {
 			final DLItem item = (DLItem) tableItem.getData();
+			item.setLastAction(LAST_ACTION.SELECTION);
+			selectedItems.add(item);
 			this.selection.add(item);
 			this.items.remove(item);
-			fireEvents(item);
+			fireSelectionEvent(item);
 		}
+		fireSelectionChangeEvent(selectedItems);
 
 		this.redrawTables();
 	}
@@ -1215,12 +1322,16 @@ public class DualList extends Composite {
 		if (this.selectionTable.getSelectionCount() == 0) {
 			return;
 		}
+		final List<DLItem> deselectedItems = new ArrayList<DLItem>();
 		for (final TableItem tableItem : this.selectionTable.getSelection()) {
 			final DLItem item = (DLItem) tableItem.getData();
+			item.setLastAction(LAST_ACTION.DESELECTION);
+			deselectedItems.add(item);
 			this.items.add(item);
 			this.selection.remove(item);
-			fireEvents(item);
+			fireSelectionEvent(item);
 		}
+		fireSelectionChangeEvent(deselectedItems);
 		this.redrawTables();
 	}
 
@@ -1290,8 +1401,8 @@ public class DualList extends Composite {
 	 * 
 	 * @param item selected item
 	 */
-	private void fireEvents(final DLItem item) {
-		if (this.eventTable == null) {
+	private void fireSelectionEvent(final DLItem item) {
+		if (this.selectionListeners == null) {
 			return;
 		}
 
@@ -1303,9 +1414,26 @@ public class DualList extends Composite {
 		event.data = item;
 		final SelectionEvent selectionEvent = new SelectionEvent(event);
 
-		for (final SelectionListener listener : this.eventTable) {
+		for (final SelectionListener listener : this.selectionListeners) {
 			listener.widgetSelected(selectionEvent);
 		}
+	}
 
+	private void fireSelectionChangeEvent(final List<DLItem> items) {
+		if (this.selectionChangeListeners == null) {
+			return;
+		}
+
+		final Event event = new Event();
+		event.button = 1;
+		event.display = this.getDisplay();
+		event.item = null;
+		event.widget = this;
+		final SelectionChangeEvent selectionChangeEvent = new SelectionChangeEvent(event);
+		selectionChangeEvent.setItems(items);
+
+		for (final SelectionChangeListener listener : this.selectionChangeListeners) {
+			listener.widgetSelected(selectionChangeEvent);
+		}
 	}
 }

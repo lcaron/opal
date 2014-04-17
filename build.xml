@@ -3,7 +3,7 @@
 	<property name="src.dir" value="src/main/java" />
 	<property name="rsc.dir" value="src/main/resources/resources" />
 	<property name="images.dir" value="src/main/resources/images" />
-	<property name="version" value="0.9.9d" />
+	<property name="version" value="0.9.9e" />
 	
 	<property name="build.dir" value="build" />
 	<property name="classes.dir" value="${build.dir}/classes" />

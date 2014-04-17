@@ -161,6 +161,7 @@ public class TextAssist extends Composite {
 						event.doit = false;
 						break;
 					case SWT.CR:
+					case SWT.KEYPAD_CR:
 						if (TextAssist.this.popup.isVisible() && TextAssist.this.table.getSelectionIndex() != -1) {
 							TextAssist.this.text.setText(TextAssist.this.table.getSelection()[0].getText());
 							TextAssist.this.popup.setVisible(false);

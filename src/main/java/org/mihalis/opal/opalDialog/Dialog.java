@@ -183,7 +183,7 @@ public class Dialog {
 	public static String ask(final Shell shell, final String title, final String text, final String defaultValue) {
 		final Dialog dialog = new Dialog(shell);
 		dialog.setTitle(ResourceManager.getLabel(ResourceManager.INPUT));
-		dialog.getMessageArea().setTitle(title).setText(text).setIcon(Display.getCurrent().getSystemImage(SWT.ICON_INFORMATION)).addTextBox(defaultValue);
+		dialog.getMessageArea().setTitle(title).setText(text).setIcon(Display.getCurrent().getSystemImage(SWT.ICON_QUESTION)).addTextBox(defaultValue);
 		dialog.setButtonType(OpalDialogType.OK_CANCEL);
 		if (dialog.show() == 0) {
 			return dialog.getMessageArea().getTextBoxValue();

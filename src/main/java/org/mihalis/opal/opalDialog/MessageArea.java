@@ -355,7 +355,7 @@ public class MessageArea extends DialogArea {
 
 			@Override
 			public void handleEvent(final Event e) {
-				if (e.keyCode == SWT.CR) {
+				if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
 					MessageArea.this.parent.shell.dispose();
 					MessageArea.this.parent.getFooterArea().selectedButtonIndex = 0;
 				}

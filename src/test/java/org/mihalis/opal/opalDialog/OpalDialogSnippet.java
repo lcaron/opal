@@ -12,6 +12,7 @@
 package org.mihalis.opal.opalDialog;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -218,6 +219,20 @@ public class OpalDialogSnippet {
 			}
 		});
 
+		final Button button14 = new Button(shell, SWT.PUSH);
+		button14.setText("Issue 29");
+		button14.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
+		button14.addSelectionListener(new SelectionAdapter() {
+
+			/**
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				testIssue29();
+			}
+		});
+
 		// Open the shell
 		shell.pack();
 		SWTGraphicUtil.centerShell(shell);
@@ -373,4 +388,15 @@ public class OpalDialogSnippet {
 		dialog.show();
 	}
 
+	private static void testIssue29() {
+		final Dialog d = new Dialog();
+		d.setCenterPolicy(Dialog.CenterOption.CENTER_ON_DIALOG);
+		d.setTitle("foo title");
+
+		d.getMessageArea().setTitle("aaaa").setText("bbbb");
+
+		d.getFooterArea().setButtonLabels(Arrays.asList("Don't Save please", "Cancel"));
+		d.show();
+
+	}
 }

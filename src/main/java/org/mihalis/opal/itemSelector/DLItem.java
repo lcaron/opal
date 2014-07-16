@@ -110,14 +110,14 @@ public class DLItem extends OpalItem {
 	/**
 	 * @return the last action (NONE, SELECTION, DESELECTION)
 	 */
-	LAST_ACTION getLastAction() {
+	public LAST_ACTION getLastAction() {
 		return this.lastAction;
 	}
 
 	/**
 	 * @param lastAction the last action performed on this DLItem
 	 */
-	void setLastAction(final LAST_ACTION lastAction) {
+	public void setLastAction(final LAST_ACTION lastAction) {
 		this.lastAction = lastAction;
 	}
 

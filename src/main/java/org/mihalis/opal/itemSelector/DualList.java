@@ -1327,6 +1327,9 @@ public class DualList extends Composite {
 			this.itemsTable.getColumn(0).setWidth(itemsTableSize);
 			this.selectionTable.getColumn(0).setWidth(selectionTableSize);
 		}
+
+		this.itemsTable.getColumn(0).pack();
+		this.selectionTable.getColumn(0).pack();
 	}
 
 	/**

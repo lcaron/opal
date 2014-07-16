@@ -45,7 +45,14 @@ public class PTIntegerEditor extends PTBaseTextEditor {
 	 */
 	@Override
 	public Object convertValue() {
-		return Integer.parseInt(this.text.getText());
+		int ret = 0;
+		try {
+			ret = Integer.parseInt(this.text.getText());
+		} catch (final NumberFormatException e) {
+			ret = 0;
+			this.text.setText("0");
+		}
+		return ret;
 	}
 
 	/**

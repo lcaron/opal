@@ -520,4 +520,16 @@ public class SWTGraphicUtil {
 		addDisposer(control, defaultColor);
 		return defaultColor;
 	}
+
+	/**
+	 * @param text 
+	 * @return the width of text
+	 */
+	public static int computeWidth(final String text) {
+		final GC gc = new GC(Display.getDefault());
+		final int width = gc.textExtent(text).x;
+		gc.dispose();
+		return width;
+	}
+
 }

@@ -142,8 +142,9 @@ public class FooterArea extends DialogArea {
 			button.setText(this.buttonLabels.get(i));
 
 			final GridData gd = new GridData(GridData.END, GridData.CENTER, i == 0, false);
-			gd.minimumWidth = BUTTON_WIDTH;
-			gd.widthHint = BUTTON_WIDTH;
+			final int defaultWidth = button.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+			gd.minimumWidth = Math.max(BUTTON_WIDTH, defaultWidth);
+			gd.widthHint = Math.max(BUTTON_WIDTH, defaultWidth);
 			button.setLayoutData(gd);
 
 			if (i == this.defaultButtonIndex) {

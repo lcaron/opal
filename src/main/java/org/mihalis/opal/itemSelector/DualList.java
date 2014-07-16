@@ -294,6 +294,7 @@ public class DualList extends Composite {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 		this.items.add(item);
+		this.redrawTables();
 	}
 
 	/**
@@ -330,6 +331,7 @@ public class DualList extends Composite {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		this.items.add(index, item);
+		this.redrawTables();
 	}
 
 	/**
@@ -471,17 +473,57 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void deselect(final int index) {
+		deselect(index, true);
+	}
+
+	/**
+	 * Deselects the item at the given zero-relative index in the receiver. If
+	 * the item at the index was already deselected, it remains deselected.
+	 * Indices that are out of range are ignored.
+	 * 
+	 * @param index the index of the item to deselect
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void deselectDoNotFireEvent(final int index) {
+		deselect(index, false);
+	}
+
+	/**
+	 * Deselects the item at the given zero-relative index in the receiver. If
+	 * the item at the index was already deselected, it remains deselected.
+	 * Indices that are out of range are ignored.
+	 * 
+	 * @param index the index of the item to deselect
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	private void deselect(final int index, final boolean shouldFireEvents) {
 		this.checkWidget();
 		if (index < 0 || index >= this.items.size()) {
 			return;
 		}
 		final DLItem item = this.selection.remove(index);
-		this.fireSelectionEvent(item);
+		if (shouldFireEvents) {
+			this.fireSelectionEvent(item);
+		}
 
 		final List<DLItem> deselectedItems = new ArrayList<DLItem>();
 		item.setLastAction(LAST_ACTION.DESELECTION);
 		deselectedItems.add(item);
-		this.fireSelectionChangeEvent(deselectedItems);
+		if (shouldFireEvents) {
+			this.fireSelectionChangeEvent(deselectedItems);
+		}
 		this.redrawTables();
 	}
 
@@ -505,6 +547,52 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void deselect(final int[] indices) {
+		deselect(indices, true);
+	}
+
+	/**
+	 * Deselects the items at the given zero-relative indices in the receiver.
+	 * If the item at the given zero-relative index in the receiver is selected,
+	 * it is deselected. If the item at the index was not selected, it remains
+	 * deselected. Indices that are out of range and duplicate indices are
+	 * ignored.
+	 * 
+	 * @param indices the array of indices for the items to deselect
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the set of indices is null</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void deselectDoNotFireEvent(final int[] indices) {
+		deselect(indices, false);
+	}
+
+	/**
+	 * Deselects the items at the given zero-relative indices in the receiver.
+	 * If the item at the given zero-relative index in the receiver is selected,
+	 * it is deselected. If the item at the index was not selected, it remains
+	 * deselected. Indices that are out of range and duplicate indices are
+	 * ignored.
+	 * 
+	 * @param indices the array of indices for the items to deselect
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the set of indices is null</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	private void deselect(final int[] indices, final boolean shouldFireEvents) {
 		this.checkWidget();
 		if (indices == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
@@ -521,7 +609,14 @@ public class DualList extends Composite {
 
 		for (final DLItem item : toBeRemoved) {
 			this.selection.remove(item);
+			if (shouldFireEvents) {
+				this.fireSelectionEvent(item);
+			}
 		}
+		if (shouldFireEvents) {
+			this.fireSelectionChangeEvent(toBeRemoved);
+		}
+
 		toBeRemoved.clear();
 		this.redrawTables();
 	}
@@ -547,6 +642,34 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void deselect(final int start, final int end) {
+		deselect(start, end, true);
+	}
+
+	/**
+	 * Deselects the items at the given zero-relative indices in the receiver.
+	 * If the item at the given zero-relative index in the receiver is selected,
+	 * it is deselected. If the item at the index was not selected, it remains
+	 * deselected. The range of the indices is inclusive. Indices that are out
+	 * of range are ignored.
+	 * 
+	 * @param start the start index of the items to deselect
+	 * @param end the end index of the items to deselect
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_INVALID_RANGE - if start is greater than end</li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void deselectDoNotFireEvent(final int start, final int end) {
+		deselect(start, end, false);
+	}
+
+	private void deselect(final int start, final int end, final boolean shouldFireEvents) {
 		this.checkWidget();
 		if (start > end) {
 			SWT.error(SWT.ERROR_INVALID_RANGE);
@@ -562,6 +685,12 @@ public class DualList extends Composite {
 
 		for (final DLItem item : toBeRemoved) {
 			this.selection.remove(item);
+			if (shouldFireEvents) {
+				this.fireSelectionEvent(item);
+			}
+		}
+		if (shouldFireEvents) {
+			this.fireSelectionChangeEvent(toBeRemoved);
 		}
 		toBeRemoved.clear();
 		this.redrawTables();
@@ -578,6 +707,34 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void deselectAll() {
+		deselectAll(true);
+	}
+
+	/**
+	 * Deselects all selected items in the receiver.
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void deselectAllDoNotFireEvent() {
+		deselectAll(false);
+	}
+
+	/**
+	 * Deselects all selected items in the receiver.
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void deselectAll(final boolean shouldFireEvents) {
 		this.checkWidget();
 		this.items.addAll(this.selection);
 
@@ -585,6 +742,9 @@ public class DualList extends Composite {
 		for (final DLItem item : this.selection) {
 			item.setLastAction(LAST_ACTION.DESELECTION);
 			deselectedItems.add(item);
+			if (shouldFireEvents) {
+				this.fireSelectionEvent(item);
+			}
 		}
 		fireSelectionChangeEvent(deselectedItems);
 
@@ -891,6 +1051,28 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void select(final int index) {
+		select(index, true);
+	}
+
+	/**
+	 * Selects the item at the given zero-relative index in the receiver's list.
+	 * If the item at the index was already selected, it remains selected.
+	 * Indices that are out of range are ignored.
+	 * 
+	 * @param index the index of the item to select
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void selectDoNotFireEvent(final int index) {
+		select(index, false);
+	}
+
+	private void select(final int index, final boolean shouldFireEvents) {
 		this.checkWidget();
 		if (index < 0 || index >= this.items.size()) {
 			return;
@@ -900,8 +1082,12 @@ public class DualList extends Composite {
 		item.setLastAction(LAST_ACTION.SELECTION);
 		selectedItems.add(item);
 		this.selection.add(item);
-		this.fireSelectionEvent(item);
-		fireSelectionChangeEvent(selectedItems);
+
+		if (shouldFireEvents) {
+			this.fireSelectionEvent(item);
+			fireSelectionChangeEvent(selectedItems);
+		}
+
 		this.redrawTables();
 	}
 
@@ -928,6 +1114,36 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void select(final int[] indices) {
+		select(indices, true);
+	}
+
+	/**
+	 * Selects the items at the given zero-relative indices in the receiver. The
+	 * current selection is not cleared before the new items are selected.
+	 * <p>
+	 * If the item at a given index is not selected, it is selected. If the item
+	 * at a given index was already selected, it remains selected. Indices that
+	 * are out of range and duplicate indices are ignored. If the receiver is
+	 * single-select and multiple indices are specified, then all indices are
+	 * ignored.
+	 * 
+	 * @param indices the array of indices for the items to select
+	 * 
+	 * @exception IllegalArgumentException <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the array of indices is null
+	 *                </li>
+	 *                </ul>
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
+	 *                called from the thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void selectDoNotFireEvent(final int[] indices) {
+		select(indices, false);
+	}
+
+	private void select(final int[] indices, final boolean shouldFireEvents) {
 		this.checkWidget();
 		if (indices == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
@@ -943,9 +1159,13 @@ public class DualList extends Composite {
 			selectedItems.add(item);
 
 			this.selection.add(item);
-			this.fireSelectionEvent(item);
+			if (shouldFireEvents) {
+				this.fireSelectionEvent(item);
+			}
 		}
-		fireSelectionChangeEvent(selectedItems);
+		if (shouldFireEvents) {
+			fireSelectionChangeEvent(selectedItems);
+		}
 		this.redrawTables();
 	}
 
@@ -972,6 +1192,36 @@ public class DualList extends Composite {
 	 * @see List#setSelection(int,int)
 	 */
 	public void select(final int start, final int end) {
+		select(start, end, true);
+	}
+
+	/**
+	 * Selects the items in the range specified by the given zero-relative
+	 * indices in the receiver. The range of indices is inclusive. The current
+	 * selection is not cleared before the new items are selected.
+	 * <p>
+	 * If an item in the given range is not selected, it is selected. If an item
+	 * in the given range was already selected, it remains selected. Indices
+	 * that are out of range are ignored and no items will be selected if start
+	 * is greater than end. If the receiver is single-select and there is more
+	 * than one item in the given range, then all indices are ignored.
+	 * 
+	 * @param start the start of the range
+	 * @param end the end of the range
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
+	 *                called from the thread that created the receiver</li>
+	 *                </ul>
+	 * 
+	 * @see List#setSelection(int,int)
+	 */
+	public void selectDoNotFireEvent(final int start, final int end) {
+		select(start, end, false);
+	}
+
+	private void select(final int start, final int end, final boolean shouldFireEvents) {
 		this.checkWidget();
 		if (start > end) {
 			SWT.error(SWT.ERROR_INVALID_RANGE);
@@ -985,9 +1235,13 @@ public class DualList extends Composite {
 			item.setLastAction(LAST_ACTION.SELECTION);
 			selectedItems.add(item);
 			this.selection.add(item);
-			this.fireSelectionEvent(item);
+			if (shouldFireEvents) {
+				this.fireSelectionEvent(item);
+			}
 		}
-		fireSelectionChangeEvent(selectedItems);
+		if (shouldFireEvents) {
+			fireSelectionChangeEvent(selectedItems);
+		}
 		this.redrawTables();
 	}
 
@@ -1003,19 +1257,41 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void selectAll() {
+		selectAll(true);
+	}
+
+	/**
+	 * Selects all of the items in the receiver.
+	 * <p>
+	 * If the receiver is single-select, do nothing.
+	 * 
+	 * @exception SWTException <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
+	 *                called from the thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void selectAllDoNotFireEvent() {
+		selectAll(false);
+	}
+
+	private void selectAll(final boolean shouldFireEvents) {
 		this.checkWidget();
 		this.selection.addAll(this.items);
-		for (final DLItem item : this.items) {
-			this.fireSelectionEvent(item);
+		if (shouldFireEvents) {
+			for (final DLItem item : this.items) {
+				this.fireSelectionEvent(item);
+			}
 		}
 
-		final List<DLItem> selectedItems = new ArrayList<DLItem>();
-		for (final DLItem item : this.items) {
-			item.setLastAction(LAST_ACTION.SELECTION);
-			selectedItems.add(item);
+		if (shouldFireEvents) {
+			final List<DLItem> selectedItems = new ArrayList<DLItem>();
+			for (final DLItem item : this.items) {
+				item.setLastAction(LAST_ACTION.SELECTION);
+				selectedItems.add(item);
+			}
+			fireSelectionChangeEvent(selectedItems);
 		}
-		fireSelectionChangeEvent(selectedItems);
-
 		this.items.clear();
 		this.redrawTables();
 	}

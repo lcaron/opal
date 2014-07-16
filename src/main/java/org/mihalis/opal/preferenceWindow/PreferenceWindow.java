@@ -57,7 +57,7 @@ public class PreferenceWindow {
 		this.values = new HashMap<String, ValueAndAssociatedWidgets>(values.size());
 
 		for (final Entry<String, Object> entry : values.entrySet()) {
-			values.put(entry.getKey(), entry.getValue());
+			this.values.put(entry.getKey(), new ValueAndAssociatedWidgets(entry.getValue()));
 		}
 
 		this.tabs = new ArrayList<PWTab>();
@@ -173,9 +173,9 @@ public class PreferenceWindow {
 		gridLayout.marginWidth = gridLayout.marginHeight = 0;
 		gridLayout.horizontalSpacing = gridLayout.verticalSpacing = 0;
 		this.shell.setLayout(gridLayout);
-		container = new PWTabContainer(this.shell, SWT.NONE, this.tabs);
-		container.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 2, 1));
-		container.build();
+		this.container = new PWTabContainer(this.shell, SWT.NONE, this.tabs);
+		this.container.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 2, 1));
+		this.container.build();
 
 		final Label sep = new Label(this.shell, SWT.SEPARATOR | SWT.HORIZONTAL);
 		sep.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 2, 1));
@@ -255,7 +255,7 @@ public class PreferenceWindow {
 	 * @return the selected tab
 	 */
 	public int getSelectedTab() {
-		return selectedTab;
+		return this.selectedTab;
 	}
 
 	/**
@@ -301,9 +301,9 @@ public class PreferenceWindow {
 	 */
 	public void setSelectedTab(final int selectedTab) {
 		this.selectedTab = selectedTab;
-		if (container != null) {
-			container.redraw();
-			container.update();
+		if (this.container != null) {
+			this.container.redraw();
+			this.container.update();
 		}
 	}
 

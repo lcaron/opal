@@ -138,7 +138,7 @@ public class PTWidgetTree extends AbstractPTWidget {
 			for (final PTProperty p : entry.getValue()) {
 				final TreeItem item = new TreeItem(root, SWT.NONE);
 				item.setData(p);
-				item.setText(0, StringUtil.safeToString(p.getName()));
+				item.setText(0, StringUtil.safeToString(p.getDisplayName()));
 				if (p.getEditor() == null) {
 					p.setEditor(new PTStringEditor());
 				}

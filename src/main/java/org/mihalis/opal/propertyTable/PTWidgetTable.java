@@ -136,7 +136,7 @@ class PTWidgetTable extends AbstractPTWidget {
 		for (final PTProperty p : props) {
 			final TableItem item = new TableItem(this.table, SWT.NONE);
 			item.setData(p);
-			item.setText(0, StringUtil.safeToString(p.getName()));
+			item.setText(0, StringUtil.safeToString(p.getDisplayName()));
 			if (p.getEditor() == null) {
 				p.setEditor(new PTStringEditor());
 			}

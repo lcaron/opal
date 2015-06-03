@@ -10,7 +10,7 @@ All this code is covered by the Eclipse Public Licence.
 
 # Author #
 
-My name is Laurent CARON, I'm a 37 years old developer, specialized in Java Technology.
+My name is Laurent CARON, I'm a 40 years old developer, specialized in Java Technology.
 This project is just for fun, to play with SWT :)
 
 # Committer #

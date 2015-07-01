@@ -1,0 +1,67 @@
+# opal
+Main repository for the Opal Project (SWT new widgets library)
+
+The goal of this project is to propose new widgets for the SWT API.
+Some widgets are new, some others are a port of existing widgets made with Swing.
+
+# V1.0.1 is out
+Version 1.0.1 is ready. You can download 
+* the jar library at https://drive.google.com/file/d/0BxckedW58_H5SlRZTGQyVV8zVEU/edit?usp=sharing
+* the source code at https://drive.google.com/file/d/0BxckedW58_H5RkVsMDJ6a3h6V0k/edit?usp=sharing
+* the OSGI bundle at https://drive.google.com/file/d/0BxckedW58_H5dUZKY0J2b3pwRWc/edit?usp=sharing
+
+# Important notice
+
+The SWT library in the project is the Windows 64-bit version. Please replace the swt.jar file by the appropriate one !
+
+# The widgets
+
+Currently Opal contains the following widgets :
+* __Multichoice__, a tool to select items.
+* __TextAssist__, an improved Text widget with auto-completion
+* __AngleSlider__, a angle picker
+* __Brushed Metal Composite__, a composite that displays a brushed metal texture "à la mac"
+* __Dual List__, a widget allows the user to select one or many elements, and order them.
+* __Infinite progress panel__, a widget that displays an animation during long task operations
+* __Switch button__, another look for checkboxes
+* __Gradient composite__, a composite that displays a gradient in its background.
+* __Image Selector__, a fancy image selector, 
+* __Dialog box__, a trivial Task Dialog API for SWT 
+* __Horizontal Spinner__, a horizontal spinner
+* __Panels__, 2 panels to make your forms nicer
+* __CheckBoxGroup__, a group with a checkbox. When one clicks on the checkbox, the whole content of the group is deactivated.
+* __HeapManager__, a widget that displays the available heap size, the current heap size and a button to perform a Garbage Collecting.
+* __ColumnBrowser__, a widget that displays a tree structure "a la mac" in miller columns.
+* __Launcher__, a widget used to launch applications, modules or anything, with a simple and fancy zoom effect
+* __Header__,a widget that displays a header, composed of a title, an image and a description.
+* __Titled Separator__, an enhanced separator, with a title and/or an image.
+* __LoginDialog__, a component to authentify users.
+* __Tip of the Day__, a window that displays the tip of the day.
+* __Preference Window__, an easy-to-build window that can be used to set up preferences.
+* __Range Slider__, a slider that allow the user to select a range
+* __Prompt Support__, an utility class to add a Prompt to Text and Combo widgets !
+* __Transition Composite__, a widget that display controls like "pages" and manage transitions between each page.
+* __Property Table__, a widget to edit properties. Each property is given a name, a type, a description.
+* __DynamicTableColumns__ an enhanced table that allow you to set width by using pixels or percentages.
+* __Notifier__ a toaster to notify the user
+* __SystemMonitor__ a widget to monitor some aspects of your system and application.
+* __Calculator__ a widget that displays a Calculator or a Calculator Combo.
+* __RoundedToolbar__ a widget that displays a rounded toolbar.
+* __StarRating__ a widget that displays a star rating component.
+* __Breadcrumb__ a widget that displays a bread crumb.
+* __OButton__ a widget that displays a custom button (Push,Toggle or Arrow).
+
+
+# Download
+All releases are hosted on Google Drive : https://drive.google.com/folderview?id=0BxckedW58_H5WTdQV05samZVRUE&usp=sharing
+
+
+# Support the project on Facebook
+
+http://www.facebook.com/eclipse.org/posts/273985562641654
+
+Thanks to the eclipse.org team for the link to Opal :)
+
+# We need you !
+
+Do you have coded extra widgets ? You have tested Opal on Linux and MacOS ? You speak German, Spanish, Italian, Polish, Chinese, Portuguese ? Please help us and make Opal better ! Contact us with Google Groups !

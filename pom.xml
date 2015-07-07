@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>opal</groupId>
   <artifactId>opal</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <name>Opal</name>
   <description>A set of SWT widgets</description>
 <repositories>
@@ -33,5 +33,5 @@
       </plugin>
     </plugins>
   </build>
-  <url>http://code.google.com/a/eclipselabs.org/p/opal/</url>
+  <url>https://github.com/lcaron/opal</url>
 </project>

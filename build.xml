@@ -46,7 +46,7 @@
 		<copy todir="${exportsrc.dir}">
 			<fileset dir=".">
 				<include name=".classpath"/>
-				<include name=".hgignore"/>
+				<include name=".gitignore"/>
 				<include name=".project"/>
 				<include name="build.xml"/>
 				<include name="pom.xml"/>

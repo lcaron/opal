@@ -4,11 +4,11 @@ Main repository for the Opal Project (SWT new widgets library)
 The goal of this project is to propose new widgets for the SWT API.
 Some widgets are new, some others are a port of existing widgets made with Swing.
 
-# V1.0.1 is out
-Version 1.0.1 is ready. You can download 
-* the jar library at https://drive.google.com/file/d/0BxckedW58_H5SlRZTGQyVV8zVEU/edit?usp=sharing
-* the source code at https://drive.google.com/file/d/0BxckedW58_H5RkVsMDJ6a3h6V0k/edit?usp=sharing
-* the OSGI bundle at https://drive.google.com/file/d/0BxckedW58_H5dUZKY0J2b3pwRWc/edit?usp=sharing
+# V1.0.2 is out
+Version 1.0.2 is ready. It contains bug fixes and few enhancements. You can download 
+* the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2.jar](https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2.jar)
+* the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-src.zip](https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-src.zip)
+* the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-plugin.jar](https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-plugin.jar)
 
 # Important notice
 

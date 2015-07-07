@@ -18,6 +18,8 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -126,6 +128,27 @@ public class SwitchButtonSnippet {
 		button11.setBackground(display.getSystemColor(SWT.COLOR_YELLOW));
 		button11.setForeground(display.getSystemColor(SWT.COLOR_RED));
 		button11.setText("And now for something completely different");
+
+		// Change margins
+		final SwitchButton button12 = new SwitchButton(shell, SWT.NONE);
+		button12.setInsideMargin(8, 2);
+		button12.setText("With bigger margins and arc");
+		button12.setArc(4);
+
+		// Register listener via Widget
+		final SwitchButton button13 = new SwitchButton(shell, SWT.NONE);
+		button13.setTextForSelect("  ");
+		button13.setTextForUnselect("  ");
+		button13.setInsideMargin(8, 2);
+		button13.setFocusColor(null);
+		button13.setText("No text, Using low level SWT observer functions");
+		button13.addListener(SWT.Selection, new Listener() {
+
+			@Override
+			public void handleEvent(final Event event) {
+				event.display.beep();
+			}
+		});
 
 		shell.pack();
 		shell.open();

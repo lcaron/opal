@@ -98,12 +98,22 @@ public class SwitchButton extends Canvas {
 	/**
 	 * Gap between the button and the text (default value is 5)
 	 */
-	private int gap;
+	private int gap = 5;
 
 	/**
-	 * Margin inside the button
+	 * Margin inside the button (default is 5)
 	 */
-	private static final int INSIDE_BUTTON_MARGIN = 5;
+	private int insideMarginX = 5;
+
+	/**
+	 * Margin inside the button (default is 5)
+	 */
+	private int insideMarginY = 5;
+
+	/**
+	 * Arc of rounded rectangles (default is 3)
+	 */
+	private int arc = 3;
 
 	/**
 	 * Graphical context for this button
@@ -131,49 +141,50 @@ public class SwitchButton extends Canvas {
 	 * style constants. The class description lists the style constants that are
 	 * applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
-	 * 
+	 *
 	 * @param parent a composite control which will be the parent of the new
 	 *            instance (cannot be null)
 	 * @param style the style of control to construct
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public SwitchButton(final Composite parent, final int style) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 
-		this.selection = false;
-		this.textForSelect = "On";
-		this.textForUnselect = "Off";
-		this.round = true;
-		this.borderColor = null;
-		this.focusColor = this.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
-		this.selectedForegroundColor = this.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		this.selectedBackgroundColor = SWTGraphicUtil.getDefaultColor(this, 0, 112, 195);
-		this.unselectedForegroundColor = this.getDisplay().getSystemColor(SWT.COLOR_BLACK);
-		this.unselectedBackgroundColor = SWTGraphicUtil.getDefaultColor(this, 203, 203, 203);
-		this.buttonBorderColor = SWTGraphicUtil.getDefaultColor(this, 96, 96, 96);
-		this.buttonBackgroundColor1 = SWTGraphicUtil.getDefaultColor(this, 254, 254, 254);
-		this.buttonBackgroundColor2 = SWTGraphicUtil.getDefaultColor(this, 192, 192, 192);
+		selection = false;
+		text = "";
+		textForSelect = "On";
+		textForUnselect = "Off";
+		round = true;
+		borderColor = null;
+		focusColor = getDisplay().getSystemColor(SWT.COLOR_YELLOW);
+		selectedForegroundColor = getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		selectedBackgroundColor = SWTGraphicUtil.getDefaultColor(this, 0, 112, 195);
+		unselectedForegroundColor = getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		unselectedBackgroundColor = SWTGraphicUtil.getDefaultColor(this, 203, 203, 203);
+		buttonBorderColor = SWTGraphicUtil.getDefaultColor(this, 96, 96, 96);
+		buttonBackgroundColor1 = SWTGraphicUtil.getDefaultColor(this, 254, 254, 254);
+		buttonBackgroundColor2 = SWTGraphicUtil.getDefaultColor(this, 192, 192, 192);
 
-		this.gap = 5;
+		listOfSelectionListeners = new ArrayList<SelectionListener>();
 
-		this.listOfSelectionListeners = new ArrayList<SelectionListener>();
-
-		this.addPaintListener(new PaintListener() {
+		addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(final PaintEvent event) {
 				SwitchButton.this.onPaint(event);
 			}
 		});
 
-		this.addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 
 			/**
 			 * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
@@ -181,31 +192,36 @@ public class SwitchButton extends Canvas {
 			@Override
 			public void mouseUp(final MouseEvent e) {
 				if (SwitchButton.this.fireSelectionListeners(e)) {
-					SwitchButton.this.selection = !SwitchButton.this.selection;
+					selection = !selection;
 					SwitchButton.this.redraw();
+
+					// notify listeners that were registered via
+					// Widget#addListener
+					SwitchButton.this.notifyListeners(SWT.Selection, new Event());
+
 				}
 			}
 
 		});
 
-		this.mouseInside = false;
-		this.addMouseTrackListener(new MouseTrackListener() {
+		mouseInside = false;
+		addMouseTrackListener(new MouseTrackListener() {
 
 			@Override
 			public void mouseHover(final MouseEvent e) {
-				SwitchButton.this.mouseInside = true;
+				mouseInside = true;
 				SwitchButton.this.redraw();
 			}
 
 			@Override
 			public void mouseExit(final MouseEvent e) {
-				SwitchButton.this.mouseInside = false;
+				mouseInside = false;
 				SwitchButton.this.redraw();
 			}
 
 			@Override
 			public void mouseEnter(final MouseEvent e) {
-				SwitchButton.this.mouseInside = true;
+				mouseInside = true;
 				SwitchButton.this.redraw();
 			}
 		});
@@ -214,116 +230,117 @@ public class SwitchButton extends Canvas {
 
 	/**
 	 * Paint the widget
-	 * 
+	 *
 	 * @param event paint event
 	 */
 	private void onPaint(final PaintEvent event) {
-		final Rectangle rect = this.getClientArea();
+		final Rectangle rect = getClientArea();
 		if (rect.width == 0 || rect.height == 0) {
 			return;
 		}
-		this.gc = event.gc;
-		this.gc.setAntialias(SWT.ON);
+		gc = event.gc;
+		gc.setAntialias(SWT.ON);
 
-		final Point buttonSize = this.computeButtonSize();
-		this.drawSwitchButton(buttonSize);
-		this.drawText(buttonSize);
+		final Point buttonSize = computeButtonSize();
+		drawSwitchButton(buttonSize);
+		drawText(buttonSize);
 
-		if (this.borderColor != null) {
-			this.drawBorder();
+		if (borderColor != null) {
+			drawBorder();
 		}
 
 	}
 
 	/**
 	 * Draw the switch button
-	 * 
+	 *
 	 * @param buttonSize size of the button
 	 */
 	private void drawSwitchButton(final Point buttonSize) {
 		// Draw the background of the button
-		this.gc.setForeground(this.buttonBorderColor);
-		if (this.round) {
-			this.gc.drawRoundRectangle(2, 2, buttonSize.x, buttonSize.y, 3, 3);
+		gc.setForeground(buttonBorderColor);
+		if (round) {
+			gc.drawRoundRectangle(2, 2, buttonSize.x, buttonSize.y, arc, arc);
 		} else {
-			this.gc.drawRectangle(2, 2, buttonSize.x, buttonSize.y);
+			gc.drawRectangle(2, 2, buttonSize.x, buttonSize.y);
 		}
 
-		this.drawRightPart(buttonSize);
-		this.drawLeftPart(buttonSize);
-		this.gc.setClipping(this.getClientArea());
-		this.drawToggleButton(buttonSize);
+		drawRightPart(buttonSize);
+		drawLeftPart(buttonSize);
+		gc.setClipping(getClientArea());
+		drawToggleButton(buttonSize);
 	}
 
 	/**
 	 * Draw the right part of the button
-	 * 
+	 *
 	 * @param buttonSize size of the button
 	 */
 	private void drawRightPart(final Point buttonSize) {
-		this.gc.setForeground(this.selectedBackgroundColor);
-		this.gc.setBackground(this.selectedBackgroundColor);
-		this.gc.setClipping(3, 3, buttonSize.x / 2, buttonSize.y - 1);
-		if (this.round) {
-			this.gc.fillRoundRectangle(2, 2, buttonSize.x, buttonSize.y, 3, 3);
+		gc.setForeground(selectedBackgroundColor);
+		gc.setBackground(selectedBackgroundColor);
+		gc.setClipping(3, 3, buttonSize.x / 2, buttonSize.y - 1);
+		if (round) {
+			gc.fillRoundRectangle(2, 2, buttonSize.x, buttonSize.y, arc, arc);
 		} else {
-			this.gc.fillRectangle(2, 2, buttonSize.x, buttonSize.y);
+			gc.fillRectangle(2, 2, buttonSize.x, buttonSize.y);
 		}
-		this.gc.setForeground(this.selectedForegroundColor);
-		final Point textSize = this.gc.textExtent(this.textForSelect);
-		this.gc.drawString(this.textForSelect, (buttonSize.x / 2 - textSize.x) / 2 + 3, (buttonSize.y - textSize.y) / 2 + 3);
+		gc.setForeground(selectedForegroundColor);
+		final Point textSize = gc.textExtent(textForSelect);
+		gc.drawString(textForSelect, (buttonSize.x / 2 - textSize.x) / 2 + arc, (buttonSize.y - textSize.y) / 2 + arc);
 	}
 
 	/**
 	 * Draw the left part of the button
-	 * 
+	 *
 	 * @param buttonSize size of the button
 	 */
 	private void drawLeftPart(final Point buttonSize) {
-		this.gc.setForeground(this.unselectedBackgroundColor);
-		this.gc.setBackground(this.unselectedBackgroundColor);
-		this.gc.setClipping(buttonSize.x / 2 + 3, 3, buttonSize.x / 2, buttonSize.y - 1);
-		if (this.round) {
-			this.gc.fillRoundRectangle(2, 2, buttonSize.x, buttonSize.y, 3, 3);
+		gc.setForeground(unselectedBackgroundColor);
+		gc.setBackground(unselectedBackgroundColor);
+		gc.setClipping(buttonSize.x / 2 + 3, 3, buttonSize.x / 2, buttonSize.y - 1);
+		if (round) {
+			gc.fillRoundRectangle(2, 2, buttonSize.x, buttonSize.y, arc, arc);
 		} else {
-			this.gc.fillRectangle(2, 2, buttonSize.x, buttonSize.y);
+			gc.fillRectangle(2, 2, buttonSize.x, buttonSize.y);
 		}
-		this.gc.setForeground(this.unselectedForegroundColor);
-		final Point textSize = this.gc.textExtent(this.textForUnselect);
+		gc.setForeground(unselectedForegroundColor);
+		final Point textSize = gc.textExtent(textForUnselect);
 
-		this.gc.drawString(this.textForUnselect, buttonSize.x / 2 + (buttonSize.x / 2 - textSize.x) / 2 + 3, (buttonSize.y - textSize.y) / 2 + 3);
+		gc.drawString(textForUnselect, buttonSize.x / 2 + (buttonSize.x / 2 - textSize.x) / 2 + arc, //
+				(buttonSize.y - textSize.y) / 2 + arc);
 	}
 
 	/**
 	 * Draw the toggle button
-	 * 
+	 *
 	 * @param buttonSize size of the button
 	 */
 	private void drawToggleButton(final Point buttonSize) {
-		this.gc.setForeground(this.buttonBackgroundColor1);
-		this.gc.setBackground(this.buttonBackgroundColor2);
-		if (this.selection) {
-			this.gc.fillGradientRectangle(3, 3, buttonSize.x / 2, buttonSize.y, true);
+		gc.setForeground(buttonBackgroundColor1);
+		gc.setBackground(buttonBackgroundColor2);
+		if (selection) {
+			gc.fillGradientRectangle(arc, arc, buttonSize.x / 2, buttonSize.y, true);
 		} else {
-			this.gc.fillGradientRectangle(buttonSize.x / 2, 3, buttonSize.x / 2 + 2, buttonSize.y - 1, true);
+			gc.fillGradientRectangle(buttonSize.x / 2, arc, buttonSize.x / 2 + 2, buttonSize.y - 1, true);
 		}
 
-		this.gc.setForeground(this.buttonBorderColor);
-		if (this.selection) {
-			this.gc.drawRoundRectangle(2, 2, buttonSize.x / 2, buttonSize.y, 3, 3);
+		gc.setForeground(buttonBorderColor);
+		if (selection) {
+			gc.drawRoundRectangle(2, 2, buttonSize.x / 2, buttonSize.y, arc, arc);
 		} else {
-			this.gc.drawRoundRectangle(buttonSize.x / 2, 2, buttonSize.x / 2 + 2, buttonSize.y, 3, 3);
+			gc.drawRoundRectangle(buttonSize.x / 2, 2, buttonSize.x / 2 + 2, buttonSize.y, arc, arc);
 		}
 
-		if (this.focusColor != null && this.mouseInside) {
-			this.gc.setForeground(this.focusColor);
-			this.gc.setLineWidth(2);
-			if (this.selection) {
-				this.gc.drawRoundRectangle(3, 3, buttonSize.x / 2, buttonSize.y - 1, 3, 3);
+		if (focusColor != null && mouseInside) {
+			gc.setForeground(focusColor);
+			gc.setLineWidth(2);
+			if (selection) {
+				gc.drawRoundRectangle(3, 3, buttonSize.x / 2, buttonSize.y - 1, 3, 3);
 			} else {
-				this.gc.drawRoundRectangle(buttonSize.x / 2 + 1, 3, buttonSize.x / 2, buttonSize.y - 2, 3, 3);
+				gc.drawRoundRectangle(buttonSize.x / 2 + 1, 3, buttonSize.x / 2, buttonSize.y - 2, 3, 3);
 			}
-			this.gc.setLineWidth(1);
+			gc.setLineWidth(1);
 		}
 
 	}
@@ -333,63 +350,63 @@ public class SwitchButton extends Canvas {
 	 */
 	private Point computeButtonSize() {
 		// Compute size for the left part
-		final Point sizeForLeftPart = this.gc.stringExtent(this.textForSelect);
+		final Point sizeForLeftPart = gc.stringExtent(textForSelect);
 		// Compute size for the right part
-		final Point sizeForRightPart = this.gc.stringExtent(this.textForUnselect);
+		final Point sizeForRightPart = gc.stringExtent(textForUnselect);
 
 		// Compute whole size
-		final int width = Math.max(sizeForLeftPart.x, sizeForRightPart.x) * 2 + 2 * INSIDE_BUTTON_MARGIN;
-		final int height = Math.max(sizeForLeftPart.y, sizeForRightPart.y) + 2 * INSIDE_BUTTON_MARGIN;
+		final int width = Math.max(sizeForLeftPart.x, sizeForRightPart.x) * 2 + 2 * insideMarginX;
+		final int height = Math.max(sizeForLeftPart.y, sizeForRightPart.y) + 2 * insideMarginY;
 
 		return new Point(width, height);
 	}
 
 	/**
 	 * Draws the text besides the button
-	 * 
+	 *
 	 * @param buttonSize whole size of the button
 	 */
 	private void drawText(final Point buttonSize) {
-		this.gc.setForeground(this.getForeground());
-		this.gc.setBackground(this.getBackground());
+		gc.setForeground(getForeground());
+		gc.setBackground(getBackground());
 
 		final int widgetHeight = this.computeSize(0, 0, true).y;
-		final int textHeight = this.gc.stringExtent(this.text).y;
-		final int x = 2 + buttonSize.x + this.gap;
+		final int textHeight = gc.stringExtent(text).y;
+		final int x = 2 + buttonSize.x + gap;
 
-		this.gc.drawString(this.text, x, (widgetHeight - textHeight) / 2);
+		gc.drawString(text, x, (widgetHeight - textHeight) / 2);
 	}
 
 	/**
 	 * Draw (eventually) the border around the button
 	 */
 	private void drawBorder() {
-		if (this.borderColor == null) {
+		if (borderColor == null) {
 			return;
 		}
 
-		this.gc.setForeground(this.borderColor);
+		gc.setForeground(borderColor);
 		final Point temp = this.computeSize(0, 0, false);
-		if (this.round) {
-			this.gc.drawRoundRectangle(0, 0, temp.x - 2, temp.y - 2, 3, 3);
+		if (round) {
+			gc.drawRoundRectangle(0, 0, temp.x - 2, temp.y - 2, 3, 3);
 		} else {
-			this.gc.drawRectangle(0, 0, temp.x - 2, temp.y - 2);
+			gc.drawRectangle(0, 0, temp.x - 2, temp.y - 2);
 		}
 
 	}
 
 	/**
 	 * Fire the selection listeners
-	 * 
+	 *
 	 * @param mouseEvent mouse event
 	 * @return true if the selection could be changed, false otherwise
 	 */
 	private boolean fireSelectionListeners(final MouseEvent mouseEvent) {
-		for (final SelectionListener listener : this.listOfSelectionListeners) {
+		for (final SelectionListener listener : listOfSelectionListeners) {
 			final Event event = new Event();
 
 			event.button = mouseEvent.button;
-			event.display = this.getDisplay();
+			event.display = getDisplay();
 			event.item = null;
 			event.widget = this;
 			event.data = null;
@@ -414,56 +431,60 @@ public class SwitchButton extends Canvas {
 	 * <code>widgetSelected</code> is called when the control is selected by the
 	 * user. <code>widgetDefaultSelected</code> is not called.
 	 * </p>
-	 * 
+	 *
 	 * @param listener the listener which should be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see SelectionListener
 	 * @see #removeSelectionListener
 	 * @see SelectionEvent
 	 */
 	public void addSelectionListener(final SelectionListener listener) {
-		this.checkWidget();
+		checkWidget();
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		this.listOfSelectionListeners.add(listener);
+		listOfSelectionListeners.add(listener);
 	}
 
 	/**
 	 * Removes the listener from the collection of listeners who will be
 	 * notified when the control is selected by the user.
-	 * 
+	 *
 	 * @param listener the listener which should no longer be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see SelectionListener
 	 * @see #addSelectionListener
 	 */
 	public void removeSelectionListener(final SelectionListener listener) {
-		this.checkWidget();
+		checkWidget();
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		this.listOfSelectionListeners.remove(listener);
+		listOfSelectionListeners.remove(listener);
 	}
 
 	/**
@@ -471,27 +492,27 @@ public class SwitchButton extends Canvas {
 	 */
 	@Override
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
-		this.checkWidget();
+		checkWidget();
 		boolean disposeGC = false;
-		if (this.gc == null || this.gc.isDisposed()) {
-			this.gc = new GC(this);
+		if (gc == null || gc.isDisposed()) {
+			gc = new GC(this);
 			disposeGC = true;
 		}
 
-		final Point buttonSize = this.computeButtonSize();
+		final Point buttonSize = computeButtonSize();
 		int width = buttonSize.x;
 		int height = buttonSize.y;
 
-		if (this.text != null && this.text.trim().length() > 0) {
-			final Point textSize = this.gc.textExtent(this.text);
-			width += textSize.x + this.gap + 1;
+		if (text != null && text.trim().length() > 0) {
+			final Point textSize = gc.textExtent(text);
+			width += textSize.x + gap + 1;
 		}
 
 		width += 4;
 		height += 6;
 
 		if (disposeGC) {
-			this.gc.dispose();
+			gc.dispose();
 		}
 
 		return new Point(width, height);
@@ -499,7 +520,8 @@ public class SwitchButton extends Canvas {
 
 	/**
 	 * @return the selection state of the button
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -507,13 +529,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public boolean getSelection() {
-		this.checkWidget();
-		return this.selection;
+		checkWidget();
+		return selection;
 	}
 
 	/**
 	 * @param selection the selection state of the button
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -521,13 +544,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setSelection(final boolean selection) {
-		this.checkWidget();
+		checkWidget();
 		this.selection = selection;
 	}
 
 	/**
 	 * @return the text used to display the selection
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -535,13 +559,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public String getTextForSelect() {
-		this.checkWidget();
-		return this.textForSelect;
+		checkWidget();
+		return textForSelect;
 	}
 
 	/**
 	 * @param textForSelect the text used to display the selection
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -549,13 +574,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setTextForSelect(final String textForSelect) {
-		this.checkWidget();
+		checkWidget();
 		this.textForSelect = textForSelect;
 	}
 
 	/**
 	 * @return the text used to display the unselected option
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -563,13 +589,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public String getTextForUnselect() {
-		this.checkWidget();
-		return this.textForUnselect;
+		checkWidget();
+		return textForUnselect;
 	}
 
 	/**
 	 * @param textForUnselect the text used to display the unselected option
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -577,13 +604,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setTextForUnselect(final String textForUnselect) {
-		this.checkWidget();
+		checkWidget();
 		this.textForUnselect = textForUnselect;
 	}
 
 	/**
 	 * @return the text displayed in the widget
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -591,13 +619,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public String getText() {
-		this.checkWidget();
-		return this.text;
+		checkWidget();
+		return text;
 	}
 
 	/**
 	 * @param the text displayed in the widget
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -605,13 +634,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setText(final String text) {
-		this.checkWidget();
+		checkWidget();
 		this.text = text;
 	}
 
 	/**
 	 * @return the round flag
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -619,14 +649,15 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public boolean isRound() {
-		this.checkWidget();
-		return this.round;
+		checkWidget();
+		return round;
 	}
 
 	/**
 	 * @param round the round flag to set. If true, the widget is composed of
 	 *            round rectangle instead of rectangles
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -634,13 +665,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setRound(final boolean round) {
-		this.checkWidget();
+		checkWidget();
 		this.round = round;
 	}
 
 	/**
 	 * @return the border's color. If null, no border is displayed
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -648,13 +680,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getBorderColor() {
-		this.checkWidget();
-		return this.borderColor;
+		checkWidget();
+		return borderColor;
 	}
 
 	/**
 	 * @param borderColor the border's color. If null, no border is displayed.
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -662,13 +695,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setBorderColor(final Color borderColor) {
-		this.checkWidget();
+		checkWidget();
 		this.borderColor = borderColor;
 	}
 
 	/**
 	 * @return the focus color. If null, no focus effect is displayed.
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -676,14 +710,15 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getFocusColor() {
-		this.checkWidget();
-		return this.focusColor;
+		checkWidget();
+		return focusColor;
 	}
 
 	/**
 	 * @param focusColor the focus color to set. If null, no focus effect is
 	 *            displayed.
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -691,14 +726,15 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setFocusColor(final Color focusColor) {
-		this.checkWidget();
+		checkWidget();
 		this.focusColor = focusColor;
 	}
 
 	/**
 	 * @return the foreground color of the left part of the widget (selection is
 	 *         on)
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -706,14 +742,15 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getSelectedForegroundColor() {
-		this.checkWidget();
-		return this.selectedForegroundColor;
+		checkWidget();
+		return selectedForegroundColor;
 	}
 
 	/**
 	 * @param the foreground color of the left part of the widget (selection is
 	 *            on)
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -721,14 +758,15 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setSelectedForegroundColor(final Color selectedForegroundColor) {
-		this.checkWidget();
+		checkWidget();
 		this.selectedForegroundColor = selectedForegroundColor;
 	}
 
 	/**
 	 * @return the background color of the left part of the widget (selection is
 	 *         on)
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -736,8 +774,8 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getSelectedBackgroundColor() {
-		this.checkWidget();
-		return this.selectedBackgroundColor;
+		checkWidget();
+		return selectedBackgroundColor;
 	}
 
 	/**
@@ -745,14 +783,15 @@ public class SwitchButton extends Canvas {
 	 *            on)
 	 */
 	public void setSelectedBackgroundColor(final Color selectedBackgroundColor) {
-		this.checkWidget();
+		checkWidget();
 		this.selectedBackgroundColor = selectedBackgroundColor;
 	}
 
 	/**
 	 * @return the foreground color of the left part of the widget (selection is
 	 *         on)
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -760,14 +799,15 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getUnselectedForegroundColor() {
-		this.checkWidget();
-		return this.unselectedForegroundColor;
+		checkWidget();
+		return unselectedForegroundColor;
 	}
 
 	/**
 	 * @param unselectedForegroundColor the foreground color of the left part of
 	 *            the widget (selection is on)
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -775,14 +815,15 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setUnselectedForegroundColor(final Color unselectedForegroundColor) {
-		this.checkWidget();
+		checkWidget();
 		this.unselectedForegroundColor = unselectedForegroundColor;
 	}
 
 	/**
 	 * @return the background color of the left part of the widget (selection is
 	 *         on)
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -790,14 +831,15 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getUnselectedBackgroundColor() {
-		this.checkWidget();
-		return this.unselectedBackgroundColor;
+		checkWidget();
+		return unselectedBackgroundColor;
 	}
 
 	/**
 	 * @param unselectedBackgroundColor the background color of the left part of
 	 *            the widget (selection is on)
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -805,13 +847,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setUnselectedBackgroundColor(final Color unselectedBackgroundColor) {
-		this.checkWidget();
+		checkWidget();
 		this.unselectedBackgroundColor = unselectedBackgroundColor;
 	}
 
 	/**
 	 * @return the border color of the switch button
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -819,13 +862,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getButtonBorderColor() {
-		this.checkWidget();
-		return this.buttonBorderColor;
+		checkWidget();
+		return buttonBorderColor;
 	}
 
 	/**
 	 * @param buttonBorderColor the border color of the switch button
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -833,13 +877,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setButtonBorderColor(final Color buttonBorderColor) {
-		this.checkWidget();
+		checkWidget();
 		this.buttonBorderColor = buttonBorderColor;
 	}
 
 	/**
 	 * @return the first color of the toggle button
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -847,13 +892,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getButtonBackgroundColor1() {
-		this.checkWidget();
-		return this.buttonBackgroundColor1;
+		checkWidget();
+		return buttonBackgroundColor1;
 	}
 
 	/**
 	 * @param buttonBackgroundColor1 the first color of the toggle button
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -861,13 +907,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setButtonBackgroundColor1(final Color buttonBackgroundColor1) {
-		this.checkWidget();
+		checkWidget();
 		this.buttonBackgroundColor1 = buttonBackgroundColor1;
 	}
 
 	/**
 	 * @return the second color of the toggle button
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -875,13 +922,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public Color getButtonBackgroundColor2() {
-		this.checkWidget();
-		return this.buttonBackgroundColor2;
+		checkWidget();
+		return buttonBackgroundColor2;
 	}
 
 	/**
 	 * @param buttonBackgroundColor2 the second color of the toggle button
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -889,13 +937,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setButtonBackgroundColor2(final Color buttonBackgroundColor2) {
-		this.checkWidget();
+		checkWidget();
 		this.buttonBackgroundColor2 = buttonBackgroundColor2;
 	}
 
 	/**
 	 * @return the gap value
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -903,13 +952,14 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public int getGap() {
-		this.checkWidget();
-		return this.gap;
+		checkWidget();
+		return gap;
 	}
 
 	/**
 	 * @param gap the gap value to set
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -917,8 +967,89 @@ public class SwitchButton extends Canvas {
 	 *                </ul>
 	 */
 	public void setGap(final int gap) {
-		this.checkWidget();
+		checkWidget();
 		this.gap = gap;
+	}
+
+	/**
+	 * @return the margin value
+	 *
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public Point getInsideMargin() {
+		checkWidget();
+		return new Point(insideMarginX, insideMarginY);
+	}
+
+	/**
+	 * @param insideMarginX the new margin value (horizontal)
+	 * @param insideMarginY the new margin value (vertical)
+	 *
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void setInsideMargin(final int insideMarginX, final int insideMarginY) {
+		checkWidget();
+		this.insideMarginX = insideMarginX;
+		this.insideMarginY = insideMarginY;
+	}
+
+	/**
+	 * @param insideMargin the new margin value
+	 *
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void setInsideMargin(final Point insideMargin) {
+		checkWidget();
+		insideMarginX = insideMargin.x;
+		insideMarginY = insideMargin.y;
+	}
+
+	/**
+	 * @return the arc value
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public int getArc() {
+		checkWidget();
+		return arc;
+	}
+
+	/**
+	 * @param arc the arc value to set
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
+	 */
+	public void setArc(final int arc) {
+		checkWidget();
+		this.arc = arc;
 	}
 
 }

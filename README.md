@@ -10,8 +10,10 @@ Version 1.0.2 is ready. It contains bug fixes and few enhancements. You can down
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-src.zip](https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-src.zip)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-plugin.jar](https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-plugin.jar)
 
-# Important notice
+# Forum 
+Our forum is located at [https://groups.google.com/forum/#!forum/opal-project](https://groups.google.com/forum/#!forum/opal-project)
 
+# Important notice
 The SWT library in the project is the Windows 64-bit version. Please replace the swt.jar file by the appropriate one !
 
 # The widgets
@@ -53,7 +55,7 @@ Currently Opal contains the following widgets :
 
 
 # Download
-All releases are hosted on Google Drive : https://drive.google.com/folderview?id=0BxckedW58_H5WTdQV05samZVRUE&usp=sharing
+All previous releases are hosted on Google Drive : https://drive.google.com/folderview?id=0BxckedW58_H5WTdQV05samZVRUE&usp=sharing
 
 
 # Support the project on Facebook

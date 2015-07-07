@@ -30,8 +30,9 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * Instances of this class provide a selectable user interface object that can
- * be used to pick angles.
- * Inspired by the Swing AngleSlider by Jeremy (http://javagraphics.blogspot.com/2008/05/angles-need-gui-widget-for-angles.html)
+ * be used to pick angles. Inspired by the Swing AngleSlider by Jeremy
+ * (http://javagraphics.blogspot.com/2008/05/angles-need-gui-widget-for-angles.
+ * html)
  * <p>
  * <dl>
  * <dt><b>Styles:</b></dt>
@@ -55,14 +56,17 @@ public class AngleSlider extends Canvas {
 
 	/**
 	 * Constructs a new instance of this class given its parent.
-	 * 
-	 * @param parent a widget which will be the parent of the new instance (cannot be null)
+	 *
+	 * @param parent a widget which will be the parent of the new instance
+	 *            (cannot be null)
 	 * @param style not used
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                </ul>
@@ -70,15 +74,16 @@ public class AngleSlider extends Canvas {
 	public AngleSlider(final Composite parent, final int style) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 
-		this.backgroundImage = new Image(getDisplay(), getClass().getClassLoader().getResourceAsStream("images/angleBackground.png"));
+		final ClassLoader loader = org.mihalis.opal.angles.AngleSlider.class.getClassLoader();
 
-		this.buttonFocus = new Image(getDisplay(), getClass().getClassLoader().getResourceAsStream("images/angleButtonFocus.png"));
-		this.buttonNoFocus = new Image(getDisplay(), getClass().getClassLoader().getResourceAsStream("images/angleButtonFocusLost.png"));
+		backgroundImage = new Image(getDisplay(), loader.getResourceAsStream("images/angleBackground.png"));
+		buttonFocus = new Image(getDisplay(), loader.getResourceAsStream("images/angleButtonFocus.png"));
+		buttonNoFocus = new Image(getDisplay(), loader.getResourceAsStream("images/angleButtonFocusLost.png"));
 
 		addListeners();
 
-		this.selection = 0;
-		this.selectionListeners = new ArrayList<SelectionListener>();
+		selection = 0;
+		selectionListeners = new ArrayList<SelectionListener>();
 	}
 
 	/**
@@ -97,9 +102,9 @@ public class AngleSlider extends Canvas {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent arg0) {
-				SWTGraphicUtil.safeDispose(AngleSlider.this.backgroundImage);
-				SWTGraphicUtil.safeDispose(AngleSlider.this.buttonFocus);
-				SWTGraphicUtil.safeDispose(AngleSlider.this.buttonNoFocus);
+				SWTGraphicUtil.safeDispose(backgroundImage);
+				SWTGraphicUtil.safeDispose(buttonFocus);
+				SWTGraphicUtil.safeDispose(buttonNoFocus);
 			}
 		});
 
@@ -115,9 +120,9 @@ public class AngleSlider extends Canvas {
 	private void paintControl(final Event event) {
 		final GC gc = event.gc;
 
-		gc.drawImage(this.backgroundImage, 0, 0);
+		gc.drawImage(backgroundImage, 0, 0);
 
-		float angle = this.selection / 360f;
+		float angle = selection / 360f;
 		angle = (float) (angle * 2 * Math.PI - 0.5 * Math.PI);
 
 		final float centerX = WHOLE_RADIUS / 2f;
@@ -127,9 +132,9 @@ public class AngleSlider extends Canvas {
 		final float y = (float) (centerY - radius * Math.sin(angle));
 
 		if (isFocusControl()) {
-			gc.drawImage(this.buttonFocus, (int) x - 2, (int) y - 2);
+			gc.drawImage(buttonFocus, (int) x - 2, (int) y - 2);
 		} else {
-			gc.drawImage(this.buttonNoFocus, (int) x - 2, (int) y - 2);
+			gc.drawImage(buttonNoFocus, (int) x - 2, (int) y - 2);
 		}
 
 		if (!isEnabled()) {
@@ -150,18 +155,18 @@ public class AngleSlider extends Canvas {
 				}
 
 				if (event.type == SWT.MouseDown) {
-					AngleSlider.this.mousePressed = true;
+					mousePressed = true;
 				}
-				if (event.type == SWT.MouseDown || event.type == SWT.MouseMove && AngleSlider.this.mousePressed) {
+				if (event.type == SWT.MouseDown || event.type == SWT.MouseMove && mousePressed) {
 					final float deltaX = event.x - WHOLE_RADIUS / 2f;
 					final float deltaY = event.y - WHOLE_RADIUS / 2f;
 					final double angle = Math.atan2(deltaX, deltaY);
-					AngleSlider.this.selection = 360 - (int) (360 * angle / (2 * Math.PI) + 360) % 360;
+					selection = 360 - (int) (360 * angle / (2 * Math.PI) + 360) % 360;
 
 					redraw();
 				}
 				if (event.type == SWT.MouseUp) {
-					AngleSlider.this.mousePressed = false;
+					mousePressed = false;
 					fireSelectionListeners(event);
 				}
 			}
@@ -169,7 +174,7 @@ public class AngleSlider extends Canvas {
 	}
 
 	private void fireSelectionListeners(final Event event) {
-		for (final SelectionListener selectionListener : this.selectionListeners) {
+		for (final SelectionListener selectionListener : selectionListeners) {
 			selectionListener.widgetSelected(new SelectionEvent(event));
 		}
 	}
@@ -186,10 +191,10 @@ public class AngleSlider extends Canvas {
 					return;
 				}
 				if (event.keyCode == SWT.ARROW_UP || event.keyCode == SWT.ARROW_LEFT) {
-					setSelection(AngleSlider.this.selection + STEP);
+					setSelection(selection + STEP);
 				}
 				if (event.keyCode == SWT.ARROW_DOWN || event.keyCode == SWT.ARROW_RIGHT) {
-					setSelection(AngleSlider.this.selection - STEP);
+					setSelection(selection - STEP);
 				}
 			}
 		};
@@ -200,7 +205,7 @@ public class AngleSlider extends Canvas {
 	 */
 	public void addSelectionListener(final SelectionListener selectionListener) {
 		checkWidget();
-		this.selectionListeners.add(selectionListener);
+		selectionListeners.add(selectionListener);
 	}
 
 	/**
@@ -215,9 +220,9 @@ public class AngleSlider extends Canvas {
 	@Override
 	public void dispose() {
 		super.dispose();
-		this.backgroundImage.dispose();
-		this.buttonFocus.dispose();
-		this.buttonNoFocus.dispose();
+		backgroundImage.dispose();
+		buttonFocus.dispose();
+		buttonNoFocus.dispose();
 	}
 
 	/**
@@ -225,7 +230,7 @@ public class AngleSlider extends Canvas {
 	 */
 	public int getSelection() {
 		checkWidget();
-		return this.selection;
+		return selection;
 	}
 
 	/**
@@ -233,7 +238,7 @@ public class AngleSlider extends Canvas {
 	 */
 	public void removeSelectionListener(final SelectionListener selectionListener) {
 		checkWidget();
-		this.selectionListeners.remove(selectionListener);
+		selectionListeners.remove(selectionListener);
 	}
 
 	/**

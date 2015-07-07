@@ -16,7 +16,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * Instances of this class represent a star displayed by the StarRating component
+ * Instances of this class represent a star displayed by the StarRating
+ * component
  */
 class Star {
 	private static final String SMALL_STAR_MARKED_FOCUS = "mark-focus16.png";
@@ -37,53 +38,55 @@ class Star {
 	private StarRating parent;
 
 	void dispose() {
-		this.defaultImage.dispose();
-		this.hoverImage.dispose();
-		this.selectedImage.dispose();
-		this.selectedHoverImage.dispose();
+		defaultImage.dispose();
+		hoverImage.dispose();
+		selectedImage.dispose();
+		selectedHoverImage.dispose();
 	}
 
 	void draw(final GC gc, final int x, final int y) {
 		Image image;
-		if (!this.parent.isEnabled()) {
-			image = this.defaultImage;
+		if (!parent.isEnabled()) {
+			image = defaultImage;
 		} else {
-			if (this.marked) {
-				if (this.hover) {
-					image = this.selectedHoverImage;
+			if (marked) {
+				if (hover) {
+					image = selectedHoverImage;
 				} else {
-					image = this.selectedImage;
+					image = selectedImage;
 				}
 			} else {
-				if (this.hover) {
-					image = this.hoverImage;
+				if (hover) {
+					image = hoverImage;
 				} else {
-					image = this.defaultImage;
+					image = defaultImage;
 				}
 			}
 		}
 
 		gc.drawImage(image, x, y);
-		this.bounds = new Rectangle(x, y, image.getBounds().width, image.getBounds().height);
+		bounds = new Rectangle(x, y, image.getBounds().width, image.getBounds().height);
 	}
 
 	static Star initBig(final StarRating parent) {
 		final Star star = new Star();
 		star.parent = parent;
-		star.defaultImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + BIG_STAR));
-		star.hoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + BIG_STAR_FOCUS));
-		star.selectedImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + BIG_STAR_MARKED));
-		star.selectedHoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + BIG_STAR_MARKED_FOCUS));
+		final ClassLoader loader = org.mihalis.opal.starRating.Star.class.getClassLoader();
+		star.defaultImage = new Image(Display.getCurrent(), loader.getResourceAsStream("images/stars/" + BIG_STAR));
+		star.hoverImage = new Image(Display.getCurrent(), loader.getResourceAsStream("images/stars/" + BIG_STAR_FOCUS));
+		star.selectedImage = new Image(Display.getCurrent(), loader.getResourceAsStream("images/stars/" + BIG_STAR_MARKED));
+		star.selectedHoverImage = new Image(Display.getCurrent(), loader.getResourceAsStream("images/stars/" + BIG_STAR_MARKED_FOCUS));
 		return star;
 	}
 
 	static Star initSmall(final StarRating parent) {
 		final Star star = new Star();
 		star.parent = parent;
-		star.defaultImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + SMALL_STAR));
-		star.hoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + SMALL_STAR_FOCUS));
-		star.selectedImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + SMALL_STAR_MARKED));
-		star.selectedHoverImage = new Image(Display.getCurrent(), star.getClass().getClassLoader().getResourceAsStream("images/stars/" + SMALL_STAR_MARKED_FOCUS));
+		final ClassLoader loader = org.mihalis.opal.starRating.Star.class.getClassLoader();
+		star.defaultImage = new Image(Display.getCurrent(), loader.getResourceAsStream("images/stars/" + SMALL_STAR));
+		star.hoverImage = new Image(Display.getCurrent(), loader.getResourceAsStream("images/stars/" + SMALL_STAR_FOCUS));
+		star.selectedImage = new Image(Display.getCurrent(), loader.getResourceAsStream("images/stars/" + SMALL_STAR_MARKED));
+		star.selectedHoverImage = new Image(Display.getCurrent(), loader.getResourceAsStream("images/stars/" + SMALL_STAR_MARKED_FOCUS));
 		return star;
 	}
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.mihalis.opal.imageSelector;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.mihalis.opal.OpalItem;
 import org.mihalis.opal.utils.SWTGraphicUtil;
@@ -26,7 +27,7 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param fileName file name of the image that will be displayed
 	 */
 	public ISItem(final String fileName) {
@@ -35,7 +36,7 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param title the title of the image
 	 * @param fileName file name of the image that will be displayed
 	 */
@@ -45,10 +46,21 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 	}
 
 	/**
+	 * Constructor
+	 *
+	 * @param title the title of the image
+	 * @param img image that will be displayed
+	 */
+	public ISItem(final String title, final Image img) {
+		setImage(img);
+		setText(title);
+	}
+
+	/**
 	 * @return the zPosition
 	 */
 	double getzPosition() {
-		return this.zPosition;
+		return zPosition;
 	}
 
 	/**
@@ -63,7 +75,7 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 	 * @return the upperLeftCorner
 	 */
 	Point getUpperLeftCorner() {
-		return this.upperLeftCorner;
+		return upperLeftCorner;
 	}
 
 	/**
@@ -71,14 +83,14 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 	 * @param y the upperLeftCorner.y to set
 	 */
 	void setUpperLeftCorner(final int x, final int y) {
-		this.upperLeftCorner = new Point(x, y);
+		upperLeftCorner = new Point(x, y);
 	}
 
 	/**
 	 * @return the lowerRightCorner
 	 */
 	Point getLowerRightCorner() {
-		return this.lowerRightCorner;
+		return lowerRightCorner;
 	}
 
 	/**
@@ -86,12 +98,12 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 	 * @param y the lowerRightCorner.y to set
 	 */
 	void setLowerRightCorner(final int x, final int y) {
-		this.lowerRightCorner = new Point(x, y);
+		lowerRightCorner = new Point(x, y);
 	}
 
 	void resetCornerToNull() {
-		this.upperLeftCorner = null;
-		this.lowerRightCorner = null;
+		upperLeftCorner = null;
+		lowerRightCorner = null;
 
 	}
 
@@ -100,7 +112,7 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 	 */
 	@Override
 	public String toString() {
-		return "ISItem [getText()=" + this.getText() + "]";
+		return "ISItem [getText()=" + getText() + "]";
 	}
 
 	/**
@@ -108,7 +120,7 @@ public class ISItem extends OpalItem implements Comparable<ISItem> {
 	 */
 	@Override
 	public int compareTo(final ISItem o) {
-		return new Double(Math.abs(this.zPosition)).compareTo(Math.abs(o.getzPosition())) * -1;
+		return new Double(Math.abs(zPosition)).compareTo(Math.abs(o.getzPosition())) * -1;
 	}
 
 }

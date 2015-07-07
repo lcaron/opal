@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation 
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.propertyTable;
 
@@ -28,7 +28,7 @@ import org.mihalis.opal.utils.StringUtil;
 /**
  * This abstract class contains all common methods for widgets that are part of
  * a property table
- * 
+ *
  */
 public abstract class AbstractPTWidget implements PTWidget {
 
@@ -43,7 +43,7 @@ public abstract class AbstractPTWidget implements PTWidget {
 
 	/**
 	 * Build the widget itself
-	 * 
+	 *
 	 * @param parent
 	 */
 	protected abstract void buildWidget(final Composite parent);
@@ -55,25 +55,25 @@ public abstract class AbstractPTWidget implements PTWidget {
 	public PTWidget build() {
 		Composite parent;
 		SashForm form = null;
-		if (this.parentPropertyTable.showDescription) {
-			form = new SashForm(this.parentPropertyTable, SWT.VERTICAL | SWT.BORDER);
+		if (parentPropertyTable.showDescription) {
+			form = new SashForm(parentPropertyTable, SWT.VERTICAL | SWT.BORDER);
 			form.setSashWidth(3);
 			form.setLayout(new GridLayout());
 
 			parent = new Composite(form, SWT.NONE);
 			parent.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 		} else {
-			parent = this.parentPropertyTable;
+			parent = parentPropertyTable;
 		}
 		parent.setLayout(new GridLayout(3, false));
 
-		if (this.parentPropertyTable.showButtons) {
-			buildButtons(parent, this.parentPropertyTable.sorted, this.parentPropertyTable.styleOfView == PropertyTable.VIEW_AS_CATEGORIES, this.parentPropertyTable.showDescription);
+		if (parentPropertyTable.showButtons) {
+			buildButtons(parent, parentPropertyTable.sorted, parentPropertyTable.styleOfView == PropertyTable.VIEW_AS_CATEGORIES, parentPropertyTable.showDescription);
 		}
 
 		buildWidget(parent);
 
-		if (this.parentPropertyTable.showDescription) {
+		if (parentPropertyTable.showDescription) {
 			buildDescriptionPanel(form);
 			form.setWeights(new int[] { 90, 10 });
 		}
@@ -84,7 +84,7 @@ public abstract class AbstractPTWidget implements PTWidget {
 	/**
 	 * Build the buttons (Sort, switch category/flat list, show/hide
 	 * description)
-	 * 
+	 *
 	 * @param parent parent composite
 	 * @param sorted if <code>true</code>, the sort button is pushed
 	 * @param showAsCategory if <code>true</code>, the "show as category" button
@@ -104,7 +104,8 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 */
 	private void buildSortButton(final Composite parent, final boolean sorted) {
 		final Button sortButton = new Button(parent, SWT.FLAT | SWT.TOGGLE);
-		sortButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/sort.png")));
+		final ClassLoader loader = org.mihalis.opal.propertyTable.AbstractPTWidget.class.getClassLoader();
+		sortButton.setImage(new Image(parent.getDisplay(), loader.getResourceAsStream("images/sort.png")));
 		sortButton.setSelection(sorted);
 		sortButton.setToolTipText(ResourceManager.getLabel(ResourceManager.SORT_SHORT_DESCRIPTION));
 		sortButton.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1));
@@ -127,7 +128,8 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 */
 	private void buildCategoryButton(final Composite parent, final boolean showAsCategory) {
 		final Button categoryButton = new Button(parent, SWT.FLAT | SWT.TOGGLE);
-		categoryButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/category.png")));
+		final ClassLoader loader = org.mihalis.opal.propertyTable.AbstractPTWidget.class.getClassLoader();
+		categoryButton.setImage(new Image(parent.getDisplay(), loader.getResourceAsStream("images/category.png")));
 		categoryButton.setSelection(showAsCategory);
 		categoryButton.setToolTipText(ResourceManager.getLabel(ResourceManager.CATEGORY_SHORT_DESCRIPTION));
 		categoryButton.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1));
@@ -154,7 +156,8 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 */
 	private void buildDescriptionButton(final Composite parent, final boolean showDescription) {
 		final Button descriptionButton = new Button(parent, SWT.FLAT | SWT.TOGGLE);
-		descriptionButton.setImage(new Image(parent.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/description.png")));
+		final ClassLoader loader = org.mihalis.opal.propertyTable.AbstractPTWidget.class.getClassLoader();
+		descriptionButton.setImage(new Image(parent.getDisplay(), loader.getResourceAsStream("images/description.png")));
 		descriptionButton.setSelection(showDescription);
 		descriptionButton.setToolTipText(ResourceManager.getLabel(ResourceManager.DESCRIPTION_SHORT_DESCRIPTION));
 		descriptionButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL, true, false, 1, 1));
@@ -175,13 +178,13 @@ public abstract class AbstractPTWidget implements PTWidget {
 
 	/**
 	 * Build the description panel
-	 * 
+	 *
 	 * @param parent parent composite
 	 */
 	private void buildDescriptionPanel(final Composite parent) {
-		this.descriptionLabel = new StyledText(parent, SWT.READ_ONLY);
-		this.descriptionLabel.setText("");
-		this.descriptionLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
+		descriptionLabel = new StyledText(parent, SWT.READ_ONLY);
+		descriptionLabel.setText("");
+		descriptionLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 	}
 
 	/**
@@ -197,11 +200,11 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 * Dispose the previous widget
 	 */
 	private void dispose() {
-		if (this.parentPropertyTable == null || this.parentPropertyTable.getChildren() == null) {
+		if (parentPropertyTable == null || parentPropertyTable.getChildren() == null) {
 			return;
 		}
 
-		for (final Control c : this.parentPropertyTable.getChildren()) {
+		for (final Control c : parentPropertyTable.getChildren()) {
 			c.dispose();
 		}
 		return;
@@ -211,7 +214,7 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 * @return the parent PropertyTable
 	 */
 	protected PropertyTable getParentPropertyTable() {
-		return this.parentPropertyTable;
+		return parentPropertyTable;
 	}
 
 	/**
@@ -219,7 +222,7 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 */
 	@Override
 	public void setParentPropertyTable(final PropertyTable table) {
-		this.parentPropertyTable = table;
+		parentPropertyTable = table;
 	}
 
 	/**
@@ -227,14 +230,14 @@ public abstract class AbstractPTWidget implements PTWidget {
 	 */
 	@Override
 	public void updateDescriptionPanel(final Object selection) {
-		if (selection == null || this.descriptionLabel == null) {
+		if (selection == null || descriptionLabel == null) {
 			return;
 		}
 
 		final PTProperty selectedProperty = (PTProperty) selection;
-		this.descriptionLabel.setText(StringUtil.safeToString(selectedProperty.getDescription()));
-		SWTGraphicUtil.applyHTMLFormating(this.descriptionLabel);
-		this.descriptionLabel.update();
+		descriptionLabel.setText(StringUtil.safeToString(selectedProperty.getDescription()));
+		SWTGraphicUtil.applyHTMLFormating(descriptionLabel);
+		descriptionLabel.update();
 	}
 
 }

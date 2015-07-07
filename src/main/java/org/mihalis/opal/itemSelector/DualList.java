@@ -75,26 +75,28 @@ public class DualList extends Composite {
 	 * style constants. The class description lists the style constants that are
 	 * applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
-	 * 
+	 *
 	 * @param parent a composite control which will be the parent of the new
 	 *            instance (cannot be null)
 	 * @param style the style of control to construct
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public DualList(final Composite parent, final int style) {
 		super(parent, style);
-		this.items = new ArrayList<DLItem>();
-		this.selection = new ArrayList<DLItem>();
+		items = new ArrayList<DLItem>();
+		selection = new ArrayList<DLItem>();
 
-		this.setLayout(new GridLayout(4, false));
+		setLayout(new GridLayout(4, false));
 		createItemsTable();
 		createButtonSelectAll();
 		createSelectionTable();
@@ -108,8 +110,8 @@ public class DualList extends Composite {
 	}
 
 	private void createItemsTable() {
-		this.itemsTable = this.createTable();
-		this.itemsTable.addMouseListener(new MouseAdapter() {
+		itemsTable = createTable();
+		itemsTable.addMouseListener(new MouseAdapter() {
 			/**
 			 * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
 			 */
@@ -137,7 +139,7 @@ public class DualList extends Composite {
 	}
 
 	private void createButtonSelectAll() {
-		final Button buttonSelectAll = this.createButton(DOUBLE_RIGHT_IMAGE, true, GridData.END);
+		final Button buttonSelectAll = createButton(DOUBLE_RIGHT_IMAGE, true, GridData.END);
 		buttonSelectAll.addSelectionListener(new SimpleSelectionAdapter() {
 			/**
 			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
@@ -150,8 +152,8 @@ public class DualList extends Composite {
 	}
 
 	private void createSelectionTable() {
-		this.selectionTable = this.createTable();
-		this.selectionTable.addMouseListener(new MouseAdapter() {
+		selectionTable = createTable();
+		selectionTable.addMouseListener(new MouseAdapter() {
 			/**
 			 * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
 			 */
@@ -163,7 +165,7 @@ public class DualList extends Composite {
 	}
 
 	private void createButtonMoveFirst() {
-		final Button buttonMoveFirst = this.createButton(DOUBLE_UP_IMAGE, true, GridData.END);
+		final Button buttonMoveFirst = createButton(DOUBLE_UP_IMAGE, true, GridData.END);
 		buttonMoveFirst.addSelectionListener(new SimpleSelectionAdapter() {
 			/**
 			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
@@ -176,7 +178,7 @@ public class DualList extends Composite {
 	}
 
 	private void createButtonSelect() {
-		final Button buttonSelect = this.createButton(ARROW_RIGHT_IMAGE, false, GridData.CENTER);
+		final Button buttonSelect = createButton(ARROW_RIGHT_IMAGE, false, GridData.CENTER);
 		buttonSelect.addSelectionListener(new SimpleSelectionAdapter() {
 			/**
 			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
@@ -189,7 +191,7 @@ public class DualList extends Composite {
 	}
 
 	private void createButtonMoveUp() {
-		final Button buttonMoveUp = this.createButton(ARROW_UP_IMAGE, false, GridData.CENTER);
+		final Button buttonMoveUp = createButton(ARROW_UP_IMAGE, false, GridData.CENTER);
 		buttonMoveUp.addSelectionListener(new SimpleSelectionAdapter() {
 			/**
 			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
@@ -202,7 +204,7 @@ public class DualList extends Composite {
 	}
 
 	private void createButtonDeselect() {
-		final Button buttonDeselect = this.createButton(ARROW_LEFT_IMAGE, false, GridData.CENTER);
+		final Button buttonDeselect = createButton(ARROW_LEFT_IMAGE, false, GridData.CENTER);
 		buttonDeselect.addSelectionListener(new SimpleSelectionAdapter() {
 			/**
 			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
@@ -215,7 +217,7 @@ public class DualList extends Composite {
 	}
 
 	private void createButtonMoveDown() {
-		final Button buttonMoveDown = this.createButton(ARROW_DOWN_IMAGE, false, GridData.CENTER);
+		final Button buttonMoveDown = createButton(ARROW_DOWN_IMAGE, false, GridData.CENTER);
 		buttonMoveDown.addSelectionListener(new SimpleSelectionAdapter() {
 			/**
 			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
@@ -228,7 +230,7 @@ public class DualList extends Composite {
 	}
 
 	private void createButtonDeselectAll() {
-		final Button buttonDeselectAll = this.createButton(DOUBLE_LEFT_IMAGE, false, GridData.BEGINNING);
+		final Button buttonDeselectAll = createButton(DOUBLE_LEFT_IMAGE, false, GridData.BEGINNING);
 		buttonDeselectAll.addSelectionListener(new SimpleSelectionAdapter() {
 			/**
 			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
@@ -241,7 +243,7 @@ public class DualList extends Composite {
 	}
 
 	private void createButtonMoveLast() {
-		final Button buttonMoveLast = this.createButton(DOUBLE_DOWN_IMAGE, true, GridData.BEGINNING);
+		final Button buttonMoveLast = createButton(DOUBLE_DOWN_IMAGE, true, GridData.BEGINNING);
 		buttonMoveLast.addSelectionListener(new SimpleSelectionAdapter() {
 			/**
 			 * @see org.mihalis.opal.utils.SimpleSelectionAdapter#handle(org.eclipse.swt.events.SelectionEvent)
@@ -255,7 +257,7 @@ public class DualList extends Composite {
 
 	/**
 	 * Create a button
-	 * 
+	 *
 	 * @param fileName file name of the icon
 	 * @param verticalExpand if <code>true</code>, the button will take all the
 	 *            available space vertically
@@ -264,7 +266,8 @@ public class DualList extends Composite {
 	 */
 	private Button createButton(final String fileName, final boolean verticalExpand, final int alignment) {
 		final Button button = new Button(this, SWT.PUSH);
-		final Image image = new Image(this.getDisplay(), this.getClass().getClassLoader().getResourceAsStream("images/" + fileName));
+		final ClassLoader loader = org.mihalis.opal.itemSelector.DualList.class.getClassLoader();
+		final Image image = new Image(getDisplay(), loader.getResourceAsStream("images/" + fileName));
 		button.setImage(image);
 		button.setLayoutData(new GridData(GridData.CENTER, alignment, false, verticalExpand));
 		SWTGraphicUtil.addDisposer(button, image);
@@ -273,28 +276,30 @@ public class DualList extends Composite {
 
 	/**
 	 * Adds the argument to the end of the receiver's list.
-	 * 
+	 *
 	 * @param item the new item
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the item is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see #add(DLItem,int)
 	 */
 	public void add(final DLItem item) {
-		this.checkWidget();
+		checkWidget();
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		this.items.add(item);
-		this.redrawTables();
+		items.add(item);
+		redrawTables();
 	}
 
 	/**
@@ -304,168 +309,179 @@ public class DualList extends Composite {
 	 * Note: To add an item at the end of the list, use the result of calling
 	 * <code>getItemCount()</code> as the index or use <code>add(DLItem)</code>.
 	 * </p>
-	 * 
+	 *
 	 * @param item the new item
 	 * @param index the index for the item
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the item is null</li>
 	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
 	 *                and the number of elements in the list (inclusive)</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see #add(String)
 	 */
 	public void add(final DLItem item, final int index) {
-		this.checkWidget();
+		checkWidget();
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (index < 0 || index >= this.items.size()) {
+		if (index < 0 || index >= items.size()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
-		this.items.add(index, item);
-		this.redrawTables();
+		items.add(index, item);
+		redrawTables();
 	}
 
 	/**
 	 * Adds the listener to the collection of listeners who will be notified
 	 * when the user changes the receiver's selection, by sending it one of the
 	 * messages defined in the <code>SelectionListener</code> interface.
-	 * 
+	 *
 	 * @param listener the listener which should be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see SelectionListener
 	 * @see #removeSelectionListener
 	 * @see SelectionEvent
 	 */
 	public void addSelectionListener(final SelectionListener listener) {
-		this.checkWidget();
+		checkWidget();
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (this.selectionListeners == null) {
-			this.selectionListeners = new ArrayList<SelectionListener>();
+		if (selectionListeners == null) {
+			selectionListeners = new ArrayList<SelectionListener>();
 		}
-		this.selectionListeners.add(listener);
+		selectionListeners.add(listener);
 	}
 
 	/**
 	 * Removes the listener from the collection of listeners who will be
 	 * notified when the user changes the receiver's selection.
-	 * 
+	 *
 	 * @param listener the listener which should no longer be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see SelectionListener
 	 * @see #addSelectionListener
 	 */
 	public void removeSelectionListener(final SelectionListener listener) {
-		this.checkWidget();
+		checkWidget();
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (this.selectionListeners == null) {
+		if (selectionListeners == null) {
 			return;
 		}
-		this.selectionListeners.remove(listener);
+		selectionListeners.remove(listener);
 	}
 
 	/**
 	 * Adds the listener to the collection of listeners who will be notified
 	 * when the user changes the receiver's selection, by sending it one of the
 	 * messages defined in the <code>SelectionChangeListener</code> interface.
-	 * 
+	 *
 	 * @param listener the listener which should be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see SelectionChangeListener
 	 * @see #removeSelectionChangeListener
 	 * @see SelectionChangeEvent
 	 */
 	public void addSelectionChangeListener(final SelectionChangeListener listener) {
-		this.checkWidget();
+		checkWidget();
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (this.selectionChangeListeners == null) {
-			this.selectionChangeListeners = new ArrayList<SelectionChangeListener>();
+		if (selectionChangeListeners == null) {
+			selectionChangeListeners = new ArrayList<SelectionChangeListener>();
 		}
-		this.selectionChangeListeners.add(listener);
+		selectionChangeListeners.add(listener);
 	}
 
 	/**
 	 * Removes the listener from the collection of listeners who will be
 	 * notified when the user changes the receiver's selection.
-	 * 
+	 *
 	 * @param listener the listener which should no longer be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see SelectionChangeListener
 	 * @see #addSelectionChangeListener
 	 */
 	public void removeSelectionChangeListener(final SelectionChangeListener listener) {
-		this.checkWidget();
+		checkWidget();
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (this.selectionChangeListeners == null) {
+		if (selectionChangeListeners == null) {
 			return;
 		}
-		this.selectionChangeListeners.remove(listener);
+		selectionChangeListeners.remove(listener);
 	}
 
 	/**
 	 * Deselects the item at the given zero-relative index in the receiver. If
 	 * the item at the index was already deselected, it remains deselected.
 	 * Indices that are out of range are ignored.
-	 * 
+	 *
 	 * @param index the index of the item to deselect
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -480,10 +496,11 @@ public class DualList extends Composite {
 	 * Deselects the item at the given zero-relative index in the receiver. If
 	 * the item at the index was already deselected, it remains deselected.
 	 * Indices that are out of range are ignored.
-	 * 
+	 *
 	 * @param index the index of the item to deselect
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -498,10 +515,11 @@ public class DualList extends Composite {
 	 * Deselects the item at the given zero-relative index in the receiver. If
 	 * the item at the index was already deselected, it remains deselected.
 	 * Indices that are out of range are ignored.
-	 * 
+	 *
 	 * @param index the index of the item to deselect
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -509,22 +527,22 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	private void deselect(final int index, final boolean shouldFireEvents) {
-		this.checkWidget();
-		if (index < 0 || index >= this.items.size()) {
+		checkWidget();
+		if (index < 0 || index >= items.size()) {
 			return;
 		}
-		final DLItem item = this.selection.remove(index);
+		final DLItem item = selection.remove(index);
 		if (shouldFireEvents) {
-			this.fireSelectionEvent(item);
+			fireSelectionEvent(item);
 		}
 
 		final List<DLItem> deselectedItems = new ArrayList<DLItem>();
 		item.setLastAction(LAST_ACTION.DESELECTION);
 		deselectedItems.add(item);
 		if (shouldFireEvents) {
-			this.fireSelectionChangeEvent(deselectedItems);
+			fireSelectionChangeEvent(deselectedItems);
 		}
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
@@ -533,13 +551,16 @@ public class DualList extends Composite {
 	 * it is deselected. If the item at the index was not selected, it remains
 	 * deselected. Indices that are out of range and duplicate indices are
 	 * ignored.
-	 * 
+	 *
 	 * @param indices the array of indices for the items to deselect
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_NULL_ARGUMENT - if the set of indices is null</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the set of indices is null
+	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -556,13 +577,16 @@ public class DualList extends Composite {
 	 * it is deselected. If the item at the index was not selected, it remains
 	 * deselected. Indices that are out of range and duplicate indices are
 	 * ignored.
-	 * 
+	 *
 	 * @param indices the array of indices for the items to deselect
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_NULL_ARGUMENT - if the set of indices is null</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the set of indices is null
+	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -579,13 +603,16 @@ public class DualList extends Composite {
 	 * it is deselected. If the item at the index was not selected, it remains
 	 * deselected. Indices that are out of range and duplicate indices are
 	 * ignored.
-	 * 
+	 *
 	 * @param indices the array of indices for the items to deselect
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_NULL_ARGUMENT - if the set of indices is null</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the set of indices is null
+	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -593,7 +620,7 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	private void deselect(final int[] indices, final boolean shouldFireEvents) {
-		this.checkWidget();
+		checkWidget();
 		if (indices == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -601,24 +628,24 @@ public class DualList extends Composite {
 		final List<DLItem> toBeRemoved = new ArrayList<DLItem>();
 
 		for (final int index : indices) {
-			if (index < 0 || index >= this.items.size()) {
+			if (index < 0 || index >= items.size()) {
 				continue;
 			}
-			toBeRemoved.add(this.selection.get(index));
+			toBeRemoved.add(selection.get(index));
 		}
 
 		for (final DLItem item : toBeRemoved) {
-			this.selection.remove(item);
+			selection.remove(item);
 			if (shouldFireEvents) {
-				this.fireSelectionEvent(item);
+				fireSelectionEvent(item);
 			}
 		}
 		if (shouldFireEvents) {
-			this.fireSelectionChangeEvent(toBeRemoved);
+			fireSelectionChangeEvent(toBeRemoved);
 		}
 
 		toBeRemoved.clear();
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
@@ -627,14 +654,17 @@ public class DualList extends Composite {
 	 * it is deselected. If the item at the index was not selected, it remains
 	 * deselected. The range of the indices is inclusive. Indices that are out
 	 * of range are ignored.
-	 * 
+	 *
 	 * @param start the start index of the items to deselect
 	 * @param end the end index of the items to deselect
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_RANGE - if start is greater than end</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_RANGE - if start is greater than end
+	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -651,14 +681,17 @@ public class DualList extends Composite {
 	 * it is deselected. If the item at the index was not selected, it remains
 	 * deselected. The range of the indices is inclusive. Indices that are out
 	 * of range are ignored.
-	 * 
+	 *
 	 * @param start the start index of the items to deselect
 	 * @param end the end index of the items to deselect
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_RANGE - if start is greater than end</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_RANGE - if start is greater than end
+	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -670,36 +703,37 @@ public class DualList extends Composite {
 	}
 
 	private void deselect(final int start, final int end, final boolean shouldFireEvents) {
-		this.checkWidget();
+		checkWidget();
 		if (start > end) {
 			SWT.error(SWT.ERROR_INVALID_RANGE);
 		}
 		final List<DLItem> toBeRemoved = new ArrayList<DLItem>();
 
 		for (int index = start; index <= end; index++) {
-			if (index < 0 || index >= this.items.size()) {
+			if (index < 0 || index >= items.size()) {
 				continue;
 			}
-			toBeRemoved.add(this.selection.get(index));
+			toBeRemoved.add(selection.get(index));
 		}
 
 		for (final DLItem item : toBeRemoved) {
-			this.selection.remove(item);
+			selection.remove(item);
 			if (shouldFireEvents) {
-				this.fireSelectionEvent(item);
+				fireSelectionEvent(item);
 			}
 		}
 		if (shouldFireEvents) {
-			this.fireSelectionChangeEvent(toBeRemoved);
+			fireSelectionChangeEvent(toBeRemoved);
 		}
 		toBeRemoved.clear();
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
 	 * Deselects all selected items in the receiver.
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -712,8 +746,9 @@ public class DualList extends Composite {
 
 	/**
 	 * Deselects all selected items in the receiver.
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -726,8 +761,9 @@ public class DualList extends Composite {
 
 	/**
 	 * Deselects all selected items in the receiver.
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -735,36 +771,38 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void deselectAll(final boolean shouldFireEvents) {
-		this.checkWidget();
-		this.items.addAll(this.selection);
+		checkWidget();
+		items.addAll(selection);
 
 		final List<DLItem> deselectedItems = new ArrayList<DLItem>();
-		for (final DLItem item : this.selection) {
+		for (final DLItem item : selection) {
 			item.setLastAction(LAST_ACTION.DESELECTION);
 			deselectedItems.add(item);
 			if (shouldFireEvents) {
-				this.fireSelectionEvent(item);
+				fireSelectionEvent(item);
 			}
 		}
 		fireSelectionChangeEvent(deselectedItems);
 
-		this.selection.clear();
-		this.redrawTables();
+		selection.clear();
+		redrawTables();
 	}
 
 	/**
 	 * Returns the item at the given, zero-relative index in the receiver.
 	 * Throws an exception if the index is out of range.
-	 * 
+	 *
 	 * @param index the index of the item to return
 	 * @return the item at the given index
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
 	 *                and the number of elements in the list minus 1 (inclusive)
 	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -773,19 +811,20 @@ public class DualList extends Composite {
 	 */
 
 	public DLItem getItem(final int index) {
-		this.checkWidget();
-		if (index < 0 || index >= this.items.size()) {
+		checkWidget();
+		if (index < 0 || index >= items.size()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
-		return this.items.get(index);
+		return items.get(index);
 	}
 
 	/**
 	 * Returns the number of items contained in the receiver.
-	 * 
+	 *
 	 * @return the number of items
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -793,8 +832,8 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public int getItemCount() {
-		this.checkWidget();
-		return this.items.size();
+		checkWidget();
+		return items.size();
 	}
 
 	/**
@@ -804,10 +843,11 @@ public class DualList extends Composite {
 	 * Note: This is not the actual structure used by the receiver to maintain
 	 * its list of items, so modifying the array will not affect the receiver.
 	 * </p>
-	 * 
+	 *
 	 * @return the items in the receiver's list
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -815,8 +855,8 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public DLItem[] getItems() {
-		this.checkWidget();
-		return this.items.toArray(new DLItem[this.items.size()]);
+		checkWidget();
+		return items.toArray(new DLItem[items.size()]);
 	}
 
 	/**
@@ -826,10 +866,11 @@ public class DualList extends Composite {
 	 * Note: This is not the actual structure used by the receiver to maintain
 	 * its list of items, so modifying the array will not affect the receiver.
 	 * </p>
-	 * 
+	 *
 	 * @return the items in the receiver's list
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -837,8 +878,8 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public List<DLItem> getItemsAsList() {
-		this.checkWidget();
-		return new ArrayList<DLItem>(this.items);
+		checkWidget();
+		return new ArrayList<DLItem>(items);
 	}
 
 	/**
@@ -848,10 +889,11 @@ public class DualList extends Composite {
 	 * Note: This is not the actual structure used by the receiver to maintain
 	 * its selection, so modifying the array will not affect the receiver.
 	 * </p>
-	 * 
+	 *
 	 * @return an array representing the selection
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -859,8 +901,8 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public DLItem[] getSelection() {
-		this.checkWidget();
-		return this.selection.toArray(new DLItem[this.items.size()]);
+		checkWidget();
+		return selection.toArray(new DLItem[items.size()]);
 	}
 
 	/**
@@ -870,10 +912,11 @@ public class DualList extends Composite {
 	 * Note: This is not the actual structure used by the receiver to maintain
 	 * its selection, so modifying the array will not affect the receiver.
 	 * </p>
-	 * 
+	 *
 	 * @return an array representing the selection
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -881,16 +924,17 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public List<DLItem> getSelectionAsList() {
-		this.checkWidget();
-		return new ArrayList<DLItem>(this.selection);
+		checkWidget();
+		return new ArrayList<DLItem>(selection);
 	}
 
 	/**
 	 * Returns the number of selected items contained in the receiver.
-	 * 
+	 *
 	 * @return the number of selected items
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -898,21 +942,23 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public int getSelectionCount() {
-		this.checkWidget();
-		return this.selection.size();
+		checkWidget();
+		return selection.size();
 	}
 
 	/**
 	 * Removes the item from the receiver at the given zero-relative index.
-	 * 
+	 *
 	 * @param index the index for the item
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
 	 *                and the number of elements in the list minus 1 (inclusive)
 	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -920,26 +966,29 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void remove(final int index) {
-		this.checkWidget();
-		if (index < 0 || index >= this.items.size()) {
+		checkWidget();
+		if (index < 0 || index >= items.size()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
-		this.items.remove(index);
-		this.redrawTables();
+		items.remove(index);
+		redrawTables();
 	}
 
 	/**
 	 * Removes the items from the receiver at the given zero-relative indices.
-	 * 
+	 *
 	 * @param indices the array of indices of the items
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
 	 *                and the number of elements in the list minus 1 (inclusive)
 	 *                </li>
-	 *                <li>ERROR_NULL_ARGUMENT - if the indices array is null</li>
+	 *                <li>ERROR_NULL_ARGUMENT - if the indices array is null
+	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -947,29 +996,31 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void remove(final int[] indices) {
-		this.checkWidget();
+		checkWidget();
 		for (final int index : indices) {
-			if (index < 0 || index >= this.items.size()) {
+			if (index < 0 || index >= items.size()) {
 				SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 			}
-			this.items.remove(index);
+			items.remove(index);
 		}
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
 	 * Removes the items from the receiver which are between the given
 	 * zero-relative start and end indices (inclusive).
-	 * 
+	 *
 	 * @param start the start of the range
 	 * @param end the end of the range
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_INVALID_RANGE - if either the start or end are
 	 *                not between 0 and the number of elements in the list minus
 	 *                1 (inclusive) or if start>end</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -977,31 +1028,33 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void remove(final int start, final int end) {
-		this.checkWidget();
+		checkWidget();
 		if (start > end) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		for (int index = start; index < end; index++) {
-			if (index < 0 || index >= this.items.size()) {
+			if (index < 0 || index >= items.size()) {
 				SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 			}
-			this.items.remove(index);
+			items.remove(index);
 		}
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
 	 * Searches the receiver's list starting at the first item until an item is
 	 * found that is equal to the argument, and removes that item from the list.
-	 * 
+	 *
 	 * @param item the item to remove
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the item is null</li>
 	 *                <li>ERROR_INVALID_ARGUMENT - if the item is not found in
 	 *                the list</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -1009,41 +1062,44 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void remove(final DLItem item) {
-		this.checkWidget();
+		checkWidget();
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (!this.items.contains(item)) {
+		if (!items.contains(item)) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
-		this.items.remove(item);
-		this.redrawTables();
+		items.remove(item);
+		redrawTables();
 	}
 
 	/**
 	 * Removes all of the items from the receiver.
 	 * <p>
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
-	 *                called from the thread that created the receiver</li>
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void removeAll() {
-		this.checkWidget();
-		this.items.clear();
-		this.redrawTables();
+		checkWidget();
+		items.clear();
+		redrawTables();
 	}
 
 	/**
 	 * Selects the item at the given zero-relative index in the receiver's list.
 	 * If the item at the index was already selected, it remains selected.
 	 * Indices that are out of range are ignored.
-	 * 
+	 *
 	 * @param index the index of the item to select
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -1058,10 +1114,11 @@ public class DualList extends Composite {
 	 * Selects the item at the given zero-relative index in the receiver's list.
 	 * If the item at the index was already selected, it remains selected.
 	 * Indices that are out of range are ignored.
-	 * 
+	 *
 	 * @param index the index of the item to select
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -1073,22 +1130,22 @@ public class DualList extends Composite {
 	}
 
 	private void select(final int index, final boolean shouldFireEvents) {
-		this.checkWidget();
-		if (index < 0 || index >= this.items.size()) {
+		checkWidget();
+		if (index < 0 || index >= items.size()) {
 			return;
 		}
 		final List<DLItem> selectedItems = new ArrayList<DLItem>();
-		final DLItem item = this.items.get(index);
+		final DLItem item = items.get(index);
 		item.setLastAction(LAST_ACTION.SELECTION);
 		selectedItems.add(item);
-		this.selection.add(item);
+		selection.add(item);
 
 		if (shouldFireEvents) {
-			this.fireSelectionEvent(item);
+			fireSelectionEvent(item);
 			fireSelectionChangeEvent(selectedItems);
 		}
 
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
@@ -1100,17 +1157,20 @@ public class DualList extends Composite {
 	 * are out of range and duplicate indices are ignored. If the receiver is
 	 * single-select and multiple indices are specified, then all indices are
 	 * ignored.
-	 * 
+	 *
 	 * @param indices the array of indices for the items to select
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the array of indices is null
 	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
-	 *                called from the thread that created the receiver</li>
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void select(final int[] indices) {
@@ -1126,17 +1186,20 @@ public class DualList extends Composite {
 	 * are out of range and duplicate indices are ignored. If the receiver is
 	 * single-select and multiple indices are specified, then all indices are
 	 * ignored.
-	 * 
+	 *
 	 * @param indices the array of indices for the items to select
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the array of indices is null
 	 *                </li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
-	 *                called from the thread that created the receiver</li>
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void selectDoNotFireEvent(final int[] indices) {
@@ -1144,29 +1207,29 @@ public class DualList extends Composite {
 	}
 
 	private void select(final int[] indices, final boolean shouldFireEvents) {
-		this.checkWidget();
+		checkWidget();
 		if (indices == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
 		final List<DLItem> selectedItems = new ArrayList<DLItem>();
 		for (final int index : indices) {
-			if (index < 0 || index >= this.items.size()) {
+			if (index < 0 || index >= items.size()) {
 				continue;
 			}
-			final DLItem item = this.items.get(index);
+			final DLItem item = items.get(index);
 			item.setLastAction(LAST_ACTION.SELECTION);
 			selectedItems.add(item);
 
-			this.selection.add(item);
+			selection.add(item);
 			if (shouldFireEvents) {
-				this.fireSelectionEvent(item);
+				fireSelectionEvent(item);
 			}
 		}
 		if (shouldFireEvents) {
 			fireSelectionChangeEvent(selectedItems);
 		}
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
@@ -1179,16 +1242,18 @@ public class DualList extends Composite {
 	 * that are out of range are ignored and no items will be selected if start
 	 * is greater than end. If the receiver is single-select and there is more
 	 * than one item in the given range, then all indices are ignored.
-	 * 
+	 *
 	 * @param start the start of the range
 	 * @param end the end of the range
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
-	 *                called from the thread that created the receiver</li>
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see List#setSelection(int,int)
 	 */
 	public void select(final int start, final int end) {
@@ -1205,16 +1270,18 @@ public class DualList extends Composite {
 	 * that are out of range are ignored and no items will be selected if start
 	 * is greater than end. If the receiver is single-select and there is more
 	 * than one item in the given range, then all indices are ignored.
-	 * 
+	 *
 	 * @param start the start of the range
 	 * @param end the end of the range
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
-	 *                called from the thread that created the receiver</li>
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see List#setSelection(int,int)
 	 */
 	public void selectDoNotFireEvent(final int start, final int end) {
@@ -1222,38 +1289,40 @@ public class DualList extends Composite {
 	}
 
 	private void select(final int start, final int end, final boolean shouldFireEvents) {
-		this.checkWidget();
+		checkWidget();
 		if (start > end) {
 			SWT.error(SWT.ERROR_INVALID_RANGE);
 		}
 		final List<DLItem> selectedItems = new ArrayList<DLItem>();
 		for (int index = start; index <= end; index++) {
-			if (index < 0 || index >= this.items.size()) {
+			if (index < 0 || index >= items.size()) {
 				continue;
 			}
-			final DLItem item = this.items.get(index);
+			final DLItem item = items.get(index);
 			item.setLastAction(LAST_ACTION.SELECTION);
 			selectedItems.add(item);
-			this.selection.add(item);
+			selection.add(item);
 			if (shouldFireEvents) {
-				this.fireSelectionEvent(item);
+				fireSelectionEvent(item);
 			}
 		}
 		if (shouldFireEvents) {
 			fireSelectionChangeEvent(selectedItems);
 		}
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
 	 * Selects all of the items in the receiver.
 	 * <p>
 	 * If the receiver is single-select, do nothing.
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
-	 *                called from the thread that created the receiver</li>
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void selectAll() {
@@ -1264,11 +1333,13 @@ public class DualList extends Composite {
 	 * Selects all of the items in the receiver.
 	 * <p>
 	 * If the receiver is single-select, do nothing.
-	 * 
-	 * @exception SWTException <ul>
+	 *
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *                disposed</li> <li>ERROR_THREAD_INVALID_ACCESS - if not
-	 *                called from the thread that created the receiver</li>
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
 	 *                </ul>
 	 */
 	public void selectAllDoNotFireEvent() {
@@ -1276,24 +1347,24 @@ public class DualList extends Composite {
 	}
 
 	private void selectAll(final boolean shouldFireEvents) {
-		this.checkWidget();
-		this.selection.addAll(this.items);
+		checkWidget();
+		selection.addAll(items);
 		if (shouldFireEvents) {
-			for (final DLItem item : this.items) {
-				this.fireSelectionEvent(item);
+			for (final DLItem item : items) {
+				fireSelectionEvent(item);
 			}
 		}
 
 		if (shouldFireEvents) {
 			final List<DLItem> selectedItems = new ArrayList<DLItem>();
-			for (final DLItem item : this.items) {
+			for (final DLItem item : items) {
 				item.setLastAction(LAST_ACTION.SELECTION);
 				selectedItems.add(item);
 			}
 			fireSelectionChangeEvent(selectedItems);
 		}
-		this.items.clear();
-		this.redrawTables();
+		items.clear();
+		redrawTables();
 	}
 
 	/**
@@ -1302,47 +1373,47 @@ public class DualList extends Composite {
 	@Override
 	public void setBounds(final int x, final int y, final int width, final int height) {
 		super.setBounds(x, y, width, height);
-		final boolean itemsContainImage = this.itemsContainImage();
-		final Point itemsTableDefaultSize = this.itemsTable.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		final Point selectionTableDefaultSize = this.selectionTable.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		final boolean itemsContainImage = itemsContainImage();
+		final Point itemsTableDefaultSize = itemsTable.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		final Point selectionTableDefaultSize = selectionTable.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
-		int itemsTableSize = this.itemsTable.getSize().x;
-		if (itemsTableDefaultSize.y > this.itemsTable.getSize().y) {
-			itemsTableSize -= this.itemsTable.getVerticalBar().getSize().x;
+		int itemsTableSize = itemsTable.getSize().x;
+		if (itemsTableDefaultSize.y > itemsTable.getSize().y) {
+			itemsTableSize -= itemsTable.getVerticalBar().getSize().x;
 		}
 
-		int selectionTableSize = this.selectionTable.getSize().x;
-		if (selectionTableDefaultSize.y > this.selectionTable.getSize().y) {
-			selectionTableSize -= this.selectionTable.getVerticalBar().getSize().x;
+		int selectionTableSize = selectionTable.getSize().x;
+		if (selectionTableDefaultSize.y > selectionTable.getSize().y) {
+			selectionTableSize -= selectionTable.getVerticalBar().getSize().x;
 		}
 
 		if (itemsContainImage) {
-			this.itemsTable.getColumn(0).pack();
-			this.itemsTable.getColumn(1).setWidth(itemsTableSize - this.itemsTable.getColumn(0).getWidth());
+			itemsTable.getColumn(0).pack();
+			itemsTable.getColumn(1).setWidth(itemsTableSize - itemsTable.getColumn(0).getWidth());
 
-			this.selectionTable.getColumn(0).pack();
-			this.selectionTable.getColumn(1).setWidth(selectionTableSize - this.selectionTable.getColumn(0).getWidth());
+			selectionTable.getColumn(0).pack();
+			selectionTable.getColumn(1).setWidth(selectionTableSize - selectionTable.getColumn(0).getWidth());
 
 		} else {
-			this.itemsTable.getColumn(0).setWidth(itemsTableSize);
-			this.selectionTable.getColumn(0).setWidth(selectionTableSize);
+			itemsTable.getColumn(0).setWidth(itemsTableSize);
+			selectionTable.getColumn(0).setWidth(selectionTableSize);
 		}
 
-		this.itemsTable.getColumn(0).pack();
-		this.selectionTable.getColumn(0).pack();
+		itemsTable.getColumn(0).pack();
+		selectionTable.getColumn(0).pack();
 	}
 
 	/**
 	 * @return <code>true</code> if any item contains an image
 	 */
 	private boolean itemsContainImage() {
-		for (final DLItem item : this.items) {
+		for (final DLItem item : items) {
 			if (item.getImage() != null) {
 				return true;
 			}
 		}
 
-		for (final DLItem item : this.selection) {
+		for (final DLItem item : selection) {
 			if (item.getImage() != null) {
 				return true;
 			}
@@ -1354,17 +1425,19 @@ public class DualList extends Composite {
 	/**
 	 * Sets the item in the receiver's list at the given zero-relative index to
 	 * the item argument.
-	 * 
+	 *
 	 * @param index the index for the item
 	 * @param item the new item
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
 	 *                and the number of elements in the list minus 1 (inclusive)
 	 *                </li>
 	 *                <li>ERROR_NULL_ARGUMENT - if the item is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -1372,28 +1445,30 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void setItem(final int index, final DLItem item) {
-		this.checkWidget();
+		checkWidget();
 		if (item == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		if (index < 0 || index >= this.items.size()) {
+		if (index < 0 || index >= items.size()) {
 			SWT.error(SWT.ERROR_INVALID_RANGE);
 		}
-		this.items.set(index, item);
-		this.redrawTables();
+		items.set(index, item);
+		redrawTables();
 	}
 
 	/**
 	 * Sets the receiver's items to be the given array of items.
-	 * 
+	 *
 	 * @param items the array of items
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the items array is null</li>
 	 *                <li>ERROR_INVALID_ARGUMENT - if an item in the items array
 	 *                is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -1401,7 +1476,7 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void setItems(final DLItem[] items) {
-		this.checkWidget();
+		checkWidget();
 		if (items == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -1415,20 +1490,22 @@ public class DualList extends Composite {
 		}
 		this.items.clear();
 		this.items.addAll(temp);
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
 	 * Sets the receiver's items to be the given list of items.
-	 * 
+	 *
 	 * @param items the list of items
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the items list is null</li>
 	 *                <li>ERROR_INVALID_ARGUMENT - if an item in the items list
 	 *                is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -1436,8 +1513,8 @@ public class DualList extends Composite {
 	 *                </ul>
 	 */
 	public void setItems(final List<DLItem> items) {
-		this.checkWidget();
-		this.checkWidget();
+		checkWidget();
+		checkWidget();
 		if (items == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
@@ -1451,36 +1528,36 @@ public class DualList extends Composite {
 		}
 		this.items.clear();
 		this.items.addAll(temp);
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
 	 * Redraws all tables that compose this widget
 	 */
 	private void redrawTables() {
-		this.setRedraw(false);
-		this.redrawTable(this.itemsTable, false);
-		this.redrawTable(this.selectionTable, true);
-		this.setRedraw(true);
-		this.setBounds(this.getBounds());
+		setRedraw(false);
+		redrawTable(itemsTable, false);
+		redrawTable(selectionTable, true);
+		setRedraw(true);
+		this.setBounds(getBounds());
 	}
 
 	/**
 	 * Redraw a given table
-	 * 
+	 *
 	 * @param table table to be redrawned
 	 * @param isSelected if <code>true</code>, fill the table with the
 	 *            selection. Otherwise, fill the table with the unselected
 	 *            items.
 	 */
 	private void redrawTable(final Table table, final boolean isSelected) {
-		this.clean(table);
-		this.fillData(table, isSelected ? this.selection : this.items);
+		clean(table);
+		fillData(table, isSelected ? selection : items);
 	}
 
 	/**
 	 * Cleans the content of a table
-	 * 
+	 *
 	 * @param table table to be emptied
 	 */
 	private void clean(final Table table) {
@@ -1495,12 +1572,12 @@ public class DualList extends Composite {
 
 	/**
 	 * Fill a table with data
-	 * 
+	 *
 	 * @param table table to be filled
 	 * @param listOfData list of data
 	 */
 	private void fillData(final Table table, final List<DLItem> listOfData) {
-		final boolean itemsContainImage = this.itemsContainImage();
+		final boolean itemsContainImage = itemsContainImage();
 		for (final DLItem item : listOfData) {
 			final TableItem tableItem = new TableItem(table, SWT.NONE);
 			tableItem.setData(item);
@@ -1529,189 +1606,189 @@ public class DualList extends Composite {
 	 * Move the selected item to the first position
 	 */
 	protected void moveSelectionToFirstPosition() {
-		if (this.selectionTable.getSelectionCount() == 0) {
+		if (selectionTable.getSelectionCount() == 0) {
 			return;
 		}
 
 		int index = 0;
-		for (final TableItem tableItem : this.selectionTable.getSelection()) {
+		for (final TableItem tableItem : selectionTable.getSelection()) {
 			final DLItem item = (DLItem) tableItem.getData();
-			this.selection.remove(item);
-			this.selection.add(index++, item);
+			selection.remove(item);
+			selection.add(index++, item);
 		}
 
-		this.redrawTables();
-		this.selectionTable.select(0, index - 1);
-		this.selectionTable.forceFocus();
+		redrawTables();
+		selectionTable.select(0, index - 1);
+		selectionTable.forceFocus();
 	}
 
 	/**
 	 * Select a given item
 	 */
 	protected void selectItem() {
-		if (this.itemsTable.getSelectionCount() == 0) {
+		if (itemsTable.getSelectionCount() == 0) {
 			return;
 		}
 		final List<DLItem> selectedItems = new ArrayList<DLItem>();
-		for (final TableItem tableItem : this.itemsTable.getSelection()) {
+		for (final TableItem tableItem : itemsTable.getSelection()) {
 			final DLItem item = (DLItem) tableItem.getData();
 			item.setLastAction(LAST_ACTION.SELECTION);
 			selectedItems.add(item);
-			this.selection.add(item);
-			this.items.remove(item);
+			selection.add(item);
+			items.remove(item);
 			fireSelectionEvent(item);
 		}
 		fireSelectionChangeEvent(selectedItems);
 
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
 	 * Move the selected item up
 	 */
 	protected void moveUpItem() {
-		if (this.selectionTable.getSelectionCount() == 0) {
+		if (selectionTable.getSelectionCount() == 0) {
 			return;
 		}
 
-		for (final int index : this.selectionTable.getSelectionIndices()) {
+		for (final int index : selectionTable.getSelectionIndices()) {
 			if (index == 0) {
-				this.selectionTable.forceFocus();
+				selectionTable.forceFocus();
 				return;
 			}
 		}
 
-		final int[] newSelection = new int[this.selectionTable.getSelectionCount()];
+		final int[] newSelection = new int[selectionTable.getSelectionCount()];
 		int newSelectionIndex = 0;
-		for (final TableItem tableItem : this.selectionTable.getSelection()) {
-			final int position = this.selection.indexOf(tableItem.getData());
-			this.swap(position, position - 1);
+		for (final TableItem tableItem : selectionTable.getSelection()) {
+			final int position = selection.indexOf(tableItem.getData());
+			swap(position, position - 1);
 			newSelection[newSelectionIndex++] = position - 1;
 		}
 
-		this.redrawTables();
-		this.selectionTable.select(newSelection);
-		this.selectionTable.forceFocus();
+		redrawTables();
+		selectionTable.select(newSelection);
+		selectionTable.forceFocus();
 	}
 
 	/**
 	 * Deselect a given item
 	 */
 	protected void deselectItem() {
-		if (this.selectionTable.getSelectionCount() == 0) {
+		if (selectionTable.getSelectionCount() == 0) {
 			return;
 		}
 		final List<DLItem> deselectedItems = new ArrayList<DLItem>();
-		for (final TableItem tableItem : this.selectionTable.getSelection()) {
+		for (final TableItem tableItem : selectionTable.getSelection()) {
 			final DLItem item = (DLItem) tableItem.getData();
 			item.setLastAction(LAST_ACTION.DESELECTION);
 			deselectedItems.add(item);
-			this.items.add(item);
-			this.selection.remove(item);
+			items.add(item);
+			selection.remove(item);
 			fireSelectionEvent(item);
 		}
 		fireSelectionChangeEvent(deselectedItems);
-		this.redrawTables();
+		redrawTables();
 	}
 
 	/**
 	 * Move the selected item down
 	 */
 	protected void moveDownItem() {
-		if (this.selectionTable.getSelectionCount() == 0) {
+		if (selectionTable.getSelectionCount() == 0) {
 			return;
 		}
 
-		for (final int index : this.selectionTable.getSelectionIndices()) {
-			if (index == this.selectionTable.getItemCount() - 1) {
-				this.selectionTable.forceFocus();
+		for (final int index : selectionTable.getSelectionIndices()) {
+			if (index == selectionTable.getItemCount() - 1) {
+				selectionTable.forceFocus();
 				return;
 			}
 		}
 
-		final int[] newSelection = new int[this.selectionTable.getSelectionCount()];
+		final int[] newSelection = new int[selectionTable.getSelectionCount()];
 		int newSelectionIndex = 0;
-		for (final TableItem tableItem : this.selectionTable.getSelection()) {
-			final int position = this.selection.indexOf(tableItem.getData());
-			this.swap(position, position + 1);
+		for (final TableItem tableItem : selectionTable.getSelection()) {
+			final int position = selection.indexOf(tableItem.getData());
+			swap(position, position + 1);
 			newSelection[newSelectionIndex++] = position + 1;
 		}
 
-		this.redrawTables();
-		this.selectionTable.select(newSelection);
-		this.selectionTable.forceFocus();
+		redrawTables();
+		selectionTable.select(newSelection);
+		selectionTable.forceFocus();
 	}
 
 	/**
 	 * Swap 2 items
-	 * 
+	 *
 	 * @param first position of the first item to swap
 	 * @param second position of the second item to swap
 	 */
 	private void swap(final int first, final int second) {
-		final DLItem temp = this.selection.get(first);
-		this.selection.set(first, this.selection.get(second));
-		this.selection.set(second, temp);
+		final DLItem temp = selection.get(first);
+		selection.set(first, selection.get(second));
+		selection.set(second, temp);
 	}
 
 	/**
 	 * Move the selected item to the last position
 	 */
 	protected void moveSelectionToLastPosition() {
-		if (this.selectionTable.getSelectionCount() == 0) {
+		if (selectionTable.getSelectionCount() == 0) {
 			return;
 		}
 
-		final int numberOfSelectedElements = this.selectionTable.getSelectionCount();
-		for (final TableItem tableItem : this.selectionTable.getSelection()) {
+		final int numberOfSelectedElements = selectionTable.getSelectionCount();
+		for (final TableItem tableItem : selectionTable.getSelection()) {
 			final DLItem item = (DLItem) tableItem.getData();
-			this.selection.remove(item);
-			this.selection.add(item);
+			selection.remove(item);
+			selection.add(item);
 		}
 
-		this.redrawTables();
-		final int numberOfElements = this.selectionTable.getItemCount();
-		this.selectionTable.select(numberOfElements - numberOfSelectedElements, numberOfElements - 1);
-		this.selectionTable.forceFocus();
+		redrawTables();
+		final int numberOfElements = selectionTable.getItemCount();
+		selectionTable.select(numberOfElements - numberOfSelectedElements, numberOfElements - 1);
+		selectionTable.forceFocus();
 	}
 
 	/**
 	 * Call all selection listeners
-	 * 
+	 *
 	 * @param item selected item
 	 */
 	private void fireSelectionEvent(final DLItem item) {
-		if (this.selectionListeners == null) {
+		if (selectionListeners == null) {
 			return;
 		}
 
 		final Event event = new Event();
 		event.button = 1;
-		event.display = this.getDisplay();
+		event.display = getDisplay();
 		event.item = null;
 		event.widget = this;
 		event.data = item;
 		final SelectionEvent selectionEvent = new SelectionEvent(event);
 
-		for (final SelectionListener listener : this.selectionListeners) {
+		for (final SelectionListener listener : selectionListeners) {
 			listener.widgetSelected(selectionEvent);
 		}
 	}
 
 	private void fireSelectionChangeEvent(final List<DLItem> items) {
-		if (this.selectionChangeListeners == null) {
+		if (selectionChangeListeners == null) {
 			return;
 		}
 
 		final Event event = new Event();
 		event.button = 1;
-		event.display = this.getDisplay();
+		event.display = getDisplay();
 		event.item = null;
 		event.widget = this;
 		final SelectionChangeEvent selectionChangeEvent = new SelectionChangeEvent(event);
 		selectionChangeEvent.setItems(items);
 
-		for (final SelectionChangeListener listener : this.selectionChangeListeners) {
+		for (final SelectionChangeListener listener : selectionChangeListeners) {
 			listener.widgetSelected(selectionChangeEvent);
 		}
 	}

@@ -27,7 +27,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
  * This snippet demonstrates the OpalDialog component
- * 
+ *
  */
 public class OpalDialogSnippet {
 	public static void main(final String[] args) {
@@ -233,6 +233,20 @@ public class OpalDialogSnippet {
 			}
 		});
 
+		final Button button15 = new Button(shell, SWT.PUSH);
+		button15.setText("Issue 45");
+		button15.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
+		button15.addSelectionListener(new SelectionAdapter() {
+
+			/**
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				testIssue45();
+			}
+		});
+
 		// Open the shell
 		shell.pack();
 		SWTGraphicUtil.centerShell(shell);
@@ -318,7 +332,8 @@ public class OpalDialogSnippet {
 		dialog.getMessageArea().setTitle("Copying files") //
 				.setIcon(Display.getCurrent().getSystemImage(SWT.ICON_INFORMATION)) //
 				.setText("Location : from 'Others' to 'Others'<br/>" + //
-						"File Name : <b>photo.jpg</b>").//
+						"File Name : <b>photo.jpg</b>")
+				.//
 				addProgressBar(0, 100, 0);
 
 		final int[] counter = new int[1];
@@ -398,5 +413,15 @@ public class OpalDialogSnippet {
 		d.getFooterArea().setButtonLabels(Arrays.asList("Don't Save please", "Cancel"));
 		d.show();
 
+	}
+
+	private static void testIssue45() {
+
+		final Dialog dialog = new Dialog(true);
+		dialog.getMessageArea().setVerticalScrollbar(true);
+		dialog.getMessageArea().setHeight(200);
+		dialog.getMessageArea().setText("Illegal format <key>:<value>");
+		dialog.setButtonType(OpalDialogType.OK);
+		dialog.show();
 	}
 }

@@ -51,7 +51,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Dispose safely any SWT resource when a widget is disposed
-	 * 
+	 *
 	 * @param widget widget attached to the resource
 	 * @param resource the resource to dispose
 	 */
@@ -66,7 +66,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Dispose safely any SWT resource
-	 * 
+	 *
 	 * @param resource the resource to dispose
 	 */
 	public static void safeDispose(final Resource resource) {
@@ -77,7 +77,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Create a color that is disposed automatically
-	 * 
+	 *
 	 * @param r red component
 	 * @param g green component
 	 * @param b blue component
@@ -99,7 +99,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Loads an image and create a SWT Image corresponding to this file
-	 * 
+	 *
 	 * @param fileName file name of the image
 	 * @return an image
 	 * @see org.eclipse.swt.graphics.Image
@@ -113,9 +113,9 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Create a reflected image of a source 
-	 * Inspired by Daniel Spiewak work (http://www.eclipsezone.com/eclipse/forums/t91013.html)
-	 * 
+	 * Create a reflected image of a source Inspired by Daniel Spiewak work
+	 * (http://www.eclipsezone.com/eclipse/forums/t91013.html)
+	 *
 	 * @param source source to be reflected
 	 * @return the source image with a reflection
 	 */
@@ -170,12 +170,13 @@ public class SWTGraphicUtil {
 
 		}
 		imgData.alphaData = alphaData;
+		newImage.dispose();
 		return new Image(source.getDevice(), imgData);
 	}
 
 	/**
 	 * Returns a new scaled image.
-	 * 
+	 *
 	 * @param source the image to be scaled
 	 * @param newWidth new width of the image
 	 * @param newHeight new height of the image
@@ -202,7 +203,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Create a reflected and resized version of an image
-	 * 
+	 *
 	 * @param source source image to be scaled and reflected
 	 * @param newWidth new width of the scaled image
 	 * @param newHeight new height of the scaled image
@@ -263,7 +264,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Center a shell on the primary monitor
-	 * 
+	 *
 	 * @param shell shell to center
 	 */
 	public static void centerShell(final Shell shell) {
@@ -292,8 +293,10 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Apply a very basic pseudo-HTML formating to a text stored in a StyledText widget. Supported tags are <b>, <i>, <u> , <COLOR>, <backgroundcolor>, <size> and <BbrR/>
-	 * 
+	 * Apply a very basic pseudo-HTML formating to a text stored in a StyledText
+	 * widget. Supported tags are <b>, <i>, <u> , <COLOR>, <backgroundcolor>,
+	 * <size> and <BbrR/>
+	 *
 	 * @param styledText styled text that contains an HTML text
 	 */
 	public static void applyHTMLFormating(final StyledText styledText) {
@@ -305,11 +308,14 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * @param originalImageData The ImageData to be average blurred. Transparency information will be ignored.
-	 * @param radius the number of radius pixels to consider when blurring image.
+	 * @param originalImageData The ImageData to be average blurred.
+	 *            Transparency information will be ignored.
+	 * @param radius the number of radius pixels to consider when blurring
+	 *            image.
 	 * @return A blurred copy of the image data, or null if an error occured.
 	 * @author Nicholas Rajendram
-	 * @see http://www.eclipse.org/articles/article.php?file=Article-SimpleImageEffectsForSWT/index.html
+	 * @see http://www.eclipse.org/articles/article.php?file=Article-
+	 *      SimpleImageEffectsForSWT/index.html
 	 */
 	public static ImageData blur(final ImageData originalImageData, int radius) {
 
@@ -317,14 +323,21 @@ public class SWTGraphicUtil {
 			return originalImageData;
 		}
 
-		// prepare new image data with 24-bit direct palette to hold blurred copy of image
+		// prepare new image data with 24-bit direct palette to hold blurred
+		// copy of image
 		final ImageData newImageData = new ImageData(originalImageData.width, originalImageData.height, 24, new PaletteData(0xFF, 0xFF00, 0xFF0000));
 		if (radius >= newImageData.height || radius >= newImageData.width) {
 			radius = Math.min(newImageData.height, newImageData.width) - 1;
 		}
 		// initialize cache
 		final ArrayList<RGB[]> rowCache = new ArrayList<RGB[]>();
-		final int cacheSize = radius * 2 + 1 > newImageData.height ? newImageData.height : radius * 2 + 1; // number of rows of imageData we cache
+		final int cacheSize = radius * 2 + 1 > newImageData.height ? newImageData.height : radius * 2 + 1; // number
+																											// of
+																											// rows
+																											// of
+																											// imageData
+																											// we
+																											// cache
 		int cacheStartIndex = 0; // which row of imageData the cache begins with
 		for (int row = 0; row < cacheSize; row++) {
 			// row data is horizontally blurred before caching
@@ -357,7 +370,8 @@ public class SWTGraphicUtil {
 						// grow cache
 						rowCache.add(rowCache.size(), blurRow(originalImageData, bottomSumBoundary, radius));
 					}
-				} while (bottomSumBoundary <= radius); // to initialize rowRGBSums at start
+				} while (bottomSumBoundary <= radius); // to initialize
+														// rowRGBSums at start
 			}
 
 			if (targetRow - topSumBoundary > radius) {
@@ -392,10 +406,13 @@ public class SWTGraphicUtil {
 	 * matrix of separated RGB values.
 	 */
 	private static RGB[] blurRow(final ImageData originalImageData, final int row, final int radius) {
-		final RGB[] rowRGBAverages = new RGB[originalImageData.width]; // resulting rgb averages
+		final RGB[] rowRGBAverages = new RGB[originalImageData.width]; // resulting
+																		// rgb
+																		// averages
 		final int[] lineData = new int[originalImageData.width];
 		originalImageData.getPixels(0, row, originalImageData.width, lineData, 0);
-		int r = 0, g = 0, b = 0; // sum red, green, and blue values separately for averaging
+		int r = 0, g = 0, b = 0; // sum red, green, and blue values separately
+									// for averaging
 		int leftSumBoundary = 0; // beginning index of summed values scope
 		int targetColumn = 0; // column of RGB average to be determined
 		int rightSumBoundary = 0; // ending index of summed values scope
@@ -411,7 +428,8 @@ public class SWTGraphicUtil {
 					b += rgb.blue;
 					numCols++;
 					rightSumBoundary++;
-				} while (rightSumBoundary <= radius); // to initialize summing scope at start
+				} while (rightSumBoundary <= radius); // to initialize summing
+														// scope at start
 			}
 
 			// subtract sum of left pixel as summing scope moves right
@@ -433,7 +451,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Enable all widgets of a control
-	 * 
+	 *
 	 * @param control control to enable/disable
 	 * @param enable <code>true</code> to enable, <code>false</code> to disable
 	 */
@@ -453,7 +471,7 @@ public class SWTGraphicUtil {
 
 	/**
 	 * Disable all widgets of a control
-	 * 
+	 *
 	 * @param control control to enable/disable
 	 * @param enable <code>true</code> to enable, <code>false</code> to disable
 	 */
@@ -468,8 +486,9 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * Build a font from a given control. Useful if we just want a bold label for example
-	 * 
+	 * Build a font from a given control. Useful if we just want a bold label
+	 * for example
+	 *
 	 * @param control control that handle the default font
 	 * @param style new style
 	 * @return a font with the given style
@@ -486,7 +505,7 @@ public class SWTGraphicUtil {
 	/**
 	 * Build a font from a given control. Useful if we just want a bold label
 	 * for example
-	 * 
+	 *
 	 * @param control control that handle the default font
 	 * @param style new style
 	 * @return a font with the given style
@@ -501,7 +520,8 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * @return <code>true</code> if the operating system is MacOS, false otherwise
+	 * @return <code>true</code> if the operating system is MacOS, false
+	 *         otherwise
 	 */
 	public static boolean isMacOS() {
 		final String OS = System.getProperty("os.name").toLowerCase();
@@ -513,7 +533,8 @@ public class SWTGraphicUtil {
 	 * @param red
 	 * @param green
 	 * @param blue
-	 * @return a color that will be disposed when <code>control</code> is disposed
+	 * @return a color that will be disposed when <code>control</code> is
+	 *         disposed
 	 */
 	public static Color getDefaultColor(final Control control, final int red, final int green, final int blue) {
 		final Color defaultColor = new Color(control.getDisplay(), red, green, blue);
@@ -522,7 +543,7 @@ public class SWTGraphicUtil {
 	}
 
 	/**
-	 * @param text 
+	 * @param text
 	 * @return the width of text
 	 */
 	public static int computeWidth(final String text) {

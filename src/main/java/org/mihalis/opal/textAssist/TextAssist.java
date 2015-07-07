@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Widget;
  * Instances of this class are selectable user interface objects that allow the
  * user to enter and modify text. The difference with the Text widget is that
  * when the user types something, some propositions are displayed.
- * 
+ *
  * @see org.eclipse.swt.widgets.Text
  */
 public class TextAssist extends Composite {
@@ -60,22 +60,24 @@ public class TextAssist extends Composite {
 	 * style constants. The class description lists the style constants that are
 	 * applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
-	 * 
+	 *
 	 * @param parent a composite control which will be the parent of the new
 	 *            instance (cannot be null)
 	 * @param style the style of control to construct
 	 * @param contentProvider the content provider
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                <li>ERROR_INVALID_SUBCLASS - if this class is not an
 	 *                allowed subclass</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see SWT#SINGLE
 	 * @see SWT#MULTI
 	 * @see SWT#READ_ONLY
@@ -95,48 +97,52 @@ public class TextAssist extends Composite {
 		this.contentProvider = contentProvider;
 		this.contentProvider.setTextAssist(this);
 
-		this.setLayout(new FillLayout());
-		this.numberOfLines = 10;
-		this.text = new Text(this, style);
-		this.popup = new Shell(this.getDisplay(), SWT.ON_TOP);
-		this.popup.setLayout(new FillLayout());
-		this.table = new Table(this.popup, SWT.SINGLE);
+		setLayout(new FillLayout());
+		numberOfLines = 10;
+		text = new Text(this, style);
+		popup = new Shell(getDisplay(), SWT.ON_TOP);
+		popup.setLayout(new FillLayout());
+		table = new Table(popup, SWT.SINGLE);
 
 		addTextListener();
 		addTableLittle();
 
-		getShell().addListener(SWT.Move, new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				TextAssist.this.popup.setVisible(false);
-			}
-		});
+		final int[] events = new int[] { SWT.Move, SWT.FocusOut };
+		for (final int event : events) {
+			getShell().addListener(event, new Listener() {
+				@Override
+				public void handleEvent(final Event event) {
+					popup.setVisible(false);
+				}
+			});
+		}
+
 	}
 
 	private void addTextListener() {
-		this.text.addListener(SWT.KeyDown, createKeyDownListener());
-		this.text.addListener(SWT.Modify, createModifyListener());
-		this.text.addListener(SWT.FocusOut, createFocusOutListener());
+		text.addListener(SWT.KeyDown, createKeyDownListener());
+		text.addListener(SWT.Modify, createModifyListener());
+		text.addListener(SWT.FocusOut, createFocusOutListener());
 	}
 
 	private void addTableLittle() {
-		this.table.addListener(SWT.DefaultSelection, new Listener() {
+		table.addListener(SWT.DefaultSelection, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				TextAssist.this.text.setText(TextAssist.this.table.getSelection()[0].getText());
-				TextAssist.this.popup.setVisible(false);
+				text.setText(table.getSelection()[0].getText());
+				popup.setVisible(false);
 			}
 		});
-		this.table.addListener(SWT.KeyDown, new Listener() {
+		table.addListener(SWT.KeyDown, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
 				if (event.keyCode == SWT.ESC) {
-					TextAssist.this.popup.setVisible(false);
+					popup.setVisible(false);
 				}
 			}
 		});
 
-		this.table.addListener(SWT.FocusOut, createFocusOutListener());
+		table.addListener(SWT.FocusOut, createFocusOutListener());
 	}
 
 	/**
@@ -147,29 +153,29 @@ public class TextAssist extends Composite {
 			@Override
 			public void handleEvent(final Event event) {
 				switch (event.keyCode) {
-					case SWT.ARROW_DOWN:
-						int index = (TextAssist.this.table.getSelectionIndex() + 1) % TextAssist.this.table.getItemCount();
-						TextAssist.this.table.setSelection(index);
-						event.doit = false;
-						break;
-					case SWT.ARROW_UP:
-						index = TextAssist.this.table.getSelectionIndex() - 1;
-						if (index < 0) {
-							index = TextAssist.this.table.getItemCount() - 1;
-						}
-						TextAssist.this.table.setSelection(index);
-						event.doit = false;
-						break;
-					case SWT.CR:
-					case SWT.KEYPAD_CR:
-						if (TextAssist.this.popup.isVisible() && TextAssist.this.table.getSelectionIndex() != -1) {
-							TextAssist.this.text.setText(TextAssist.this.table.getSelection()[0].getText());
-							TextAssist.this.popup.setVisible(false);
-						}
-						break;
-					case SWT.ESC:
-						TextAssist.this.popup.setVisible(false);
-						break;
+				case SWT.ARROW_DOWN:
+					int index = (table.getSelectionIndex() + 1) % table.getItemCount();
+					table.setSelection(index);
+					event.doit = false;
+					break;
+				case SWT.ARROW_UP:
+					index = table.getSelectionIndex() - 1;
+					if (index < 0) {
+						index = table.getItemCount() - 1;
+					}
+					table.setSelection(index);
+					event.doit = false;
+					break;
+				case SWT.CR:
+				case SWT.KEYPAD_CR:
+					if (popup.isVisible() && table.getSelectionIndex() != -1) {
+						text.setText(table.getSelection()[0].getText());
+						popup.setVisible(false);
+					}
+					break;
+				case SWT.ESC:
+					popup.setVisible(false);
+					break;
 				}
 			}
 		};
@@ -182,44 +188,44 @@ public class TextAssist extends Composite {
 		return new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				if (TextAssist.this.text.getData(SETTEXT_KEY) != null && Boolean.TRUE.equals(TextAssist.this.text.getData(SETTEXT_KEY))) {
-					TextAssist.this.text.setData(SETTEXT_KEY, null);
+				if (text.getData(SETTEXT_KEY) != null && Boolean.TRUE.equals(text.getData(SETTEXT_KEY))) {
+					text.setData(SETTEXT_KEY, null);
 					return;
 				}
-				TextAssist.this.text.setData(SETTEXT_KEY, null);
+				text.setData(SETTEXT_KEY, null);
 
-				final String string = TextAssist.this.text.getText();
+				final String string = text.getText();
 				if (string.length() == 0) {
-					TextAssist.this.popup.setVisible(false);
+					popup.setVisible(false);
 					return;
 				}
 
-				List<String> values = TextAssist.this.contentProvider.getContent(string);
+				List<String> values = contentProvider.getContent(string);
 				if (values == null || values.isEmpty()) {
-					TextAssist.this.popup.setVisible(false);
+					popup.setVisible(false);
 					return;
 				}
 
-				if (values.size() > TextAssist.this.numberOfLines) {
-					values = values.subList(0, TextAssist.this.numberOfLines);
+				if (values.size() > numberOfLines) {
+					values = values.subList(0, numberOfLines);
 				}
 
-				TextAssist.this.table.removeAll();
-				final int numberOfRows = Math.min(values.size(), TextAssist.this.numberOfLines);
+				table.removeAll();
+				final int numberOfRows = Math.min(values.size(), numberOfLines);
 				for (int i = 0; i < numberOfRows; i++) {
-					final TableItem tableItem = new TableItem(TextAssist.this.table, SWT.NONE);
+					final TableItem tableItem = new TableItem(table, SWT.NONE);
 					tableItem.setText(values.get(i));
 				}
 
-				final Point point = TextAssist.this.text.toDisplay(TextAssist.this.text.getLocation().x, TextAssist.this.text.getSize().y + TextAssist.this.text.getBorderWidth() - 3);
+				final Point point = text.toDisplay(text.getLocation().x, text.getSize().y + text.getBorderWidth() - 3);
 				int x = point.x;
 				int y = point.y;
 
 				final Rectangle displayRect = getMonitor().getClientArea();
 				final Rectangle parentRect = getDisplay().map(getParent(), null, getBounds());
-				TextAssist.this.popup.pack();
-				final int width = TextAssist.this.popup.getBounds().width;
-				final int height = TextAssist.this.popup.getBounds().height;
+				popup.pack();
+				final int width = popup.getBounds().width;
+				final int height = popup.getBounds().height;
 
 				if (y + height > displayRect.y + displayRect.height) {
 					y = parentRect.y - height;
@@ -228,8 +234,8 @@ public class TextAssist extends Composite {
 					x = displayRect.x + displayRect.width - width;
 				}
 
-				TextAssist.this.popup.setLocation(x, y);
-				TextAssist.this.popup.setVisible(true);
+				popup.setLocation(x, y);
+				popup.setVisible(true);
 
 			}
 		};
@@ -242,7 +248,9 @@ public class TextAssist extends Composite {
 		return new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				/* Async is needed to wait until focus reaches its new Control */
+				/*
+				 * Async is needed to wait until focus reaches its new Control
+				 */
 				TextAssist.this.getDisplay().asyncExec(new Runnable() {
 					@Override
 					public void run() {
@@ -250,8 +258,8 @@ public class TextAssist extends Composite {
 							return;
 						}
 						final Control control = TextAssist.this.getDisplay().getFocusControl();
-						if (control == null || control != TextAssist.this.text && control != TextAssist.this.table) {
-							TextAssist.this.popup.setVisible(false);
+						if (control == null || control != text && control != table) {
+							popup.setVisible(false);
 						}
 					}
 				});
@@ -265,7 +273,7 @@ public class TextAssist extends Composite {
 	@Override
 	public Color getBackground() {
 		checkWidget();
-		return this.text.getBackground();
+		return text.getBackground();
 	}
 
 	/**
@@ -273,7 +281,7 @@ public class TextAssist extends Composite {
 	 */
 	public TextAssistContentProvider getContentProvider() {
 		checkWidget();
-		return this.contentProvider;
+		return contentProvider;
 	}
 
 	/**
@@ -291,7 +299,7 @@ public class TextAssist extends Composite {
 	@Override
 	public void setBackground(final Color color) {
 		checkWidget();
-		this.text.setBackground(color);
+		text.setBackground(color);
 	}
 
 	/**
@@ -307,7 +315,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getNumberOfLines() {
 		checkWidget();
-		return this.numberOfLines;
+		return numberOfLines;
 	}
 
 	/**
@@ -324,7 +332,7 @@ public class TextAssist extends Composite {
 	@Override
 	public void addListener(final int eventType, final Listener listener) {
 		checkWidget();
-		this.text.addListener(eventType, listener);
+		text.addListener(eventType, listener);
 	}
 
 	/**
@@ -332,7 +340,7 @@ public class TextAssist extends Composite {
 	 */
 	public void addModifyListener(final ModifyListener listener) {
 		checkWidget();
-		this.text.addModifyListener(listener);
+		text.addModifyListener(listener);
 	}
 
 	/**
@@ -340,7 +348,7 @@ public class TextAssist extends Composite {
 	 */
 	public void addSelectionListener(final SelectionListener listener) {
 		checkWidget();
-		this.text.addSelectionListener(listener);
+		text.addSelectionListener(listener);
 	}
 
 	/**
@@ -348,7 +356,7 @@ public class TextAssist extends Composite {
 	 */
 	public void addVerifyListener(final VerifyListener listener) {
 		checkWidget();
-		this.text.addVerifyListener(listener);
+		text.addVerifyListener(listener);
 	}
 
 	/**
@@ -356,7 +364,7 @@ public class TextAssist extends Composite {
 	 */
 	public void append(final String string) {
 		checkWidget();
-		this.text.append(string);
+		text.append(string);
 	}
 
 	/**
@@ -364,7 +372,7 @@ public class TextAssist extends Composite {
 	 */
 	public void clearSelection() {
 		checkWidget();
-		this.text.clearSelection();
+		text.clearSelection();
 	}
 
 	/**
@@ -373,7 +381,7 @@ public class TextAssist extends Composite {
 	@Override
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
 		checkWidget();
-		return this.text.computeSize(wHint, hHint, changed);
+		return text.computeSize(wHint, hHint, changed);
 	}
 
 	/**
@@ -390,7 +398,7 @@ public class TextAssist extends Composite {
 	 */
 	public void copy() {
 		checkWidget();
-		this.text.copy();
+		text.copy();
 	}
 
 	/**
@@ -398,7 +406,7 @@ public class TextAssist extends Composite {
 	 */
 	public void cut() {
 		checkWidget();
-		this.text.cut();
+		text.cut();
 	}
 
 	/**
@@ -406,7 +414,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getCaretLineNumber() {
 		checkWidget();
-		return this.text.getCaretLineNumber();
+		return text.getCaretLineNumber();
 	}
 
 	/**
@@ -414,7 +422,7 @@ public class TextAssist extends Composite {
 	 */
 	public Point getCaretLocation() {
 		checkWidget();
-		return this.text.getCaretLocation();
+		return text.getCaretLocation();
 	}
 
 	/**
@@ -422,7 +430,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getCaretPosition() {
 		checkWidget();
-		return this.text.getCaretPosition();
+		return text.getCaretPosition();
 	}
 
 	/**
@@ -430,7 +438,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getCharCount() {
 		checkWidget();
-		return this.text.getCharCount();
+		return text.getCharCount();
 	}
 
 	/**
@@ -438,7 +446,7 @@ public class TextAssist extends Composite {
 	 */
 	public boolean getDoubleClickEnabled() {
 		checkWidget();
-		return this.text.getDoubleClickEnabled();
+		return text.getDoubleClickEnabled();
 	}
 
 	/**
@@ -446,7 +454,7 @@ public class TextAssist extends Composite {
 	 */
 	public char getEchoChar() {
 		checkWidget();
-		return this.text.getEchoChar();
+		return text.getEchoChar();
 	}
 
 	/**
@@ -454,7 +462,7 @@ public class TextAssist extends Composite {
 	 */
 	public boolean getEditable() {
 		checkWidget();
-		return this.text.getEditable();
+		return text.getEditable();
 	}
 
 	/**
@@ -471,7 +479,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getLineCount() {
 		checkWidget();
-		return this.text.getLineCount();
+		return text.getLineCount();
 	}
 
 	/**
@@ -479,7 +487,7 @@ public class TextAssist extends Composite {
 	 */
 	public String getLineDelimiter() {
 		checkWidget();
-		return this.text.getLineDelimiter();
+		return text.getLineDelimiter();
 	}
 
 	/**
@@ -487,7 +495,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getLineHeight() {
 		checkWidget();
-		return this.text.getLineHeight();
+		return text.getLineHeight();
 	}
 
 	/**
@@ -495,7 +503,7 @@ public class TextAssist extends Composite {
 	 */
 	public String getMessage() {
 		checkWidget();
-		return this.text.getMessage();
+		return text.getMessage();
 	}
 
 	/**
@@ -503,7 +511,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getOrientation() {
 		checkWidget();
-		return this.text.getOrientation();
+		return text.getOrientation();
 	}
 
 	/**
@@ -511,7 +519,7 @@ public class TextAssist extends Composite {
 	 */
 	public Point getSelection() {
 		checkWidget();
-		return this.text.getSelection();
+		return text.getSelection();
 	}
 
 	/**
@@ -519,7 +527,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getSelectionCount() {
 		checkWidget();
-		return this.text.getSelectionCount();
+		return text.getSelectionCount();
 	}
 
 	/**
@@ -527,7 +535,7 @@ public class TextAssist extends Composite {
 	 */
 	public String getSelectionText() {
 		checkWidget();
-		return this.text.getSelectionText();
+		return text.getSelectionText();
 	}
 
 	/**
@@ -535,7 +543,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getTabs() {
 		checkWidget();
-		return this.text.getTabs();
+		return text.getTabs();
 	}
 
 	/**
@@ -543,7 +551,7 @@ public class TextAssist extends Composite {
 	 */
 	public String getText() {
 		checkWidget();
-		return this.text.getText();
+		return text.getText();
 	}
 
 	/**
@@ -551,7 +559,7 @@ public class TextAssist extends Composite {
 	 */
 	public String getText(final int start, final int end) {
 		checkWidget();
-		return this.text.getText(start, end);
+		return text.getText(start, end);
 	}
 
 	/**
@@ -559,7 +567,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getTextLimit() {
 		checkWidget();
-		return this.text.getTextLimit();
+		return text.getTextLimit();
 	}
 
 	/**
@@ -567,7 +575,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getTopIndex() {
 		checkWidget();
-		return this.text.getTopIndex();
+		return text.getTopIndex();
 	}
 
 	/**
@@ -575,7 +583,7 @@ public class TextAssist extends Composite {
 	 */
 	public int getTopPixel() {
 		checkWidget();
-		return this.text.getTopPixel();
+		return text.getTopPixel();
 	}
 
 	/**
@@ -583,7 +591,7 @@ public class TextAssist extends Composite {
 	 */
 	public void insert(final String string) {
 		checkWidget();
-		this.text.insert(string);
+		text.insert(string);
 	}
 
 	/**
@@ -591,7 +599,7 @@ public class TextAssist extends Composite {
 	 */
 	public void paste() {
 		checkWidget();
-		this.text.paste();
+		text.paste();
 	}
 
 	/**
@@ -599,7 +607,7 @@ public class TextAssist extends Composite {
 	 */
 	public void removeModifyListener(final ModifyListener listener) {
 		checkWidget();
-		this.text.removeModifyListener(listener);
+		text.removeModifyListener(listener);
 	}
 
 	/**
@@ -607,7 +615,7 @@ public class TextAssist extends Composite {
 	 */
 	public void removeSelectionListener(final SelectionListener listener) {
 		checkWidget();
-		this.text.removeSelectionListener(listener);
+		text.removeSelectionListener(listener);
 	}
 
 	/**
@@ -615,7 +623,7 @@ public class TextAssist extends Composite {
 	 */
 	public void removeVerifyListener(final VerifyListener listener) {
 		checkWidget();
-		this.text.removeVerifyListener(listener);
+		text.removeVerifyListener(listener);
 	}
 
 	/**
@@ -623,7 +631,7 @@ public class TextAssist extends Composite {
 	 */
 	public void selectAll() {
 		checkWidget();
-		this.text.selectAll();
+		text.selectAll();
 	}
 
 	/**
@@ -631,7 +639,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setDoubleClickEnabled(final boolean doubleClick) {
 		checkWidget();
-		this.text.setDoubleClickEnabled(doubleClick);
+		text.setDoubleClickEnabled(doubleClick);
 	}
 
 	/**
@@ -639,7 +647,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setEchoChar(final char echo) {
 		checkWidget();
-		this.text.setEchoChar(echo);
+		text.setEchoChar(echo);
 	}
 
 	/**
@@ -647,7 +655,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setEditable(final boolean editable) {
 		checkWidget();
-		this.text.setEditable(editable);
+		text.setEditable(editable);
 	}
 
 	/**
@@ -656,7 +664,7 @@ public class TextAssist extends Composite {
 	@Override
 	public void setEnabled(final boolean value) {
 		checkWidget();
-		this.text.setEnabled(value);
+		text.setEnabled(value);
 	}
 
 	/**
@@ -665,8 +673,8 @@ public class TextAssist extends Composite {
 	@Override
 	public void setFont(final Font font) {
 		checkWidget();
-		this.text.setFont(font);
-		this.table.setFont(font);
+		text.setFont(font);
+		table.setFont(font);
 	}
 
 	/**
@@ -675,7 +683,7 @@ public class TextAssist extends Composite {
 	@Override
 	public void setForeground(final Color color) {
 		checkWidget();
-		this.text.setForeground(color);
+		text.setForeground(color);
 	}
 
 	/**
@@ -683,7 +691,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setMessage(final String string) {
 		checkWidget();
-		this.text.setMessage(string);
+		text.setMessage(string);
 	}
 
 	/**
@@ -691,7 +699,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setOrientation(final int orientation) {
 		checkWidget();
-		this.text.setOrientation(orientation);
+		text.setOrientation(orientation);
 	}
 
 	/**
@@ -700,7 +708,7 @@ public class TextAssist extends Composite {
 	@Override
 	public void setRedraw(final boolean redraw) {
 		checkWidget();
-		this.text.setRedraw(redraw);
+		text.setRedraw(redraw);
 	}
 
 	/**
@@ -708,7 +716,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setSelection(final int start, final int end) {
 		checkWidget();
-		this.text.setSelection(start, end);
+		text.setSelection(start, end);
 	}
 
 	/**
@@ -716,7 +724,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setSelection(final int start) {
 		checkWidget();
-		this.text.setSelection(start);
+		text.setSelection(start);
 	}
 
 	/**
@@ -724,7 +732,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setSelection(final Point selection) {
 		checkWidget();
-		this.text.setSelection(selection);
+		text.setSelection(selection);
 	}
 
 	/**
@@ -732,7 +740,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setTabs(final int tabs) {
 		checkWidget();
-		this.text.setTabs(tabs);
+		text.setTabs(tabs);
 	}
 
 	/**
@@ -749,7 +757,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setTextLimit(final int textLimit) {
 		checkWidget();
-		this.text.setTextLimit(textLimit);
+		text.setTextLimit(textLimit);
 	}
 
 	/**
@@ -757,7 +765,7 @@ public class TextAssist extends Composite {
 	 */
 	public void setTopIndex(final int topIndex) {
 		checkWidget();
-		this.text.setTopIndex(topIndex);
+		text.setTopIndex(topIndex);
 	}
 
 	/**
@@ -765,7 +773,7 @@ public class TextAssist extends Composite {
 	 */
 	public void showSelection() {
 		checkWidget();
-		this.text.showSelection();
+		text.showSelection();
 	}
 
 }

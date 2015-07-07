@@ -23,7 +23,8 @@ import org.mihalis.opal.utils.AdvancedPath;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
- * This class is an abstract button renderer used for default, red, orange, green and purple themes
+ * This class is an abstract button renderer used for default, red, orange,
+ * green and purple themes
  */
 public abstract class AbstractButtonRenderer implements ButtonRenderer {
 
@@ -59,15 +60,16 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	}
 
 	private void initButtonConfiguration() {
-		this.normal = createNormalConfiguration();
-		this.hover = createHoverConfiguration();
-		this.disabled = createDisabledConfiguration();
-		this.selected = createSelectedConfiguration();
-		this.onclick = createOnClickConfiguration();
+		normal = createNormalConfiguration();
+		hover = createHoverConfiguration();
+		disabled = createDisabledConfiguration();
+		selected = createSelectedConfiguration();
+		onclick = createOnClickConfiguration();
 	}
 
 	/**
-	 * @return the configuration when the button is not clicked, enabled, not selected, and the mouse is not hover
+	 * @return the configuration when the button is not clicked, enabled, not
+	 *         selected, and the mouse is not hover
 	 */
 	protected ButtonConfiguration createNormalConfiguration() {
 		final ButtonConfiguration configuration = new ButtonConfiguration();
@@ -135,19 +137,20 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	}
 
 	private void createArrows() {
-		this.imageUp = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_UP_IMAGE));
-		this.imageDown = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_DOWN_IMAGE));
-		this.imageLeft = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_LEFT_IMAGE));
-		this.imageRight = new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream(ARROW_RIGHT_IMAGE));
+		final ClassLoader loader = org.mihalis.opal.obutton.AbstractButtonRenderer.class.getClassLoader();
+		imageUp = new Image(Display.getCurrent(), loader.getResourceAsStream(ARROW_UP_IMAGE));
+		imageDown = new Image(Display.getCurrent(), loader.getResourceAsStream(ARROW_DOWN_IMAGE));
+		imageLeft = new Image(Display.getCurrent(), loader.getResourceAsStream(ARROW_LEFT_IMAGE));
+		imageRight = new Image(Display.getCurrent(), loader.getResourceAsStream(ARROW_RIGHT_IMAGE));
 
 		Display.getCurrent().addListener(SWT.Dispose, new Listener() {
 
 			@Override
 			public void handleEvent(final Event event) {
-				AbstractButtonRenderer.this.imageUp.dispose();
-				AbstractButtonRenderer.this.imageDown.dispose();
-				AbstractButtonRenderer.this.imageLeft.dispose();
-				AbstractButtonRenderer.this.imageRight.dispose();
+				imageUp.dispose();
+				imageDown.dispose();
+				imageLeft.dispose();
+				imageRight.dispose();
 			}
 		});
 	}
@@ -157,18 +160,18 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	 */
 	@Override
 	public void createDisabledImage() {
-		if (this.disabledImage != null && !this.disabledImage.isDisposed()) {
-			this.disabledImage.dispose();
+		if (disabledImage != null && !disabledImage.isDisposed()) {
+			disabledImage.dispose();
 		}
-		if (this.parent == null || this.parent.getImage() == null) {
-			this.disabledImage = null;
+		if (parent == null || parent.getImage() == null) {
+			disabledImage = null;
 		} else {
-			this.disabledImage = new Image(this.parent.getDisplay(), this.parent.getImage(), SWT.IMAGE_DISABLE);
-			this.parent.addListener(SWT.Dispose, new Listener() {
+			disabledImage = new Image(parent.getDisplay(), parent.getImage(), SWT.IMAGE_DISABLE);
+			parent.addListener(SWT.Dispose, new Listener() {
 				@Override
 				public void handleEvent(final Event e) {
-					if (!AbstractButtonRenderer.this.disabledImage.isDisposed()) {
-						AbstractButtonRenderer.this.disabledImage.dispose();
+					if (!disabledImage.isDisposed()) {
+						disabledImage.dispose();
 					}
 				}
 			});
@@ -183,53 +186,54 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 	}
 
 	/**
-	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButtonWhenMouseHover(org.eclipse.swt.graphics.GC, org.mihalis.opal.obutton.OButton)
+	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButtonWhenMouseHover(org.eclipse.swt.graphics.GC,
+	 *      org.mihalis.opal.obutton.OButton)
 	 */
 	@Override
 	public void drawButtonWhenMouseHover(final GC gc, final OButton parent) {
 		this.gc = gc;
-		this.configuration = this.hover;
-		this.gapOnClic = 0;
+		configuration = hover;
+		gapOnClic = 0;
 		this.parent = parent;
 		draw();
 	}
 
 	private void draw() {
-		this.gc.setAdvanced(true);
-		this.gc.setAntialias(SWT.ON);
+		gc.setAdvanced(true);
+		gc.setAntialias(SWT.ON);
 		drawBackground();
 		int xPosition = computeStartingPosition();
 		xPosition += drawImage(xPosition);
-		if (this.parent.getText() != null) {
+		if (parent.getText() != null) {
 			drawText(xPosition);
 		}
 	}
 
 	private void drawBackground() {
 		final AdvancedPath path = createClipping();
-		this.gc.setClipping(path);
-		this.gc.setForeground(this.configuration.getBackgroundColor());
-		this.gc.setBackground(this.configuration.getSecondBackgroundColor());
-		this.gc.fillGradientRectangle(0, this.gapOnClic, this.parent.getWidth(), this.parent.getHeight() - GAP_ON_CLIC, this.configuration.getGradientDirection() == SWT.VERTICAL);
-		this.gc.setClipping((Rectangle) null);
+		gc.setClipping(path);
+		gc.setForeground(configuration.getBackgroundColor());
+		gc.setBackground(configuration.getSecondBackgroundColor());
+		gc.fillGradientRectangle(0, gapOnClic, parent.getWidth(), parent.getHeight() - GAP_ON_CLIC, configuration.getGradientDirection() == SWT.VERTICAL);
+		gc.setClipping((Rectangle) null);
 		path.dispose();
 	}
 
 	private AdvancedPath createClipping() {
-		final AdvancedPath path = new AdvancedPath(this.parent.getDisplay());
-		path.addRoundRectangle(0, this.gapOnClic, this.parent.getWidth(), this.parent.getHeight() - GAP_ON_CLIC, this.configuration.getCornerRadius(), this.configuration.getCornerRadius());
+		final AdvancedPath path = new AdvancedPath(parent.getDisplay());
+		path.addRoundRectangle(0, gapOnClic, parent.getWidth(), parent.getHeight() - GAP_ON_CLIC, configuration.getCornerRadius(), configuration.getCornerRadius());
 		return path;
 	}
 
 	private int computeStartingPosition() {
 		final int widthOfTextAndImage = computeSizeOfTextAndImages().x;
-		switch (this.parent.alignment) {
-			case SWT.CENTER:
-				return (this.parent.getWidth() - widthOfTextAndImage) / 2;
-			case SWT.RIGHT:
-				return this.parent.getWidth() - widthOfTextAndImage - MARGIN;
-			default:
-				return MARGIN;
+		switch (parent.alignment) {
+		case SWT.CENTER:
+			return (parent.getWidth() - widthOfTextAndImage) / 2;
+		case SWT.RIGHT:
+			return parent.getWidth() - widthOfTextAndImage - MARGIN;
+		default:
+			return MARGIN;
 		}
 	}
 
@@ -240,122 +244,127 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 			return 0;
 		}
 
-		final int yPosition = (this.parent.getHeight() - image.getBounds().height - GAP_ON_CLIC) / 2;
-		this.gc.drawImage(image, xPosition, yPosition + this.gapOnClic);
+		final int yPosition = (parent.getHeight() - image.getBounds().height - GAP_ON_CLIC) / 2;
+		gc.drawImage(image, xPosition, yPosition + gapOnClic);
 		return image.getBounds().width + MARGIN;
 	}
 
 	private Image extractImage() {
-		if ((this.parent.getStyle() & SWT.ARROW) != 0) {
-			if ((this.parent.getStyle() & SWT.DOWN) != 0) {
-				return this.imageDown;
+		if ((parent.getStyle() & SWT.ARROW) != 0) {
+			if ((parent.getStyle() & SWT.DOWN) != 0) {
+				return imageDown;
 			}
-			if ((this.parent.getStyle() & SWT.UP) != 0) {
-				return this.imageUp;
+			if ((parent.getStyle() & SWT.UP) != 0) {
+				return imageUp;
 			}
-			if ((this.parent.getStyle() & SWT.LEFT) != 0) {
-				return this.imageLeft;
+			if ((parent.getStyle() & SWT.LEFT) != 0) {
+				return imageLeft;
 			}
-			if ((this.parent.getStyle() & SWT.RIGHT) != 0) {
-				return this.imageRight;
+			if ((parent.getStyle() & SWT.RIGHT) != 0) {
+				return imageRight;
 			}
 		}
 
-		if (this.parent.getImage() == null) {
+		if (parent.getImage() == null) {
 			return null;
 		}
 
 		final Image image;
-		if (!this.parent.isEnabled()) {
-			image = this.disabledImage;
+		if (!parent.isEnabled()) {
+			image = disabledImage;
 		} else {
-			image = this.parent.getImage();
+			image = parent.getImage();
 		}
 
 		return image;
 	}
 
 	private void drawText(final int xPosition) {
-		this.gc.setFont(this.configuration.getFont());
-		this.gc.setForeground(this.configuration.getFontColor());
+		gc.setFont(configuration.getFont());
+		gc.setForeground(configuration.getFontColor());
 
-		final Point textSize = this.gc.stringExtent(this.parent.getText());
-		final int yPosition = (this.parent.getHeight() - textSize.y - GAP_ON_CLIC) / 2;
+		final Point textSize = gc.stringExtent(parent.getText());
+		final int yPosition = (parent.getHeight() - textSize.y - GAP_ON_CLIC) / 2;
 
-		this.gc.drawText(this.parent.getText(), xPosition, yPosition + this.gapOnClic, true);
+		gc.drawText(parent.getText(), xPosition, yPosition + gapOnClic, true);
 	}
 
 	/**
-	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButtonWhenDisabled(org.eclipse.swt.graphics.GC, org.mihalis.opal.obutton.OButton)
+	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButtonWhenDisabled(org.eclipse.swt.graphics.GC,
+	 *      org.mihalis.opal.obutton.OButton)
 	 */
 	@Override
 	public void drawButtonWhenDisabled(final GC gc, final OButton parent) {
 		this.gc = gc;
-		this.configuration = this.disabled;
-		this.gapOnClic = 0;
+		configuration = disabled;
+		gapOnClic = 0;
 		this.parent = parent;
 		draw();
 	}
 
 	/**
-	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButtonWhenSelected(org.eclipse.swt.graphics.GC, org.mihalis.opal.obutton.OButton)
+	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButtonWhenSelected(org.eclipse.swt.graphics.GC,
+	 *      org.mihalis.opal.obutton.OButton)
 	 */
 	@Override
 	public void drawButtonWhenSelected(final GC gc, final OButton parent) {
 		this.gc = gc;
-		this.configuration = this.selected;
-		this.gapOnClic = 0;
+		configuration = selected;
+		gapOnClic = 0;
 		this.parent = parent;
 		draw();
 	}
 
 	/**
-	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButton(org.eclipse.swt.graphics.GC, org.mihalis.opal.obutton.OButton)
+	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButton(org.eclipse.swt.graphics.GC,
+	 *      org.mihalis.opal.obutton.OButton)
 	 */
 	@Override
 	public void drawButton(final GC gc, final OButton parent) {
 		this.gc = gc;
-		this.configuration = this.normal;
-		this.gapOnClic = 0;
+		configuration = normal;
+		gapOnClic = 0;
 		this.parent = parent;
 		draw();
 	}
 
 	/**
-	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButtonWhenClicked(org.eclipse.swt.graphics.GC, org.mihalis.opal.obutton.OButton)
+	 * @see org.mihalis.opal.obutton.ButtonRenderer#drawButtonWhenClicked(org.eclipse.swt.graphics.GC,
+	 *      org.mihalis.opal.obutton.OButton)
 	 */
 	@Override
 	public void drawButtonWhenClicked(final GC gc, final OButton parent) {
 		this.gc = gc;
-		this.configuration = this.onclick;
-		this.gapOnClic = GAP_ON_CLIC;
+		configuration = onclick;
+		gapOnClic = GAP_ON_CLIC;
 		this.parent = parent;
 		draw();
 	}
 
 	/**
-	 * @see org.mihalis.opal.obutton.ButtonRenderer#computeSize(org.mihalis.opal.obutton.OButton, int, int, boolean)
+	 * @see org.mihalis.opal.obutton.ButtonRenderer#computeSize(org.mihalis.opal.obutton.OButton,
+	 *      int, int, boolean)
 	 */
 	@Override
 	public Point computeSize(final OButton button, final int wHint, final int hHint, final boolean changed) {
-		this.parent = button;
+		parent = button;
 		final Point sizeOfTextAndImages = computeSizeOfTextAndImages();
 		return new Point(2 * MARGIN + sizeOfTextAndImages.x, 2 * MARGIN + sizeOfTextAndImages.y + GAP_ON_CLIC);
 	}
 
 	private Point computeSizeOfTextAndImages() {
 		int width = 0, height = 0;
-		final boolean textNotEmpty = this.parent.getText() != null && !this.parent.getText().equals("");
+		final boolean textNotEmpty = parent.getText() != null && !parent.getText().equals("");
 
 		if (textNotEmpty) {
-			final GC gc = new GC(this.parent);
-			if (this.configuration == null) {
-				gc.setFont(this.parent.getFont());
+			final GC gc = new GC(parent);
+			if (configuration == null) {
+				gc.setFont(parent.getFont());
 			} else {
-				gc.setFont(this.configuration.getFont());
+				gc.setFont(configuration.getFont());
 			}
 
-			final Point extent = gc.stringExtent(this.parent.getText());
+			final Point extent = gc.stringExtent(parent.getText());
 			gc.dispose();
 			width += extent.x;
 			height = extent.y;

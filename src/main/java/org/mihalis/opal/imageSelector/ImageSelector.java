@@ -43,7 +43,8 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
- * Work inspired by Romain Guy's work (http://www.curious-creature.org/2005/07/09/a-music-shelf-in-java2d/)
+ * Work inspired by Romain Guy's work
+ * (http://www.curious-creature.org/2005/07/09/a-music-shelf-in-java2d/)
  */
 public class ImageSelector extends Canvas {
 	private List<ISItem> items;
@@ -77,33 +78,35 @@ public class ImageSelector extends Canvas {
 	 * style constants. The class description lists the style constants that are
 	 * applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
-	 * 
+	 *
 	 * @param parent a composite control which will be the parent of the new
 	 *            instance (cannot be null)
 	 * @param style the style of control to construct
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public ImageSelector(final Composite parent, final int style) {
 		super(parent, style | SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
-		final Font defaultFont = new Font(this.getDisplay(), "Lucida Sans", 24, SWT.NONE);
-		this.font = defaultFont;
+		final Font defaultFont = new Font(getDisplay(), "Lucida Sans", 24, SWT.NONE);
+		font = defaultFont;
 		SWTGraphicUtil.addDisposer(this, defaultFont);
 
 		setSigma(0.5);
-		this.gradientStart = getDisplay().getSystemColor(SWT.COLOR_BLACK);
-		this.gradientEnd = SWTGraphicUtil.getDefaultColor(this, 110, 110, 110);
+		gradientStart = getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		gradientEnd = SWTGraphicUtil.getDefaultColor(this, 110, 110, 110);
 
 		addListeners();
-		SWTGraphicUtil.addDisposer(this, this.cachedGC);
-		SWTGraphicUtil.addDisposer(this, this.cachedImage);
+		SWTGraphicUtil.addDisposer(this, cachedGC);
+		SWTGraphicUtil.addDisposer(this, cachedImage);
 	}
 
 	private void addListeners() {
@@ -120,14 +123,14 @@ public class ImageSelector extends Canvas {
 		addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
-				if (ImageSelector.this.cachedGC == null) {
+				if (cachedGC == null) {
 					return;
 				}
-				ImageSelector.this.cachedGC.dispose();
-				ImageSelector.this.cachedImage.dispose();
-				ImageSelector.this.cachedImage = new Image(getDisplay(), getClientArea());
-				ImageSelector.this.cachedGC = new GC(ImageSelector.this.cachedImage);
-				ImageSelector.this.cachedGC.setAntialias(SWT.ON);
+				cachedGC.dispose();
+				cachedImage.dispose();
+				cachedImage = new Image(getDisplay(), getClientArea());
+				cachedGC = new GC(cachedImage);
+				cachedGC.setAntialias(SWT.ON);
 			}
 		});
 	}
@@ -143,26 +146,26 @@ public class ImageSelector extends Canvas {
 			@Override
 			public void keyReleased(final KeyEvent e) {
 				switch (e.keyCode) {
-					case SWT.ARROW_LEFT:
-					case SWT.ARROW_UP:
-						scrollAndAnimateBy(-1);
-						break;
-					case SWT.ARROW_RIGHT:
-					case SWT.ARROW_DOWN:
-						scrollAndAnimateBy(1);
-						break;
-					case SWT.HOME:
-						scrollBy(-1 * ImageSelector.this.index);
-						break;
-					case SWT.END:
-						scrollBy(ImageSelector.this.index);
-						break;
-					case SWT.PAGE_UP:
-						scrollBy(-1 * ImageSelector.this.pageIncrement);
-						break;
-					case SWT.PAGE_DOWN:
-						scrollBy(ImageSelector.this.pageIncrement);
-						break;
+				case SWT.ARROW_LEFT:
+				case SWT.ARROW_UP:
+					scrollAndAnimateBy(-1);
+					break;
+				case SWT.ARROW_RIGHT:
+				case SWT.ARROW_DOWN:
+					scrollAndAnimateBy(1);
+					break;
+				case SWT.HOME:
+					scrollBy(-1 * index);
+					break;
+				case SWT.END:
+					scrollBy(index);
+					break;
+				case SWT.PAGE_UP:
+					scrollBy(-1 * pageIncrement);
+					break;
+				case SWT.PAGE_DOWN:
+					scrollBy(pageIncrement);
+					break;
 				}
 			}
 		});
@@ -175,8 +178,9 @@ public class ImageSelector extends Canvas {
 		addMouseMoveListener(new MouseMoveListener() {
 			@Override
 			public void mouseMove(final MouseEvent e) {
-				for (final ISItem item : ImageSelector.this.items) {
-					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y && e.y <= item.getLowerRightCorner().y) {
+				for (final ISItem item : items) {
+					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y
+							&& e.y <= item.getLowerRightCorner().y) {
 						setCursor(getDisplay().getSystemCursor(SWT.CURSOR_HAND));
 						return;
 					}
@@ -191,9 +195,10 @@ public class ImageSelector extends Canvas {
 			 */
 			@Override
 			public void mouseUp(final MouseEvent e) {
-				for (final ISItem item : ImageSelector.this.items) {
-					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y && e.y <= item.getLowerRightCorner().y) {
-						scrollAndAnimateBy(ImageSelector.this.originalItems.indexOf(item) - ImageSelector.this.index);
+				for (final ISItem item : items) {
+					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y
+							&& e.y <= item.getLowerRightCorner().y) {
+						scrollAndAnimateBy(originalItems.indexOf(item) - index);
 						return;
 					}
 				}
@@ -210,21 +215,21 @@ public class ImageSelector extends Canvas {
 
 	/**
 	 * Set the sigma value for the gaussian curve
-	 * 
+	 *
 	 * @param sigma new sigma parameter
 	 */
 	public void setSigma(final double sigma) {
 		this.sigma = sigma;
-		this.rho = 1.0;
+		rho = 1.0;
 		computeEquationParts();
-		this.rho = computeModifierUnbounded(0.0);
+		rho = computeModifierUnbounded(0.0);
 		computeEquationParts();
 		redraw();
 	}
 
 	/**
 	 * Compute the value of the modifier. The value is bounded between -1 and +1
-	 * 
+	 *
 	 * @param x input value
 	 * @return the value of the modifier between -1 and +1
 	 */
@@ -240,33 +245,33 @@ public class ImageSelector extends Canvas {
 
 	/**
 	 * Compute the value of the modifier
-	 * 
+	 *
 	 * @param x input value
 	 * @return the value of the function
 	 */
 	private double computeModifierUnbounded(final double x) {
-		return this.expMultiplier * Math.exp(-x * x / this.expMember);
+		return expMultiplier * Math.exp(-x * x / expMember);
 	}
 
 	/**
 	 * Computer both members of the equation
 	 */
 	private void computeEquationParts() {
-		this.expMultiplier = Math.sqrt(2.0 * Math.PI) / this.sigma / this.rho;
-		this.expMember = 4.0 * this.sigma * this.sigma;
+		expMultiplier = Math.sqrt(2.0 * Math.PI) / sigma / rho;
+		expMember = 4.0 * sigma * sigma;
 	}
 
 	/**
 	 * Draw the widget
-	 * 
+	 *
 	 * @param e the paintEvent
 	 */
 	private void paintControl(final PaintEvent e) {
 
-		if (this.cachedImage == null) {
-			this.cachedImage = new Image(getDisplay(), getClientArea());
-			this.cachedGC = new GC(this.cachedImage);
-			this.cachedGC.setAntialias(SWT.ON);
+		if (cachedImage == null) {
+			cachedImage = new Image(getDisplay(), getClientArea());
+			cachedGC = new GC(cachedImage);
+			cachedGC.setAntialias(SWT.ON);
 		}
 
 		// Draw gradient
@@ -276,62 +281,62 @@ public class ImageSelector extends Canvas {
 		drawItems();
 
 		// Draw the title
-		if (this.animationStep < 0d) {
+		if (animationStep < 0d) {
 			drawTitle();
 		}
 
 		// Draw the offscreen buffer to the screen
-		e.gc.drawImage(this.cachedImage, 0, 0);
+		e.gc.drawImage(cachedImage, 0, 0);
 	}
 
 	/**
 	 * Draw the background
-	 * 
+	 *
 	 * @param gc graphical context
 	 */
 	private void drawBackground() {
 		final Rectangle rect = getClientArea();
 
-		this.cachedGC.setForeground(this.gradientStart);
-		this.cachedGC.setBackground(this.gradientEnd);
-		this.cachedGC.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height / 2, true);
+		cachedGC.setForeground(gradientStart);
+		cachedGC.setBackground(gradientEnd);
+		cachedGC.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height / 2, true);
 
-		this.cachedGC.setForeground(this.gradientEnd);
-		this.cachedGC.setBackground(this.gradientStart);
-		this.cachedGC.fillGradientRectangle(rect.x, rect.height / 2, rect.width, rect.height / 2, true);
+		cachedGC.setForeground(gradientEnd);
+		cachedGC.setBackground(gradientStart);
+		cachedGC.fillGradientRectangle(rect.x, rect.height / 2, rect.width, rect.height / 2, true);
 	}
 
 	/**
 	 * Draw the items
-	 * 
+	 *
 	 * @param gc graphical context
 	 */
 	private void drawItems() {
-		if (this.animationStep < 0d) {
-			this.items.clear();
-			this.items.addAll(this.originalItems);
-			for (int i = 0; i < this.items.size(); i++) {
-				final ISItem item = this.items.get(i);
-				item.setzPosition((i - this.index) * this.spacing);
+		if (animationStep < 0d) {
+			items.clear();
+			items.addAll(originalItems);
+			for (int i = 0; i < items.size(); i++) {
+				final ISItem item = items.get(i);
+				item.setzPosition((i - index) * spacing);
 			}
-			Collections.sort(this.items);
+			Collections.sort(items);
 		}
 
-		for (final ISItem item : this.items) {
+		for (final ISItem item : items) {
 			drawItem(item);
 		}
 	}
 
 	/**
 	 * Draw a given item
-	 * 
+	 *
 	 * @param item item to draw
 	 */
 	private void drawItem(final ISItem item) {
 
 		final int size = computeSize(item);
 		final int centerX = computeZPosition(item);
-		final int centerY = this.getClientArea().height / 2;
+		final int centerY = getClientArea().height / 2;
 
 		if (size <= 0 || centerX < 0 || centerX > getBounds().width) {
 			item.resetCornerToNull();
@@ -341,12 +346,12 @@ public class ImageSelector extends Canvas {
 		final int alpha = computeAlpha(item);
 
 		final Image newImage = SWTGraphicUtil.createReflectedResizedImage(item.getImage(), size, size);
-		this.cachedGC.setAlpha(alpha);
+		cachedGC.setAlpha(alpha);
 
 		final int x = centerX - newImage.getBounds().width / 2;
 		final int y = centerY - newImage.getBounds().height / 2;
 
-		this.cachedGC.drawImage(newImage, x, y);
+		cachedGC.drawImage(newImage, x, y);
 
 		item.setUpperLeftCorner(x, y);
 		item.setLowerRightCorner(x + newImage.getBounds().width, (int) (y + newImage.getBounds().height / 1.5));
@@ -356,29 +361,29 @@ public class ImageSelector extends Canvas {
 
 	/**
 	 * Compute the z position for a given item
-	 * 
+	 *
 	 * @param item item
 	 * @return the z position of the item
 	 */
 	private int computeZPosition(final ISItem item) {
-		final int totalWidth = this.getClientArea().width / 2;
-		final int centerX = this.getClientArea().width / 2;
+		final int totalWidth = getClientArea().width / 2;
+		final int centerX = getClientArea().width / 2;
 		return (int) (centerX + item.getzPosition() * totalWidth);
 	}
 
 	/**
 	 * Compute size for a given item
-	 * 
+	 *
 	 * @param item item
 	 * @return the size of the item
 	 */
 	private int computeSize(final ISItem item) {
-		return (int) (computeModifierBounded(item.getzPosition()) * this.maxItemWidth);
+		return (int) (computeModifierBounded(item.getzPosition()) * maxItemWidth);
 	}
 
 	/**
 	 * Compute the alpha value of a given item
-	 * 
+	 *
 	 * @param item item
 	 * @return the alpha value of the item
 	 */
@@ -388,52 +393,52 @@ public class ImageSelector extends Canvas {
 
 	/**
 	 * Draw the title under the selected item
-	 * 
+	 *
 	 * @param gc graphical context
 	 */
 	private void drawTitle() {
-		final String title = this.originalItems.get(this.index).getText();
+		final String title = originalItems.get(index).getText();
 		if (title == null || title.trim().equals("")) {
 			return;
 		}
-		this.cachedGC.setFont(getFont());
-		final Point textSize = this.cachedGC.stringExtent(title);
+		cachedGC.setFont(getFont());
+		final Point textSize = cachedGC.stringExtent(title);
 
-		this.cachedGC.setFont(getFont());
-		this.cachedGC.setForeground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		this.cachedGC.setAlpha(255);
+		cachedGC.setFont(getFont());
+		cachedGC.setForeground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		cachedGC.setAlpha(255);
 
-		final int centerX = this.getClientArea().width / 2;
-		final int centerY = (this.getClientArea().height + this.maxItemWidth) / 2;
+		final int centerX = getClientArea().width / 2;
+		final int centerY = (getClientArea().height + maxItemWidth) / 2;
 
-		this.cachedGC.drawString(title, centerX - textSize.x / 2, (centerY - textSize.y / 2), true);
+		cachedGC.drawString(title, centerX - textSize.x / 2, centerY - textSize.y / 2, true);
 
 	}
 
 	/**
 	 * Scroll the selected item
-	 * 
+	 *
 	 * @param increment increment value
 	 */
 	private void scrollBy(final int increment) {
-		this.index += increment;
-		if (this.index < 0) {
-			this.index = 0;
+		index += increment;
+		if (index < 0) {
+			index = 0;
 		}
 
-		if (this.index >= this.items.size()) {
-			this.index = this.items.size() - 1;
+		if (index >= items.size()) {
+			index = items.size() - 1;
 		}
 		redraw();
 	}
 
 	/**
 	 * Scroll the selected item with an animation
-	 * 
+	 *
 	 * @param increment increment value
 	 */
 	private void scrollAndAnimateBy(final int increment) {
-		if (this.index == 0 && increment < 0 || this.index == this.items.size() - 1 && increment > 0) {
+		if (increment == 0 || index == 0 && increment < 0 || index == items.size() - 1 && increment > 0) {
 			return;
 		}
 
@@ -449,21 +454,21 @@ public class ImageSelector extends Canvas {
 			}
 
 			private void startAnimation(final int increment, final double step) {
-				ImageSelector.this.items.clear();
-				ImageSelector.this.items.addAll(ImageSelector.this.originalItems);
-				for (int i = 0; i < ImageSelector.this.items.size(); i++) {
-					final ISItem item = ImageSelector.this.items.get(i);
-					item.setzPosition((i - ImageSelector.this.index + ImageSelector.this.animationStep * (increment > 0 ? -1d : 1d)) * ImageSelector.this.spacing);
+				items.clear();
+				items.addAll(originalItems);
+				for (int i = 0; i < items.size(); i++) {
+					final ISItem item = items.get(i);
+					item.setzPosition((i - index + animationStep * (increment > 0 ? -1d : 1d)) * spacing);
 				}
-				Collections.sort(ImageSelector.this.items);
+				Collections.sort(items);
 				if (!isDisposed()) {
 					redraw();
 				}
 
-				ImageSelector.this.animationStep += step;
-				if (ImageSelector.this.animationStep >= 1d) {
-					ImageSelector.this.animationStep = -1d;
-					ImageSelector.this.index += increment;
+				animationStep += step;
+				if (animationStep >= 1d) {
+					animationStep = -1d;
+					index += increment;
 					setCursor(getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
 				} else {
 					if (!isDisposed()) {
@@ -479,7 +484,7 @@ public class ImageSelector extends Canvas {
 	 * @return the items displayed by this widget
 	 */
 	public List<ISItem> getItems() {
-		return this.originalItems;
+		return originalItems;
 	}
 
 	/**
@@ -487,8 +492,8 @@ public class ImageSelector extends Canvas {
 	 */
 	public void setItems(final List<ISItem> items) {
 		this.items = new ArrayList<ISItem>(items);
-		this.originalItems = items;
-		this.index = this.items.size() / 2;
+		originalItems = items;
+		index = this.items.size() / 2;
 		redraw();
 	}
 
@@ -497,7 +502,7 @@ public class ImageSelector extends Canvas {
 	 */
 	@Override
 	public Font getFont() {
-		return this.font;
+		return font;
 	}
 
 	/**
@@ -513,7 +518,7 @@ public class ImageSelector extends Canvas {
 	 * @return the index of the selected image
 	 */
 	public int getIndex() {
-		return this.index;
+		return index;
 	}
 
 	/**
@@ -528,7 +533,7 @@ public class ImageSelector extends Canvas {
 	 * @return the maximum items width
 	 */
 	public int getMaxItemWidth() {
-		return this.maxItemWidth;
+		return maxItemWidth;
 	}
 
 	/**
@@ -543,14 +548,14 @@ public class ImageSelector extends Canvas {
 	 * @return the sigma value
 	 */
 	public double getSigma() {
-		return this.sigma;
+		return sigma;
 	}
 
 	/**
 	 * @return the spacing between 2 items
 	 */
 	public float getSpacing() {
-		return this.spacing;
+		return spacing;
 	}
 
 	/**
@@ -565,7 +570,7 @@ public class ImageSelector extends Canvas {
 	 * @return the gradient start color
 	 */
 	public Color getGradientStart() {
-		return this.gradientStart;
+		return gradientStart;
 	}
 
 	/**
@@ -580,7 +585,7 @@ public class ImageSelector extends Canvas {
 	 * @return the the gradient end color
 	 */
 	public Color getGradientEnd() {
-		return this.gradientEnd;
+		return gradientEnd;
 	}
 
 	/**
@@ -595,7 +600,7 @@ public class ImageSelector extends Canvas {
 	 * @return the page increment when the user uses PgUp and PgDown
 	 */
 	public int getPageIncrement() {
-		return this.pageIncrement;
+		return pageIncrement;
 	}
 
 	/**

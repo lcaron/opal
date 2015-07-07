@@ -17,10 +17,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.mihalis.opal.header.HeaderSnippet;
 
 /**
  * A simple snippet for the Rounded Toolbar Widget
@@ -52,21 +52,27 @@ public class RoundedToolbarSnippet {
 		grey1 = new Color(display, 211, 211, 211);
 		grey2 = new Color(display, 255, 250, 250);
 
-		iconBubble1b = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble1_b.png"));
-		iconBubble1w = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble1_w.png"));
+		iconBubble1b = new Image(display, RoundedToolbarSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble1_b.png"));
+		iconBubble1w = new Image(display, RoundedToolbarSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble1_w.png"));
 
-		iconBubble2b = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble2_b.png"));
-		iconBubble2w = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble2_w.png"));
+		iconBubble2b = new Image(display, RoundedToolbarSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble2_b.png"));
+		iconBubble2w = new Image(display, RoundedToolbarSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble2_w.png"));
 
-		iconBubble3b = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble3_b.png"));
-		iconBubble3w = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble3_w.png"));
+		iconBubble3b = new Image(display, RoundedToolbarSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble3_b.png"));
+		iconBubble3w = new Image(display, RoundedToolbarSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/bubble3_w.png"));
 
-		emailb = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/email_b.png"));
-		emailw = new Image(display, HeaderSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/email_w.png"));
+		emailb = new Image(display, RoundedToolbarSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/email_b.png"));
+		emailw = new Image(display, RoundedToolbarSnippet.class.getClassLoader().getResourceAsStream("org/mihalis/opal/roundedToolbar/icons/email_w.png"));
 
 		createFirstToolbar(shell);
 
-		createSecondToolbar(shell);
+		createSecondToolbar(shell, false);
+
+		final RoundedToolbar toolbar = createSecondToolbar(shell, true);
+		final GridData gd = new GridData(SWT.FILL, SWT.FILL, false, false);
+		gd.widthHint = SWT.DEFAULT;
+		gd.heightHint = 100;
+		toolbar.setLayoutData(gd);
 
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -132,7 +138,7 @@ public class RoundedToolbarSnippet {
 		item3.setWidth(40);
 	}
 
-	private static void createSecondToolbar(final Shell shell) {
+	private static RoundedToolbar createSecondToolbar(final Shell shell, final boolean verticalAlignment) {
 		final RoundedToolbar roundedToolBar2 = new RoundedToolbar(shell, SWT.NONE);
 		roundedToolBar2.setCornerRadius(8);
 		roundedToolBar2.setBackground(grey1);
@@ -147,6 +153,9 @@ public class RoundedToolbarSnippet {
 				System.out.println("Bar2/Button 1");
 			}
 		});
+		if (verticalAlignment) {
+			mailItem.setVerticalAlignment(SWT.TOP);
+		}
 
 		final RoundedToolItem mailItemWithText = new RoundedToolItem(roundedToolBar2);
 		mailItemWithText.setTextColorSelected(grey2);
@@ -160,6 +169,9 @@ public class RoundedToolbarSnippet {
 				System.out.println("Bar2/Button 2");
 			}
 		});
+		if (verticalAlignment) {
+			mailItemWithText.setVerticalAlignment(SWT.CENTER);
+		}
 
 		final RoundedToolItem itemJustText = new RoundedToolItem(roundedToolBar2);
 		itemJustText.setTextColorSelected(grey2);
@@ -172,6 +184,11 @@ public class RoundedToolbarSnippet {
 				System.out.println("Bar2/Button 3");
 			}
 		});
+
+		if (verticalAlignment) {
+			itemJustText.setVerticalAlignment(SWT.BOTTOM);
+		}
+		return roundedToolBar2;
 
 	}
 }

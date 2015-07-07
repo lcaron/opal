@@ -29,7 +29,8 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
 /**
  * Instances of this class are controls located on the top of a shell. They
  * display a ticker that indicates to the user that a long task operation is
- * running. The design is inspired by Romain Guy's work (http://www.curious-creature.org)
+ * running. The design is inspired by Romain Guy's work
+ * (http://www.curious-creature.org)
  */
 public class InfiniteProgressPanel {
 
@@ -56,13 +57,15 @@ public class InfiniteProgressPanel {
 
 	/**
 	 * Constructs a new instance of this class given its parent.
-	 * 
+	 *
 	 * @param shell a shell that will be the parent of the new instance (cannot
 	 *            be null)
-	 * @exception IllegalArgumentException <ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the parent has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
@@ -78,30 +81,30 @@ public class InfiniteProgressPanel {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 
-		this.parent = shell;
+		parent = shell;
 		if (shell.getData(INFINITE_PANEL_KEY) != null) {
 			throw new IllegalArgumentException("This shell has already an infinite panel attached on it !");
 		}
 
-		this.text = null;
-		this.textFont = null;
-		this.barsCount = 14;
-		this.fps = 15.0f;
-		this.lineWidth = 16;
-		this.alpha = 200;
-		this.fadeIn = false;
-		this.fadeOut = false;
-		this.fadeOutCounter = 0;
+		text = null;
+		textFont = null;
+		barsCount = 14;
+		fps = 15.0f;
+		lineWidth = 16;
+		alpha = 200;
+		fadeIn = false;
+		fadeOut = false;
+		fadeOutCounter = 0;
 		shell.setData(INFINITE_PANEL_KEY, this);
 
-		this.parent.addListener(SWT.Activate, new Listener() {
+		parent.addListener(SWT.Activate, new Listener() {
 
 			@Override
 			public void handleEvent(final Event e) {
-				if (InfiniteProgressPanel.this.shellHover != null && //
-						!InfiniteProgressPanel.this.shellHover.isDisposed() && !InfiniteProgressPanel.this.shellHover.isVisible()) {
-					InfiniteProgressPanel.this.shellHover.setVisible(true);
-					InfiniteProgressPanel.this.shellHover.setActive();
+				if (shellHover != null && //
+						!shellHover.isDisposed() && !shellHover.isVisible()) {
+					shellHover.setVisible(true);
+					shellHover.setActive();
 				}
 			}
 		});
@@ -111,21 +114,21 @@ public class InfiniteProgressPanel {
 	 * Starts the ticker
 	 */
 	public void start() {
-		if (this.parent.isDisposed()) {
+		if (parent.isDisposed()) {
 			SWT.error(SWT.ERROR_WIDGET_DISPOSED);
 		}
 
-		this.currentPosition = 0;
-		this.fadeIn = true;
-		this.fadeOut = false;
-		this.fadeOutCounter = 0;
+		currentPosition = 0;
+		fadeIn = true;
+		fadeOut = false;
+		fadeOutCounter = 0;
 
-		if (this.defaultColor == null) {
-			this.defaultColor = SWTGraphicUtil.getDefaultColor(this.parent, 200, 200, 200);
+		if (defaultColor == null) {
+			defaultColor = SWTGraphicUtil.getDefaultColor(parent, 200, 200, 200);
 		}
 
-		if (this.selectionColor == null) {
-			this.selectionColor = this.parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		if (selectionColor == null) {
+			selectionColor = parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
 		}
 
 		createShell();
@@ -133,29 +136,29 @@ public class InfiniteProgressPanel {
 	}
 
 	private void createShell() {
-		this.shellHover = new Shell(this.parent, SWT.APPLICATION_MODAL | SWT.NO_TRIM | SWT.ON_TOP);
-		this.shellHover.setLayout(new FillLayout());
-		this.shellHover.setAlpha(0);
+		shellHover = new Shell(parent, SWT.APPLICATION_MODAL | SWT.NO_TRIM | SWT.ON_TOP);
+		shellHover.setLayout(new FillLayout());
+		shellHover.setAlpha(0);
 
-		this.shellHover.addListener(SWT.KeyUp, new Listener() {
+		shellHover.addListener(SWT.KeyUp, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
 				event.doit = false;
 			}
 		});
 
-		this.shellHover.addListener(SWT.Deactivate, new Listener() {
+		shellHover.addListener(SWT.Deactivate, new Listener() {
 
 			@Override
 			public void handleEvent(final Event arg0) {
-				InfiniteProgressPanel.this.shellHover.setVisible(false);
+				shellHover.setVisible(false);
 			}
 		});
 
-		this.shellHover.setBounds(this.shellHover.getDisplay().map(this.parent, null, this.parent.getClientArea()));
+		shellHover.setBounds(shellHover.getDisplay().map(parent, null, parent.getClientArea()));
 
-		this.canvas = new Canvas(this.shellHover, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
-		this.canvas.addPaintListener(new PaintListener() {
+		canvas = new Canvas(shellHover, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED);
+		canvas.addPaintListener(new PaintListener() {
 
 			@Override
 			public void paintControl(final PaintEvent e) {
@@ -163,11 +166,11 @@ public class InfiniteProgressPanel {
 			}
 		});
 
-		this.shellHover.open();
+		shellHover.open();
 	}
 
 	private void createAndRunAnimatorThread() {
-		this.animatorThread = new Thread() {
+		animatorThread = new Thread() {
 
 			/**
 			 * @see java.lang.Thread#run()
@@ -175,32 +178,32 @@ public class InfiniteProgressPanel {
 			@Override
 			public void run() {
 				while (!Thread.interrupted()) {
-					InfiniteProgressPanel.this.currentPosition = (InfiniteProgressPanel.this.currentPosition + 1) % InfiniteProgressPanel.this.barsCount;
-					if (InfiniteProgressPanel.this.fadeOut) {
-						InfiniteProgressPanel.this.fadeOutCounter++;
+					currentPosition = (currentPosition + 1) % barsCount;
+					if (fadeOut) {
+						fadeOutCounter++;
 					}
-					InfiniteProgressPanel.this.shellHover.getDisplay().asyncExec(new Runnable() {
+					shellHover.getDisplay().asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
-							InfiniteProgressPanel.this.canvas.redraw();
+							canvas.redraw();
 						}
 					});
 
 					try {
-						sleep(InfiniteProgressPanel.this.fadeOut ? 20 : (long) (1000 / InfiniteProgressPanel.this.fps));
+						sleep(fadeOut ? 20 : (long) (1000 / fps));
 					} catch (final InterruptedException e) {
 						break;
 					}
 				}
 			}
 		};
-		this.animatorThread.start();
+		animatorThread.start();
 	}
 
 	/**
 	 * Paint the canvas that holds the ticker
-	 * 
+	 *
 	 * @param e
 	 */
 	private void paintCanvas(final PaintEvent e) {
@@ -208,11 +211,11 @@ public class InfiniteProgressPanel {
 		final Rectangle clientArea = ((Canvas) e.widget).getClientArea();
 		final GC gc = e.gc;
 
-		this.handleFadeIn();
-		this.handleFadeOut();
-		this.drawBackground(clientArea, gc);
-		this.drawTicker(clientArea, gc);
-		this.drawText(clientArea, gc);
+		handleFadeIn();
+		handleFadeOut();
+		drawBackground(clientArea, gc);
+		drawTicker(clientArea, gc);
+		drawText(clientArea, gc);
 
 	}
 
@@ -220,12 +223,12 @@ public class InfiniteProgressPanel {
 	 * Handle the fade in effect of the hover shell
 	 */
 	private void handleFadeIn() {
-		if (this.fadeIn) {
-			if (this.currentPosition == NUMBER_OF_STEPS) {
-				this.fadeIn = false;
-				this.shellHover.setAlpha(this.alpha);
+		if (fadeIn) {
+			if (currentPosition == NUMBER_OF_STEPS) {
+				fadeIn = false;
+				shellHover.setAlpha(alpha);
 			} else {
-				this.shellHover.setAlpha(this.currentPosition * this.alpha / NUMBER_OF_STEPS);
+				shellHover.setAlpha(currentPosition * alpha / NUMBER_OF_STEPS);
 			}
 		}
 	}
@@ -234,41 +237,41 @@ public class InfiniteProgressPanel {
 	 * Handle the fade out effect of the hover shell
 	 */
 	private void handleFadeOut() {
-		if (this.fadeOut) {
-			if (this.fadeOutCounter == NUMBER_OF_STEPS) {
-				if (this.animatorThread != null) {
-					this.animatorThread.interrupt();
-					this.animatorThread = null;
+		if (fadeOut) {
+			if (fadeOutCounter >= NUMBER_OF_STEPS) {
+				if (animatorThread != null) {
+					animatorThread.interrupt();
+					animatorThread = null;
 				}
-				if (!this.shellHover.isDisposed()) {
-					this.shellHover.getDisplay().asyncExec(new Runnable() {
+				if (!shellHover.isDisposed()) {
+					shellHover.getDisplay().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							if (!InfiniteProgressPanel.this.shellHover.isDisposed()) {
-								InfiniteProgressPanel.this.shellHover.dispose();
+							if (!shellHover.isDisposed()) {
+								shellHover.dispose();
 							}
 						}
 					});
 				}
 			}
-			this.shellHover.setAlpha(255 - this.fadeOutCounter * this.alpha / NUMBER_OF_STEPS);
+			shellHover.setAlpha(255 - fadeOutCounter * alpha / NUMBER_OF_STEPS);
 		}
 	}
 
 	/**
 	 * Draw the background of the panel
-	 * 
+	 *
 	 * @param gc GC on with the background is drawn
 	 * @param clientArea client area of the canvas
 	 */
 	private void drawBackground(final Rectangle clientArea, final GC gc) {
-		gc.setBackground(this.shellHover.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		gc.setBackground(shellHover.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(clientArea);
 	}
 
 	/**
 	 * Draw the ticker
-	 * 
+	 *
 	 * @param gc GC on with the ticker is drawn
 	 * @param clientArea client area of the canvas
 	 */
@@ -281,15 +284,15 @@ public class InfiniteProgressPanel {
 		double angle = Math.PI / 2;
 
 		gc.setLineCap(SWT.CAP_ROUND);
-		gc.setLineWidth(this.lineWidth);
+		gc.setLineWidth(lineWidth);
 		gc.setAntialias(SWT.ON);
 
-		final double angleStep = 2 * Math.PI / this.barsCount;
-		for (int i = 0; i < this.barsCount; i++) {
-			if (i == this.currentPosition) {
-				gc.setForeground(this.selectionColor);
+		final double angleStep = 2 * Math.PI / barsCount;
+		for (int i = 0; i < barsCount; i++) {
+			if (i == currentPosition) {
+				gc.setForeground(selectionColor);
 			} else {
-				gc.setForeground(this.defaultColor);
+				gc.setForeground(defaultColor);
 			}
 			gc.drawLine((int) (centerX + minRay * Math.cos(angle)), //
 					(int) (centerY - minRay * Math.sin(angle)), //
@@ -301,37 +304,37 @@ public class InfiniteProgressPanel {
 
 	/**
 	 * Draw the text over the ticker
-	 * 
+	 *
 	 * @param gc GC on with the text is drawn
 	 * @param clientArea client area of the canvas
 	 */
 	private void drawText(final Rectangle clientArea, final GC gc) {
-		if (this.text == null || "".equals(this.text)) {
+		if (text == null || "".equals(text)) {
 			return;
 		}
 
 		final Font font;
-		if (this.textFont == null) {
-			font = this.parent.getDisplay().getSystemFont();
+		if (textFont == null) {
+			font = parent.getDisplay().getSystemFont();
 		} else {
-			font = this.textFont;
+			font = textFont;
 		}
 
 		final Color color;
-		if (this.textColor == null) {
-			color = this.parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		if (textColor == null) {
+			color = parent.getDisplay().getSystemColor(SWT.COLOR_BLACK);
 		} else {
-			color = this.textColor;
+			color = textColor;
 		}
 
 		gc.setForeground(color);
 		gc.setFont(font);
 		gc.setTextAntialias(SWT.ON);
-		final Point textSize = gc.textExtent(this.text, SWT.DRAW_TRANSPARENT);
+		final Point textSize = gc.textExtent(text, SWT.DRAW_TRANSPARENT);
 		final int textWidth = textSize.x;
 		final int textHeight = textSize.y;
 
-		gc.drawString(this.text, (clientArea.width - textWidth) / 2, (clientArea.height - textHeight) / 2, true);
+		gc.drawString(text, (clientArea.width - textWidth) / 2, (clientArea.height - textHeight) / 2, true);
 
 	}
 
@@ -339,16 +342,16 @@ public class InfiniteProgressPanel {
 	 * Stop the animation and dispose the panel
 	 */
 	public void stop() {
-		if (this.shellHover.isDisposed() || this.shellHover.getDisplay().isDisposed()) {
+		if (shellHover.isDisposed() || shellHover.getDisplay().isDisposed()) {
 			return;
 		}
-		this.fadeOut = true;
+		fadeOut = true;
 	}
 
 	/**
 	 * Returns the infinite progress panel for the shell. If no infinite panel
 	 * has been declared, returns null.
-	 * 
+	 *
 	 * @param shell the shell for which we are trying to get the associated
 	 *            progess panel
 	 * @return the progress panel associated to shell, or null if there is no
@@ -388,7 +391,7 @@ public class InfiniteProgressPanel {
 
 	/**
 	 * Check if a shell has an associated progress panel
-	 * 
+	 *
 	 * @param shell the shell
 	 * @return <code>true</code> if the shell has an associated panel,
 	 *         <code>false</code> otherwise
@@ -403,21 +406,23 @@ public class InfiniteProgressPanel {
 	 * @return the alpha value of the panel
 	 */
 	public int getAlpha() {
-		return this.alpha;
+		return alpha;
 	}
 
 	/**
 	 * @param alpha the alpha value of the panel, between 0 and 255
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setAlpha(final int alpha) {
 		if (alpha < 0 || alpha > 255) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		this.alpha = alpha;
 	}
 
@@ -425,7 +430,7 @@ public class InfiniteProgressPanel {
 	 * Check if the animation is running
 	 */
 	private void checkIfAnimationIsRunning() {
-		if (this.animatorThread != null) {
+		if (animatorThread != null) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT, null, "Can not change this value when an animation is running");
 		}
 	}
@@ -434,18 +439,20 @@ public class InfiniteProgressPanel {
 	 * @return the number of bars displayed in the ticker
 	 */
 	public int getBarsCount() {
-		return this.barsCount;
+		return barsCount;
 	}
 
 	/**
 	 * @param barsCount the number of bars displayed in the ticker
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setBarsCount(final int barsCount) {
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		this.barsCount = barsCount;
 	}
 
@@ -453,19 +460,21 @@ public class InfiniteProgressPanel {
 	 * @return the default color for the ticker's bars
 	 */
 	public Color getDefaultColor() {
-		return this.defaultColor;
+		return defaultColor;
 	}
 
 	/**
 	 * @param defaultColor the new default color for the ticker's bars. Please
 	 *            notice that the previous color is disposed.
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setDefaultColor(final Color defaultColor) {
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		SWTGraphicUtil.safeDispose(this.defaultColor);
 		this.defaultColor = defaultColor;
 	}
@@ -474,18 +483,20 @@ public class InfiniteProgressPanel {
 	 * @return the number of frame per second for the animation
 	 */
 	public float getFps() {
-		return this.fps;
+		return fps;
 	}
 
 	/**
 	 * @param fps the new frame per second value
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setFps(final float fps) {
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		this.fps = fps;
 	}
 
@@ -493,18 +504,20 @@ public class InfiniteProgressPanel {
 	 * @return the line width of the bars that compose the ticker
 	 */
 	public int getLineWidth() {
-		return this.lineWidth;
+		return lineWidth;
 	}
 
 	/**
 	 * @param lineWidth the line width of the bars that compose the ticker
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setLineWidth(final int lineWidth) {
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		this.lineWidth = lineWidth;
 	}
 
@@ -512,19 +525,21 @@ public class InfiniteProgressPanel {
 	 * @return the selection color of the ticker's bars
 	 */
 	public Color getSelectionColor() {
-		return this.selectionColor;
+		return selectionColor;
 	}
 
 	/**
 	 * @param selectionColor the new selection color for the ticker's bars.
 	 *            Please notice that the previous color is disposed.
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setSelectionColor(final Color selectionColor) {
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		this.selectionColor = selectionColor;
 	}
 
@@ -532,18 +547,20 @@ public class InfiniteProgressPanel {
 	 * @return the displayed text
 	 */
 	public String getText() {
-		return this.text;
+		return text;
 	}
 
 	/**
 	 * @param text set the text to display
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setText(final String text) {
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		this.text = text;
 	}
 
@@ -551,19 +568,21 @@ public class InfiniteProgressPanel {
 	 * @return the text color
 	 */
 	public Color getTextColor() {
-		return this.textColor;
+		return textColor;
 	}
 
 	/**
 	 * @param textColor the text color. Please notice that the previous color is
 	 *            disposed.
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setTextColor(final Color textColor) {
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		this.textColor = textColor;
 	}
 
@@ -571,19 +590,21 @@ public class InfiniteProgressPanel {
 	 * @return the text font
 	 */
 	public Font getTextFont() {
-		return this.textFont;
+		return textFont;
 	}
 
 	/**
 	 * @param textFont the new text font. Please notice that the previous font
 	 *            set is disposed.
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running</li>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the animation is running
+	 *                </li>
 	 *                </ul>
 	 */
 	public void setTextFont(final Font textFont) {
-		this.checkIfAnimationIsRunning();
+		checkIfAnimationIsRunning();
 		this.textFont = textFont;
 	}
 

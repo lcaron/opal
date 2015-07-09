@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation 
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.propertyTable;
 
@@ -59,39 +59,41 @@ public class PropertyTable extends Composite {
 	 * style constants. The class description lists the style constants that are
 	 * applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
-	 * 
+	 *
 	 * @param parent a composite control which will be the parent of the new
 	 *            instance (cannot be null)
 	 * @param style the style of control to construct
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public PropertyTable(final Composite parent, final int style) {
 		super(parent, style);
 		setLayout(new FillLayout(SWT.VERTICAL));
-		this.showButtons = true;
-		this.showDescription = true;
-		this.sorted = true;
-		this.styleOfView = VIEW_AS_CATEGORIES;
-		this.properties = new ArrayList<PTProperty>();
-		this.changeListeners = new ArrayList<PTPropertyChangeListener>();
+		showButtons = true;
+		showDescription = true;
+		sorted = true;
+		styleOfView = VIEW_AS_CATEGORIES;
+		properties = new ArrayList<PTProperty>();
+		changeListeners = new ArrayList<PTPropertyChangeListener>();
 
-		this.widget = PTWidgetFactory.build(this);
+		widget = PTWidgetFactory.build(this);
 
-		this.addListener(SWT.Resize, new Listener() {
+		addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
 				// Draw the widget on first displaying
-				if (!PropertyTable.this.hasBeenBuilt) {
-					PropertyTable.this.widget.build();
-					PropertyTable.this.hasBeenBuilt = true;
+				if (!hasBeenBuilt) {
+					widget.build();
+					hasBeenBuilt = true;
 				}
 			}
 		});
@@ -101,36 +103,36 @@ public class PropertyTable extends Composite {
 	/**
 	 * Add a change listener (event fired when the value of a property is
 	 * changed)
-	 * 
+	 *
 	 * @param listener
 	 */
 	public void addChangeListener(final PTPropertyChangeListener listener) {
-		this.changeListeners.add(listener);
+		changeListeners.add(listener);
 	}
 
 	/**
 	 * Add a property in this widget
-	 * 
+	 *
 	 * @param property property to add
 	 * @return the property
 	 */
 	public PTProperty addProperty(final PTProperty property) {
-		if (this.properties.contains(property)) {
+		if (properties.contains(property)) {
 			throw new IllegalArgumentException("A property called '" + property.getName() + "' has already been declared.");
 		}
 
-		this.properties.add(property);
+		properties.add(property);
 		property.setParentTable(this);
 		return property;
 	}
 
 	/**
 	 * Fire the event "a value of a property has changed"
-	 * 
+	 *
 	 * @param property property which value has changed
 	 */
 	public void firePTPropertyChangeListeners(final PTProperty property) {
-		for (final PTPropertyChangeListener listener : this.changeListeners) {
+		for (final PTPropertyChangeListener listener : changeListeners) {
 			listener.propertyHasChanged(property);
 		}
 	}
@@ -141,7 +143,7 @@ public class PropertyTable extends Composite {
 	 */
 	public Map<String, Object> getProperties() {
 		final Map<String, Object> map = new HashMap<String, Object>();
-		for (final PTProperty prop : this.properties) {
+		for (final PTProperty prop : properties) {
 			map.put(prop.getName(), prop.getValue());
 		}
 		return map;
@@ -151,113 +153,135 @@ public class PropertyTable extends Composite {
 	 * @return the properties stored in a list
 	 */
 	public List<PTProperty> getPropertiesAsList() {
-		return new ArrayList<PTProperty>(this.properties);
+		return new ArrayList<PTProperty>(properties);
 	}
 
 	/**
 	 * Hide all buttons
-	 * 
+	 *
 	 * @return this property table
 	 */
 	public PropertyTable hideButtons() {
-		this.showButtons = false;
+		showButtons = false;
 		return rebuild();
 	}
 
 	/**
 	 * Hide description
-	 * 
+	 *
 	 * @return this property table
 	 */
 	public PropertyTable hideDescription() {
-		this.showDescription = false;
+		showDescription = false;
 		return rebuild();
 	}
 
 	/**
 	 * Rebuild the whole table
-	 * 
+	 *
 	 * @return this property table
 	 */
 	private PropertyTable rebuild() {
-		this.widget = this.widget.disposeAndBuild(this);
-		if (this.hasBeenBuilt) {
+		widget = widget.disposeAndBuild(this);
+		if (hasBeenBuilt) {
 			setLayout(new FillLayout());
-			this.widget.build();
+			widget.build();
 			layout();
 		}
 		return this;
 	}
 
 	/**
+	 * Update the component when some values has changed
+	 */
+	public void refreshValues() {
+		rebuild();
+	}
+
+	/**
 	 * Remove a change listener
-	 * 
+	 *
 	 * @param listener listener to remove
 	 */
 	public void removeChangeListener(final PTPropertyChangeListener listener) {
-		this.changeListeners.remove(listener);
+		changeListeners.remove(listener);
+	}
+
+	/**
+	 * @param newValues
+	 */
+	public void setProperties(final Map<String, Object> newValues) {
+		for (final PTProperty prop : properties) {
+			if (newValues == null) {
+				prop.setValue(null);
+			} else {
+				final Object value = newValues.get(prop.getName());
+				prop.setValue(value);
+			}
+		}
+		rebuild();
 	}
 
 	/**
 	 * Show all buttons
-	 * 
+	 *
 	 * @return this property table
 	 */
 	public PropertyTable showButtons() {
-		this.showButtons = true;
+		showButtons = true;
 		return rebuild();
 	}
 
 	/**
 	 * Show description
-	 * 
+	 *
 	 * @return this property table
 	 */
 	public PropertyTable showDescription() {
-		this.showDescription = true;
+		showDescription = true;
 		return rebuild();
 	}
 
 	/**
 	 * Sort the properties
-	 * 
+	 *
 	 * @return this property table
 	 */
 	public PropertyTable sort() {
-		this.sorted = true;
-		this.widget.refillData();
+		sorted = true;
+		widget.refillData();
 		return this;
 	}
 
 	/**
 	 * Show properties not sorted
-	 * 
+	 *
 	 * @return this property table
 	 */
 	public PropertyTable unsort() {
-		this.sorted = false;
-		this.widget.refillData();
+		sorted = false;
+		widget.refillData();
 		return this;
 
 	}
 
 	/**
 	 * View the properties as categories
-	 * 
+	 *
 	 * @return this property table
 	 */
 	public PropertyTable viewAsCategories() {
-		this.styleOfView = VIEW_AS_CATEGORIES;
+		styleOfView = VIEW_AS_CATEGORIES;
 		return rebuild();
 	}
 
 	/**
 	 * View the properties as a flat list
-	 * 
+	 *
 	 * @return this property table
 	 */
 	public PropertyTable viewAsFlatList() {
-		this.styleOfView = VIEW_AS_FLAT_LIST;
+		styleOfView = VIEW_AS_FLAT_LIST;
 		return rebuild();
 	}
 }

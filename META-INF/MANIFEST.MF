@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Opal
 Bundle-SymbolicName: org.mihalis.opal
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.3
 Export-Package: org.mihalis.opal,
  org.mihalis.opal.SystemMonitor,
  org.mihalis.opal.angles,

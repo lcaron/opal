@@ -49,3 +49,4 @@ Export-Package: org.mihalis.opal,
  org.mihalis.opal.transitionComposite,
  org.mihalis.opal.utils
 Require-Bundle: org.eclipse.swt;bundle-version="3.7.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

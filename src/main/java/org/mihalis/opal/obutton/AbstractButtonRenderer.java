@@ -211,6 +211,9 @@ public abstract class AbstractButtonRenderer implements ButtonRenderer {
 
 	private void drawBackground() {
 		final AdvancedPath path = createClipping();
+		if (path.isDisposed()) {
+			return;
+		}
 		gc.setClipping(path);
 		gc.setForeground(configuration.getBackgroundColor());
 		gc.setBackground(configuration.getSecondBackgroundColor());

@@ -140,7 +140,7 @@ public class RoundedToolItem extends Item {
 		enabled = true;
 		alignment = SWT.CENTER;
 		verticalAlignment = SWT.CENTER;
-		selectionListeners = new ArrayList<SelectionListener>();
+		selectionListeners = new CopyOnWriteArrayList<SelectionListener>();
 		width = -1;
 		height = -1;
 	}

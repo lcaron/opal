@@ -9,8 +9,8 @@
  *******************************************************************************/
 package org.mihalis.opal.roundedToolbar;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -140,7 +140,7 @@ public class RoundedToolItem extends Item {
 		enabled = true;
 		alignment = SWT.CENTER;
 		verticalAlignment = SWT.CENTER;
-		selectionListeners = new ArrayList<SelectionListener>();
+		selectionListeners = new CopyOnWriteArrayList<SelectionListener>();
 		width = -1;
 		height = -1;
 	}

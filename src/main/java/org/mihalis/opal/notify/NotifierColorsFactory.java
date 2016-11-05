@@ -10,7 +10,6 @@
 
 package org.mihalis.opal.notify;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -37,27 +36,28 @@ public class NotifierColorsFactory {
 	 */
 	static NotifierColors getColorsForTheme(final NotifierTheme theme) {
 		final NotifierColors colors = new NotifierColors();
+		Display display = Display.getDefault();
 		switch (theme) {
 			case BLUE_THEME:
-				colors.textColor = new Color(Display.getDefault(), 4, 64, 140);
-				colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-				colors.borderColor = new Color(Display.getDefault(), 153, 188, 232);
-				colors.leftColor = new Color(Display.getDefault(), 210, 225, 244);
-				colors.rightColor = new Color(Display.getDefault(), 182, 207, 238);
+				colors.textColor = new Color(display, 4, 64, 140);
+				colors.titleColor = new Color(display, 0, 0, 0);
+				colors.borderColor = new Color(display, 153, 188, 232);
+				colors.leftColor = new Color(display, 210, 225, 244);
+				colors.rightColor = new Color(display, 182, 207, 238);
 				break;
 			case GRAY_THEME:
-				colors.textColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-				colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED);
-				colors.borderColor = new Color(Display.getDefault(), 208, 208, 208);
-				colors.leftColor = new Color(Display.getDefault(), 255, 255, 255);
-				colors.rightColor = new Color(Display.getDefault(), 208, 208, 208);
+				colors.textColor = new Color(display, 0, 0, 0);
+				colors.titleColor = new Color(display, 255, 20, 20);
+				colors.borderColor = new Color(display, 208, 208, 208);
+				colors.leftColor = new Color(display, 255, 255, 255);
+				colors.rightColor = new Color(display, 208, 208, 208);
 				break;
 			default:
-				colors.textColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-				colors.titleColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-				colors.borderColor = new Color(Display.getDefault(), 218, 178, 85);
-				colors.leftColor = new Color(Display.getDefault(), 220, 220, 160);
-				colors.rightColor = new Color(Display.getDefault(), 255, 255, 191);
+				colors.textColor = new Color(display, 0, 0, 0);
+				colors.titleColor = new Color(display, 0, 0, 0);
+				colors.borderColor = new Color(display, 218, 178, 85);
+				colors.leftColor = new Color(display, 220, 220, 160);
+				colors.rightColor = new Color(display, 255, 255, 191);
 				break;
 		}
 		return colors;

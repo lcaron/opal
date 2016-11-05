@@ -5,7 +5,7 @@ The goal of this project is to propose new widgets for the SWT API.
 Some widgets are new, some others are a port of existing widgets made with Swing.
 
 # V1.0.4 is out
-Version 1.0.4 is ready. It contains a bug fix. You can download 
+Version 1.0.4 is ready. It contains bug fixes. You can download 
 * the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4.jar?raw=true)
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4-plugin.jar?raw=true)

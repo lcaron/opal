@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>opal</groupId>
 	<artifactId>opal</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<name>Opal</name>
 	<description>A set of SWT widgets</description>
 	<packaging>bundle</packaging>

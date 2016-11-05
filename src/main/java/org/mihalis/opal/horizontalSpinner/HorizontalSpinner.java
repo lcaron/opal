@@ -200,11 +200,11 @@ public class HorizontalSpinner extends Composite {
 		this.text.addVerifyListener(new VerifyListener() {
 			@Override
 			public void verifyText(final VerifyEvent e) {
-				if (e.character != 0 && !Character.isDigit(e.character) && e.keyCode != SWT.BS && e.keyCode != SWT.DEL) {
+				if (e.character != 0 && !(Character.isDigit(e.character) || e.character == '-') && e.keyCode != SWT.BS && e.keyCode != SWT.DEL) {
 					e.doit = false;
 					return;
 				}
-				e.doit = HorizontalSpinner.this.verifyEntryAndStoreValue(e.text, e.keyCode);
+				e.doit = verifyEntryAndStoreValue(e.text, e.keyCode);
 			}
 		});
 
@@ -216,16 +216,16 @@ public class HorizontalSpinner extends Composite {
 			@Override
 			public void keyReleased(final KeyEvent e) {
 				if (e.keyCode == SWT.ARROW_UP) {
-					HorizontalSpinner.this.increaseValue(HorizontalSpinner.this.increment);
+					increaseValue(increment);
 				}
 				if (e.keyCode == SWT.ARROW_DOWN) {
-					HorizontalSpinner.this.decreaseValue(HorizontalSpinner.this.increment);
+					decreaseValue(increment);
 				}
 				if (e.keyCode == SWT.PAGE_UP) {
-					HorizontalSpinner.this.increaseValue(HorizontalSpinner.this.pageIncrement);
+					increaseValue(pageIncrement);
 				}
 				if (e.keyCode == SWT.PAGE_DOWN) {
-					HorizontalSpinner.this.decreaseValue(HorizontalSpinner.this.pageIncrement);
+					decreaseValue(pageIncrement);
 				}
 			}
 
@@ -237,8 +237,8 @@ public class HorizontalSpinner extends Composite {
 			 */
 			@Override
 			public void focusLost(final org.eclipse.swt.events.FocusEvent e) {
-				if (HorizontalSpinner.this.text.getText().trim().equals("")) {
-					HorizontalSpinner.this.setSelection(HorizontalSpinner.this.storedValue);
+				if (text.getText().trim().equals("")) {
+					setSelection(storedValue);
 				}
 			}
 		});
@@ -271,7 +271,7 @@ public class HorizontalSpinner extends Composite {
 			return false;
 		}
 
-		for (final SelectionListener s : HorizontalSpinner.this.selectionListeners) {
+		for (final SelectionListener s : this.selectionListeners) {
 			s.widgetSelected(null);
 		}
 
@@ -289,7 +289,7 @@ public class HorizontalSpinner extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				HorizontalSpinner.this.decreaseValue(HorizontalSpinner.this.increment);
+				decreaseValue(increment);
 			}
 		});
 
@@ -300,7 +300,7 @@ public class HorizontalSpinner extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				HorizontalSpinner.this.increaseValue(HorizontalSpinner.this.increment);
+				increaseValue(increment);
 			}
 		});
 
@@ -333,7 +333,7 @@ public class HorizontalSpinner extends Composite {
 
 			@Override
 			public void modifyText(final ModifyEvent e) {
-				for (final ModifyListener m : HorizontalSpinner.this.modifyListeners) {
+				for (final ModifyListener m : modifyListeners) {
 					m.modifyText(e);
 				}
 			}
@@ -782,10 +782,8 @@ public class HorizontalSpinner extends Composite {
 
 		this.storedValue = selection;
 		this.text.setText(this.convertSelectionToStringValue());
-		this.text.selectAll();
-		this.text.setFocus();
 
-		for (final SelectionListener s : HorizontalSpinner.this.selectionListeners) {
+		for (final SelectionListener s : this.selectionListeners) {
 			s.widgetSelected(null);
 		}
 

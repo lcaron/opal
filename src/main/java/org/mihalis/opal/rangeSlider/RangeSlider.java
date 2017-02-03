@@ -74,7 +74,7 @@ public class RangeSlider extends Canvas {
 	private int orientation;
 	private int increment;
 	private int pageIncrement;
-	private int selectedElement, priorSelectedElement;
+	private byte selectedElement, priorSelectedElement;
 	private boolean dragInProgress;
 	private Point coordUpper;
 	private Point coordLower;
@@ -126,7 +126,6 @@ public class RangeSlider extends Canvas {
 		listeners = new ArrayList<SelectionListener>();
 		increment = 1;
 		pageIncrement = 10;
-		selectedElement = NONE;
 		final ClassLoader loader = org.mihalis.opal.rangeSlider.RangeSlider.class.getClassLoader();
 		slider = new Image(getDisplay(), loader.getResourceAsStream("images/slider-normal.png"));
 		sliderHover = new Image(getDisplay(), loader.getResourceAsStream("images/slider-hover.png"));
@@ -147,6 +146,7 @@ public class RangeSlider extends Canvas {
 		isFullSelection = (style & SWT.CONTROL) == SWT.CONTROL;
 		isHighQuality = (style & SWT.HIGH) == SWT.HIGH;
 		isOn = (style & SWT.ON) == SWT.ON;
+		selectedElement = isFullSelection ? BOTH : LOWER;
 
 		addListener(SWT.Dispose, new Listener() {
 			@Override

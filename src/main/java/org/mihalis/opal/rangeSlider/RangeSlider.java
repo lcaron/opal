@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *		 Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
+ *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.rangeSlider;
 
@@ -59,10 +59,10 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  */
 public class RangeSlider extends Canvas {
 
-	public static final int NONE = 0;
-	public static final int UPPER = 1<<0;
-	public static final int LOWER = 1<<1;
-	public static final int BOTH = (UPPER|LOWER);
+	private static final byte NONE = 0;
+	private static final byte UPPER = 1<<0;
+	private static final byte LOWER = 1<<1;
+	private static final byte BOTH = (UPPER|LOWER);
 
 	private int minimum;
 	private int maximum;
@@ -102,18 +102,18 @@ public class RangeSlider extends Canvas {
 	 * </p>
 	 * 
 	 * @param parent a composite control which will be the parent of the new
-	 *						instance (cannot be null)
+	 *            instance (cannot be null)
 	 * @param style the style of control to construct. Default style is HORIZONTAL
 	 *
 	 * @exception IllegalArgumentException
-	 *								<ul>
-	 *								<li>ERROR_NULL_ARGUMENT - if the parent is null</li>
-	 *								</ul>
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+	 *                </ul>
 	 * @exception SWTException
-	 *								<ul>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the parent</li>
-	 *								</ul>
+	 *                <ul>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the parent</li>
+	 *                </ul>
 	 * @see SWT#HORIZONTAL
 	 * @see SWT#VERTICAL
 	 * @see Widget#getStyle
@@ -359,7 +359,7 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @param event selection event
 	 * @return <code>true</code> if no listener cancels the selection,
-	 *				 <code>false</code> otherwise
+	 *         <code>false</code> otherwise
 	 */
 	private boolean fireSelectionListeners(final Event event) {
 		for (final SelectionListener selectionListener : listeners) {
@@ -511,15 +511,33 @@ public class RangeSlider extends Canvas {
 				if (selectedElement == BOTH) {
 					lowerValue += value - upperValue;
 					upperValue = value;
-				} else {
+				} else if ((selectedElement & UPPER) != 0) {
 					upperValue = value;
+				} else if ((selectedElement & LOWER) != 0) {
+					int diff = upperValue - lowerValue;
+					if (value + diff > maximum) {
+						upperValue = maximum;
+						lowerValue = maximum - diff;
+					} else {
+						upperValue = value + diff;
+						lowerValue = value;
+					}
 				}
 			} else if (value < lowerValue) {
 				if (selectedElement == BOTH) {
 					upperValue += value - lowerValue;
 					lowerValue = value;
-				} else {
+				} else if ((selectedElement & LOWER) != 0) {
 					lowerValue = value;
+				} else if ((selectedElement & UPPER) != 0) {
+					int diff = upperValue - lowerValue;
+					if (value - diff < minimum) {
+						lowerValue = minimum;
+						upperValue = minimum + diff;
+					} else {
+						upperValue = value;
+						lowerValue = value - diff;
+					}
 				}
 			} else if (value > lowerValue && value < upperValue && selectedElement != BOTH) {
 				if ((selectedElement & LOWER) != 0) {
@@ -759,7 +777,7 @@ public class RangeSlider extends Canvas {
 	 * @param gc graphic context
 	 * @param value corresponding value
 	 * @param upper if <code>true</code>, draws the upper knob. If
-	 *						<code>false</code>, draws the lower knob
+	 *            <code>false</code>, draws the lower knob
 	 * @return the coordinate of the upper left corner of the knob
 	 */
 	private Point drawHorizontalKnob(final GC gc, final int value, final boolean upper) {
@@ -871,7 +889,7 @@ public class RangeSlider extends Canvas {
 	 * @param gc graphic context
 	 * @param value corresponding value
 	 * @param upper if <code>true</code>, draws the upper knob. If
-	 *						<code>false</code>, draws the lower knob
+	 *            <code>false</code>, draws the lower knob
 	 * @return the coordinate of the upper left corner of the knob
 	 */
 	private Point drawVerticalKnob(final GC gc, final int value, final boolean upper) {
@@ -1066,7 +1084,7 @@ public class RangeSlider extends Canvas {
 		}
 	}
 	/**
-	 * translate both the upper and lower values by the input amount.	The updated values are constrained to be within
+	 * translate both the upper and lower values by the input amount. The updated values are constrained to be within
 	 * the minimum and maximum. The difference between upper and lower values is retained.
 	 * @param amount
 	 */
@@ -1095,15 +1113,17 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @param listener the listener which should be notified
 	 *
-	 * @exception IllegalArgumentException <ul>
-	 *								<li>ERROR_NULL_ARGUMENT - if the listener is null</li>
-	 *								</ul>
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+	 *                </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 *
 	 * @see SelectionListener
 	 * @see #removeSelectionListener
@@ -1155,12 +1175,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @return the increment
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int getIncrement() {
 		checkWidget();
@@ -1172,12 +1193,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @return the selection
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int getLowerValue() {
 		checkWidget();
@@ -1189,12 +1211,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @return the maximum
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int getMaximum() {
 		checkWidget();
@@ -1206,12 +1229,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @return the minimum
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int getMinimum() {
 		checkWidget();
@@ -1224,12 +1248,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @return the page increment
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int getPageIncrement() {
 		checkWidget();
@@ -1242,12 +1267,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @return the selection
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int[] getSelection() {
 		checkWidget();
@@ -1262,12 +1288,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @return the selection
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int getUpperValue() {
 		checkWidget();
@@ -1280,15 +1307,17 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @param listener the listener which should no longer be notified
 	 *
-	 * @exception IllegalArgumentException <ul>
-	 *								<li>ERROR_NULL_ARGUMENT - if the listener is null</li>
-	 *								</ul>
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+	 *                </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 *
 	 * @see SelectionListener
 	 * @see #addSelectionListener
@@ -1305,12 +1334,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @param increment the new increment (must be greater than zero)
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public void setIncrement(final int increment) {
 		checkWidget();
@@ -1328,12 +1358,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @param value the new lower selection
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 * @see #getUpperValue()
 	 * @see #getMinimum()
 	 * @see #setSelection(int, int)
@@ -1349,14 +1380,15 @@ public class RangeSlider extends Canvas {
 	 * will be adjusted if necessary to fall within its new range.
 	 *
 	 * @param value the new maximum, which must be greater than the current
-	 *						minimum
+	 *            minimum
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 * @see #setExtrema(int, int)
 	 */
 	public void setMaximum(final int value) {
@@ -1371,14 +1403,15 @@ public class RangeSlider extends Canvas {
 	 * range.
 	 *
 	 * @param value the new minimum, which must be nonnegative and less than the
-	 *						current maximum
+	 *            current maximum
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 * @see #setExtrema(int, int)
 	 */
 	public void setMinimum(final int value) {
@@ -1393,12 +1426,13 @@ public class RangeSlider extends Canvas {
 	 * @param min the new minimum, which must be nonnegative and less than the max
 	 * @param max the new maximum, which must be greater than the min
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public void setExtrema(final int min, final int max) {
 		checkWidget();
@@ -1429,12 +1463,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @param pageIncrement the page increment (must be greater than zero)
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public void setPageIncrement(final int pageIncrement) {
 		checkWidget();
@@ -1451,14 +1486,15 @@ public class RangeSlider extends Canvas {
 	 * minimum and maximum. If either condition fails, no action is taken.
 	 *
 	 * @param value the new selection (first value is lower value, second value
-	 *						is upper value)
+	 *            is upper value)
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public void setSelection(final int[] values) {
 		if (values.length == 2)
@@ -1473,12 +1509,13 @@ public class RangeSlider extends Canvas {
 	 * @param lowerValue the new lower selection
 	 * @param upperValue the new upper selection
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 * @see #getMinimum()
 	 * @see #getMaximum()
 	 */
@@ -1499,12 +1536,13 @@ public class RangeSlider extends Canvas {
 	 *
 	 * @param value the new upper selection
 	 *
-	 * @exception SWTException <ul>
-	 *								<li>ERROR_WIDGET_DISPOSED - if the receiver has been
-	 *								disposed</li>
-	 *								<li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *								thread that created the receiver</li>
-	 *								</ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 * @see #getLowerValue()
 	 * @see #getMaximum()
 	 * @see #setSelection(int, int)

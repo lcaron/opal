@@ -335,6 +335,7 @@ public class RangeSlider extends Canvas {
 			startDragPoint = null;
 			validateNewValues(e);
 			dragInProgress = false;
+			super.setToolTipText(clientToolTipText);
 		}
 	}
 	/**

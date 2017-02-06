@@ -957,6 +957,7 @@ public class RangeSlider extends Canvas {
 				lowerValue = startDragLowerValue;
 				validateNewValues(event);
 				dragInProgress = false;
+				if (!isOn) redraw();
 				event.doit = false;
 				break;
 			case SWT.ARROW_UP:

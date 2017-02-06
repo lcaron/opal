@@ -76,12 +76,9 @@ public class RangeSlider extends Canvas {
 	private int pageIncrement;
 	private byte selectedElement, priorSelectedElement;
 	private boolean dragInProgress;
-	private Point coordUpper;
-	private Point coordLower;
-	private boolean upperHover;
-	private boolean lowerHover;
-	private int previousUpperValue;
-	private int previousLowerValue;
+	private boolean upperHover, lowerHover;
+	private int previousUpperValue, previousLowerValue;
+	private int startDragUpperValue, startDragLowerValue;
 	private Point startDragPoint;
 	private boolean hasFocus, isSmooth, isFullSelection, isHighQuality, isOn;
 	private int tickDivisions = 10, stride = 1;
@@ -319,8 +316,8 @@ public class RangeSlider extends Canvas {
 		if (upperHover || lowerHover) {
 			selectedElement = isFullSelection && lowerHover && upperHover ? BOTH : lowerHover ? LOWER : upperHover ? UPPER : selectedElement;
 			dragInProgress = true;
-			previousLowerValue = lowerValue;
-			previousUpperValue = upperValue;
+			startDragLowerValue = previousLowerValue = lowerValue;
+			startDragUpperValue = previousUpperValue = upperValue;
 			startDragPoint = new Point(e.x, e.y);
 		}
 	}
@@ -340,8 +337,8 @@ public class RangeSlider extends Canvas {
 	}
 	/**
 	 * invoke selection listeners if either upper or lower value has changed.
-	 * if listeners reject the change, restore the previous values and redraw.
-	 * otherwise redraw if there is no current drag in progress
+	 * if listeners reject the change, restore the previous values.
+	 * redraw if either upper or lower value has changed.
 	 * @param e event
 	 */
 	private void validateNewValues(final Event e) {
@@ -349,10 +346,10 @@ public class RangeSlider extends Canvas {
 			if (!fireSelectionListeners(e)) {
 				upperValue = previousUpperValue;
 				lowerValue = previousLowerValue;
-				redraw();
-			} else if (!dragInProgress) {
-				redraw();
 			}
+			previousUpperValue = upperValue;
+			previousLowerValue = lowerValue;
+			redraw();
 		}
 	}
 	/**
@@ -380,20 +377,25 @@ public class RangeSlider extends Canvas {
 	 */
 	private void handleMouseMove(final Event e) {
 		if (!dragInProgress) {
+			boolean wasUpper = upperHover;
+			boolean wasLower = lowerHover;
 			selectKnobs(e);
+			if (wasUpper != upperHover || wasLower != lowerHover) {
+				redraw();
+			}
 		} else { // dragInProgress
 			final int x = e.x, y = e.y;
 			if (orientation == SWT.HORIZONTAL) {
 				if (selectedElement == BOTH) {
 					int diff = (int) ((startDragPoint.x - x) / computePixelSizeForHorizontalSlider()) + minimum;
-					int newUpper = previousUpperValue - diff;
-					int newLower = previousLowerValue - diff;
+					int newUpper = startDragUpperValue - diff;
+					int newLower = startDragLowerValue - diff;
 					if (newUpper > maximum) {
 						newUpper = maximum;
-						newLower = maximum - (previousUpperValue - previousLowerValue);
+						newLower = maximum - (startDragUpperValue - startDragLowerValue);
 					} else if (newLower < minimum) {
 						newLower = minimum;
-						newUpper = minimum + (previousUpperValue - previousLowerValue);
+						newUpper = minimum + (startDragUpperValue - startDragLowerValue);
 					}
 					upperValue = newUpper;
 					lowerValue = newLower;
@@ -418,14 +420,14 @@ public class RangeSlider extends Canvas {
 			} else {
 				if (selectedElement == BOTH) {
 					int diff = (int) ((startDragPoint.y - y) / computePixelSizeForVerticalSlider()) + minimum;
-					int newUpper = previousUpperValue - diff;
-					int newLower = previousLowerValue - diff;
+					int newUpper = startDragUpperValue - diff;
+					int newLower = startDragLowerValue - diff;
 					if (newUpper > maximum) {
 						newUpper = maximum;
-						newLower = maximum - (previousUpperValue - previousLowerValue);
+						newLower = maximum - (startDragUpperValue - startDragLowerValue);
 					} else if (newLower < minimum) {
 						newLower = minimum;
-						newUpper = minimum + (previousUpperValue - previousLowerValue);
+						newUpper = minimum + (startDragUpperValue - startDragLowerValue);
 					}
 					upperValue = newUpper;
 					lowerValue = newLower;
@@ -448,9 +450,12 @@ public class RangeSlider extends Canvas {
 					handleToolTip(lowerValue);
 				}
 			}
-			if (isOn) validateNewValues(e);
+			if (isOn) {
+				validateNewValues(e);
+			} else {
+				redraw();
+			}
 		}
-		redraw();
 	}
 	/**
 	 * determine whether the input coordinate is within the scale bounds and between the current upper and lower values.
@@ -547,7 +552,6 @@ public class RangeSlider extends Canvas {
 					upperValue = value;
 				}
 			}
-			dragInProgress = false;
 			validateNewValues(e);
 		}
 	}
@@ -600,8 +604,8 @@ public class RangeSlider extends Canvas {
 	}
 	/**
 	 * a formatter for displaying a tool tip when hovering over the scale and during thumb modification events.
-	 * The {@link Format#format} method is invoked to retrieve the text for the tooltip where the input is
-	 * an {@code Integer} object with a value within the minimum and maximum.
+	 * The {@link Format#format(Object, StringBuffer, java.text.FieldPosition)} method is invoked to retrieve the
+	 * text for the tooltip where the input {@code Object} is an {@code Integer} with a value within the minimum and maximum.
 	 * @param formatter
 	 */
 	public void setToolTipFormatter(Format formatter) {
@@ -949,12 +953,8 @@ public class RangeSlider extends Canvas {
 			switch (event.keyCode) {
 			case SWT.ESC:
 				startDragPoint = null;
-				int temp = upperValue;
-				upperValue = previousUpperValue;
-				previousUpperValue = temp;
-				temp = lowerValue;
-				lowerValue = previousLowerValue;
-				previousLowerValue = temp;
+				upperValue = startDragUpperValue;
+				lowerValue = startDragLowerValue;
 				validateNewValues(event);
 				dragInProgress = false;
 				event.doit = false;

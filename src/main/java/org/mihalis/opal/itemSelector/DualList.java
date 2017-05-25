@@ -902,7 +902,7 @@ public class DualList extends Composite {
 	 */
 	public DLItem[] getSelection() {
 		checkWidget();
-		return selection.toArray(new DLItem[items.size()]);
+		return selection.toArray(new DLItem[selection.size()]);
 	}
 
 	/**

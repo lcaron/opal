@@ -101,7 +101,7 @@ public class Notifier {
 	 * @param colors color set
 	 * @return the notification window as a shell object
 	 */
-	private static Shell createNotificationWindow(final Image image, final String title, final String text, final NotifierColors colors) {
+	protected static Shell createNotificationWindow(final Image image, final String title, final String text, final NotifierColors colors) {
 		final Shell shell = new Shell(Display.getDefault().getActiveShell(),SWT.NO_TRIM | SWT.NO_FOCUS | SWT.ON_TOP);
 		shell.setLayout(new GridLayout(2, false));
 		shell.setBackgroundMode(SWT.INHERIT_FORCE);
@@ -238,7 +238,7 @@ public class Notifier {
 	/**
 	 * @param shell shell that will appear
 	 */
-	private static void makeShellAppears(final Shell shell) {
+	protected static void makeShellAppears(final Shell shell) {
 		if (shell == null || shell.isDisposed()) {
 			return;
 		}

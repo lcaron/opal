@@ -61,12 +61,10 @@ public class AngleSlider extends Canvas {
 	 *            (cannot be null)
 	 * @param style not used
 	 *
-	 * @exception IllegalArgumentException
-	 *                <ul>
+	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException
-	 *                <ul>
+	 * @exception SWTException <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                </ul>
@@ -259,7 +257,9 @@ public class AngleSlider extends Canvas {
 			SWT.error(SWT.ERROR_CANNOT_SET_SELECTION);
 		}
 		this.selection = selection;
-		fireSelectionListeners(new Event());
+		Event e = new Event();
+		e.widget = this;
+		fireSelectionListeners(e);
 		redraw();
 	}
 

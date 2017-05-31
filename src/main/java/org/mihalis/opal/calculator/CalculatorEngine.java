@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.mihalis.opal.calculator;
 
+import java.math.BigDecimal;
+
 import org.mihalis.opal.utils.ResourceManager;
 
 /**
@@ -21,23 +23,15 @@ class CalculatorEngine {
 	static final String OPERATOR_MINUS = "-";
 	static final String OPERATOR_MULTIPLY = "*";
 	static final String OPERATOR_DIVIDE = "/";
-	static final String CHARACTER_ZERO = "0";
-	static final String DOT_CHARACTER = ".";
-	static final String EMPTY_STRING = "";
 
-	private enum DISPLAY_MODE {
-		INPUT, RESULT, ERROR
-	}
-
-	private DISPLAY_MODE displayMode;
-	private boolean clearOnNextDigit;
-	private double lastNumber;
 	private String lastOperator;
 	private final CalculatorButtonsComposite composite;
+	private boolean error;
+	private Double lastNumber;
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param calculator calculator widget associated to this engine
 	 */
 	CalculatorEngine(final CalculatorButtonsComposite composite) {
@@ -45,264 +39,157 @@ class CalculatorEngine {
 	}
 
 	/**
-	 * Add a decimal point
-	 */
-	void addDecimalPoint() {
-		this.displayMode = DISPLAY_MODE.INPUT;
-
-		if (this.clearOnNextDigit) {
-			setDisplayString(EMPTY_STRING);
-		}
-
-		final String inputString = getDisplayString();
-
-		if (inputString.indexOf(DOT_CHARACTER) < 0) {
-			setDisplayString(inputString + DOT_CHARACTER);
-		}
-	}
-
-	/**
 	 * @param value value to display
 	 */
-	private void setDisplayString(final String value) {
-		this.composite.getDisplayArea().setText(value);
-		this.composite.fireModifyListeners();
+	private void setContent(final Double value) {
+		composite.getDisplayArea().setText(doubleToString(value));
+		composite.fireModifyListeners();
 	}
 
-	/**
-	 * @param digit digit to add
-	 */
-	void addDigitToDisplay(final int digit) {
-		if (this.clearOnNextDigit) {
-			setDisplayString(EMPTY_STRING);
+	private String doubleToString(final Double d) {
+		if (d == null) {
+			return "0";
+		}
+		// pre java 8, a value of 0 would yield "0.0" below
+		if (d.doubleValue() == 0) {
+			return "0";
 		}
 
-		String inputString = getDisplayString();
-
-		if (inputString.indexOf(CHARACTER_ZERO) == 0) {
-			inputString = inputString.substring(1);
+		if (Math.floor(d) == d) {
+			return Integer.toString(d.intValue());
 		}
 
-		if (!inputString.equals(CHARACTER_ZERO) || digit > 0) {
-			setDisplayString(inputString + digit);
-		}
-
-		this.displayMode = DISPLAY_MODE.INPUT;
-		this.clearOnNextDigit = false;
-	}
-
-	/**
-	 * Clear content
-	 */
-	void clearWholeContent() {
-		setDisplayString(CHARACTER_ZERO);
-		this.lastOperator = CHARACTER_ZERO;
-		this.lastNumber = 0;
-		this.displayMode = DISPLAY_MODE.INPUT;
-		this.clearOnNextDigit = true;
-	}
-
-	/**
-	 * Clear result
-	 */
-	void clearResult() {
-		setDisplayString(CHARACTER_ZERO);
-		this.clearOnNextDigit = true;
-		this.displayMode = DISPLAY_MODE.INPUT;
-	}
-
-	/**
-	 * Process backspace
-	 */
-	void processBackSpace() {
-		if (this.displayMode != DISPLAY_MODE.ERROR) {
-			setDisplayString(getDisplayString().substring(0, getDisplayString().length() - 1));
-			if (getDisplayString().length() < 1) {
-				setDisplayString(CHARACTER_ZERO);
-			}
-		}
+		return new BigDecimal(d.toString()).stripTrailingZeros().toPlainString();
 	}
 
 	/**
 	 * @return the displayed value as string
 	 */
-	private String getDisplayString() {
-		return this.composite.getDisplayArea().getText();
+	private Double getContent() {
+		String content = composite.getDisplayArea().getText();
+		return Double.valueOf(content);
 	}
 
 	/**
 	 * Process equals operation
 	 */
 	void processEquals() {
-		double result = 0;
+		if (error) {
+			return;
+		}
+		if (lastOperator == null) {
+			return;
+		}
 
-		if (this.displayMode != DISPLAY_MODE.ERROR) {
-			try {
-				result = processLastOperator();
-				displayResult(result);
-			} catch (final DivideByZeroException e) {
+		double result = 0;
+		final double content = getContent();
+
+		if (lastOperator.equals(OPERATOR_DIVIDE)) {
+			if (content == 0) {
 				displayErrorMessage(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
+				return;
 			}
-			this.lastOperator = CHARACTER_ZERO;
-		}
-	}
-
-	/**
-	 * @return the result of the last operation
-	 * @throws DivideByZeroException
-	 */
-	private double processLastOperator() throws DivideByZeroException {
-		double result = 0;
-		final double numberInDisplay = getDisplayedNumber();
-
-		if (this.lastOperator.equals(OPERATOR_DIVIDE)) {
-			if (numberInDisplay == 0) {
-				throw new DivideByZeroException();
-			}
-			result = this.lastNumber / numberInDisplay;
+			result = lastNumber / content;
 		}
 
-		if (this.lastOperator.equals(OPERATOR_MULTIPLY)) {
-			result = this.lastNumber * numberInDisplay;
+		if (lastOperator.equals(OPERATOR_MULTIPLY)) {
+			result = lastNumber * content;
 		}
 
-		if (this.lastOperator.equals(OPERATOR_MINUS)) {
-			result = this.lastNumber - numberInDisplay;
+		if (lastOperator.equals(OPERATOR_MINUS)) {
+			result = lastNumber - content;
 		}
 
-		if (this.lastOperator.equals(OPERATOR_PLUS)) {
-			result = this.lastNumber + numberInDisplay;
+		if (lastOperator.equals(OPERATOR_PLUS)) {
+			result = lastNumber + content;
 		}
 
-		return result;
-	}
-
-	/**
-	 * @param result result to display
-	 */
-	private void displayResult(final double result) {
-		if (Math.floor(result) == result) {
-			setDisplayString(Integer.toString((int) result));
-		} else {
-			setDisplayString(Double.toString(result));
-		}
-		this.lastNumber = result;
-		this.displayMode = DISPLAY_MODE.RESULT;
-		this.clearOnNextDigit = true;
+		setContent(result);
+		lastOperator = null;
+		lastNumber = result;
 	}
 
 	/**
 	 * @param errorMessage error message
 	 */
 	private void displayErrorMessage(final String errorMessage) {
-		setDisplayString(ResourceManager.getLabel(errorMessage));
-		this.lastNumber = 0;
-		this.displayMode = DISPLAY_MODE.ERROR;
-		this.clearOnNextDigit = true;
+		composite.getDisplayArea().setText(ResourceManager.getLabel(errorMessage));
+		lastOperator = null;
+		lastNumber = null;
+		error = true;
 	}
 
 	/**
 	 * Process 1/x operation
 	 */
 	void processInverseOperation() {
-		if (this.displayMode != DISPLAY_MODE.ERROR) {
-			try {
-				if (getDisplayedNumber() == 0) {
-					displayErrorMessage(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
-					return;
-				}
-				final double result = 1 / getDisplayedNumber();
-				displayResult(result);
-			} catch (final Exception ex) {
-				displayErrorMessage(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
-				this.displayMode = DISPLAY_MODE.ERROR;
-			}
+		if (error) {
+			return;
 		}
-	}
-
-	/**
-	 * @return the displayed number
-	 */
-	private double getDisplayedNumber() {
-		final String input = getDisplayString();
-		return Double.parseDouble(input);
+		processEquals();
+		try {
+			final double result = 1d / getContent();
+			setContent(result);
+		} catch (final Exception ex) {
+			displayErrorMessage(ResourceManager.CALCULATOR_DIVIDE_BY_ZERO);
+		}
 	}
 
 	/**
 	 * @param operator operation to process
 	 */
 	void processOperation(final String operator) {
-		if (this.displayMode != DISPLAY_MODE.ERROR) {
-			final double numberInDisplay = getDisplayedNumber();
-			if (this.lastOperator != null && !this.lastOperator.equals(CHARACTER_ZERO)) {
-				try {
-					final double result = processLastOperator();
-					displayResult(result);
-					this.lastNumber = result;
-				} catch (final DivideByZeroException e) {
-				}
-			} else {
-				this.lastNumber = numberInDisplay;
-			}
-			this.clearOnNextDigit = true;
-			this.lastOperator = operator;
+		if (error) {
+			return;
 		}
+		lastOperator = operator;
+		lastNumber = getContent();
+		composite.setReadyToEnterNewNumber(true);
 	}
 
 	/**
 	 * Process percentage operation
 	 */
 	void processPerCentageOperation() {
-		if (this.displayMode != DISPLAY_MODE.ERROR) {
-			try {
-				final double result = getDisplayedNumber() / 100;
-				displayResult(result);
-			} catch (final Exception ex) {
-				displayErrorMessage(ResourceManager.CALCULATOR_INVALID_VALUE);
-				this.displayMode = DISPLAY_MODE.ERROR;
-			}
+		if (error) {
+			return;
 		}
+		final double result = getContent();
+		setContent(result / 100d);
 	}
 
 	/**
 	 * Process +/- operation
 	 */
 	void processSignChange() {
-		if (this.displayMode == DISPLAY_MODE.INPUT) {
-			final String input = getDisplayString();
-			if (input.length() > 0 && !input.equals(CHARACTER_ZERO)) {
-				if (input.indexOf(OPERATOR_MINUS) == 0) {
-					setDisplayString(input.substring(1));
-				} else {
-					setDisplayString(OPERATOR_MINUS + input);
-				}
-			}
-		} else if (this.displayMode == DISPLAY_MODE.RESULT) {
-			final double numberInDisplay = getDisplayedNumber();
-
-			if (numberInDisplay != 0) {
-				displayResult(-numberInDisplay);
-			}
+		if (error) {
+			return;
 		}
+		final double result = getContent();
+		setContent(result * -1d);
 	}
 
 	/**
 	 * Process square root operation
 	 */
 	void processSquareRootOperation() {
-		if (this.displayMode != DISPLAY_MODE.ERROR) {
-			try {
-				if (getDisplayString().indexOf(OPERATOR_MINUS) == 0) {
-					displayErrorMessage(ResourceManager.CALCULATOR_INVALID_VALUE);
-				}
-
-				final double result = Math.sqrt(getDisplayedNumber());
-				displayResult(result);
-			} catch (final Exception ex) {
-				displayErrorMessage(ResourceManager.CALCULATOR_INVALID_VALUE);
-				this.displayMode = DISPLAY_MODE.ERROR;
-			}
+		if (error) {
+			return;
 		}
+		processEquals();
+		try {
+			final double result = Math.sqrt(getContent());
+			setContent(result);
+		} catch (final Exception ex) {
+			displayErrorMessage(ResourceManager.CALCULATOR_INVALID_VALUE);
+		}
+	}
+
+	public void cancel() {
+		lastOperator = null;
+		error = false;
+		composite.setReadyToEnterNewNumber(false);
+		lastNumber = null;
 	}
 
 }

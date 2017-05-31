@@ -406,12 +406,12 @@ public class CalculatorCombo extends Composite {
 
 	/**
 	 * @param value new value
-	 * @throws NumberFormatException if <code>value</code> is not a valid float
+	 * @throws NumberFormatException if <code>value</code> is not a valid double
 	 *             value
 	 */
 	public void setValue(final String value) {
 		checkWidget();
-		new Float(value);
+		new Double(value);
 		this.label.setText(value);
 	}
 

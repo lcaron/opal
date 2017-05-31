@@ -49,33 +49,36 @@ class CalculatorButtonsComposite extends Composite {
 	private Label displayArea;
 	private KeyListener keyListener;
 	private final List<ModifyListener> modifyListeners;
+	private final CalculatorButtonsBehaviourEngine behaviourEngine;
+	private boolean readyToEnterNewNumber;
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param parent parent composite
 	 * @param style style
 	 */
 	CalculatorButtonsComposite(final Composite parent, final int style) {
 		super(parent, style);
 		setLayout(new GridLayout(5, false));
-		this.darkRedColor = new Color(getDisplay(), 139, 0, 0);
-		this.darkBlueColor = new Color(getDisplay(), 0, 0, 139);
+		darkRedColor = new Color(getDisplay(), 139, 0, 0);
+		darkBlueColor = new Color(getDisplay(), 0, 0, 139);
 		createButtons();
 
-		SWTGraphicUtil.addDisposer(this, this.darkBlueColor);
-		SWTGraphicUtil.addDisposer(this, this.darkRedColor);
+		SWTGraphicUtil.addDisposer(this, darkBlueColor);
+		SWTGraphicUtil.addDisposer(this, darkRedColor);
 
-		this.engine = new CalculatorEngine(this);
+		engine = new CalculatorEngine(this);
+		behaviourEngine = new CalculatorButtonsBehaviourEngine(this);
 		addKeyListeners();
-		this.modifyListeners = new ArrayList<ModifyListener>();
+		modifyListeners = new ArrayList<ModifyListener>();
 	}
 
 	/**
 	 * Create all buttons
 	 */
 	private void createButtons() {
-		final Button buttonBackSpace = createButton(LABEL_BACK, this.darkRedColor);
+		final Button buttonBackSpace = createButton(LABEL_BACK, darkRedColor);
 		buttonBackSpace.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 3, 1));
 		buttonBackSpace.addSelectionListener(new SelectionAdapter() {
 			/**
@@ -83,29 +86,30 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processBackSpace();
+				behaviourEngine.processBackSpace();
 			}
 		});
 
-		final Button buttonCe = createButton(LABEL_CE, this.darkRedColor);
+		final Button buttonCe = createButton(LABEL_CE, darkRedColor);
 		buttonCe.addSelectionListener(new SelectionAdapter() {
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.clearResult();
+				behaviourEngine.clearResult();
 			}
 		});
 
-		final Button buttonC = createButton(LABEL_C, this.darkRedColor);
+		final Button buttonC = createButton(LABEL_C, darkRedColor);
 		buttonC.addSelectionListener(new SelectionAdapter() {
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.clearWholeContent();
+				behaviourEngine.clearResult();
+				engine.cancel();
 			}
 		});
 
@@ -120,18 +124,18 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_DIVIDE);
+				engine.processOperation(CalculatorEngine.OPERATOR_DIVIDE);
 			}
 		});
 
-		final Button buttonSqrt = createButton("\u221A", this.darkRedColor);
+		final Button buttonSqrt = createButton("\u221A", darkRedColor);
 		buttonSqrt.addSelectionListener(new SelectionAdapter() {
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processSquareRootOperation();
+				engine.processSquareRootOperation();
 			}
 		});
 
@@ -146,17 +150,17 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_MULTIPLY);
+				engine.processOperation(CalculatorEngine.OPERATOR_MULTIPLY);
 			}
 		});
-		final Button buttonInverse = createButton("1/x", this.darkBlueColor);
+		final Button buttonInverse = createButton("1/x", darkBlueColor);
 		buttonInverse.addSelectionListener(new SelectionAdapter() {
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processInverseOperation();
+				engine.processInverseOperation();
 			}
 		});
 
@@ -171,18 +175,18 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_MINUS);
+				engine.processOperation(CalculatorEngine.OPERATOR_MINUS);
 			}
 		});
 
-		final Button buttonPercent = createButton("%", this.darkBlueColor);
+		final Button buttonPercent = createButton("%", darkBlueColor);
 		buttonPercent.addSelectionListener(new SelectionAdapter() {
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processPerCentageOperation();
+				engine.processPerCentageOperation();
 			}
 		});
 
@@ -195,7 +199,7 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processSignChange();
+				engine.processSignChange();
 			}
 		});
 		final Button buttonDot = createButton(".", getDisplay().getSystemColor(SWT.COLOR_BLUE));
@@ -205,7 +209,7 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.addDecimalPoint();
+				behaviourEngine.addDecimalPoint();
 			}
 		});
 
@@ -216,7 +220,7 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_PLUS);
+				engine.processOperation(CalculatorEngine.OPERATOR_PLUS);
 			}
 		});
 
@@ -227,7 +231,7 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.processEquals();
+				engine.processEquals();
 			}
 		});
 	}
@@ -240,7 +244,7 @@ class CalculatorButtonsComposite extends Composite {
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				CalculatorButtonsComposite.this.engine.addDigitToDisplay(digit);
+				behaviourEngine.addDigitToDisplay(digit);
 			}
 		});
 
@@ -272,118 +276,118 @@ class CalculatorButtonsComposite extends Composite {
 	 * Add key listeners
 	 */
 	private void addKeyListeners() {
-		this.keyListener = new KeyAdapter() {
+		keyListener = new KeyAdapter() {
 
 			/**
-			 * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
+			 * @see org.eclipse.swt.events.KeyAdapter#keyPressed(org.eclipse.swt.events.KeyEvent)
 			 */
 			@Override
-			public void keyReleased(final KeyEvent e) {
+			public void keyPressed(final KeyEvent e) {
 				switch (e.character) {
-					case '0':
-					case '1':
-					case '2':
-					case '3':
-					case '4':
-					case '5':
-					case '6':
-					case '7':
-					case '8':
-					case '9':
-						CalculatorButtonsComposite.this.engine.addDigitToDisplay(Integer.parseInt(String.valueOf(e.character)));
-						return;
-					case '.':
-						CalculatorButtonsComposite.this.engine.addDecimalPoint();
-						return;
-					case '+':
-						CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_PLUS);
-						return;
-					case '-':
-						CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_MINUS);
-						return;
-					case '*':
-						CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_MULTIPLY);
-						return;
-					case '/':
-						CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_DIVIDE);
-						return;
-					case '=':
-						CalculatorButtonsComposite.this.engine.processEquals();
-						return;
-					case '%':
-						CalculatorButtonsComposite.this.engine.processPerCentageOperation();
-						return;
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+					behaviourEngine.addDigitToDisplay(Integer.parseInt(String.valueOf(e.character)));
+					return;
+				case '.':
+					behaviourEngine.addDecimalPoint();
+					return;
+				case '+':
+					engine.processOperation(CalculatorEngine.OPERATOR_PLUS);
+					return;
+				case '-':
+					engine.processOperation(CalculatorEngine.OPERATOR_MINUS);
+					return;
+				case '*':
+					engine.processOperation(CalculatorEngine.OPERATOR_MULTIPLY);
+					return;
+				case '/':
+					engine.processOperation(CalculatorEngine.OPERATOR_DIVIDE);
+					return;
+				case '=':
+					engine.processEquals();
+					return;
+				case '%':
+					engine.processPerCentageOperation();
+					return;
 
 				}
 
 				switch (e.keyCode) {
-					case SWT.KEYPAD_0:
-					case SWT.KEYPAD_1:
-					case SWT.KEYPAD_2:
-					case SWT.KEYPAD_3:
-					case SWT.KEYPAD_4:
-					case SWT.KEYPAD_5:
-					case SWT.KEYPAD_6:
-					case SWT.KEYPAD_7:
-					case SWT.KEYPAD_8:
-					case SWT.KEYPAD_9:
-						final int digit = e.keyCode - SWT.KEYCODE_BIT - 47;
-						CalculatorButtonsComposite.this.engine.addDigitToDisplay(digit);
-						return;
-					case SWT.KEYPAD_ADD:
-						CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_PLUS);
-						return;
-					case SWT.KEYPAD_SUBTRACT:
-						CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_MINUS);
-						return;
-					case SWT.KEYPAD_DIVIDE:
-						CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_DIVIDE);
-						return;
-					case SWT.KEYPAD_MULTIPLY:
-						CalculatorButtonsComposite.this.engine.processOperation(CalculatorEngine.OPERATOR_MULTIPLY);
-						return;
-					case SWT.KEYPAD_CR:
-					case SWT.KEYPAD_EQUAL:
-					case SWT.CR:
-						CalculatorButtonsComposite.this.engine.processEquals();
-						return;
-					case SWT.KEYPAD_DECIMAL:
-						CalculatorButtonsComposite.this.engine.addDecimalPoint();
-						return;
-					case SWT.BS:
-						CalculatorButtonsComposite.this.engine.processBackSpace();
-						return;
-					case SWT.ESC:
-						CalculatorButtonsComposite.this.engine.clearWholeContent();
-						return;
+				case SWT.KEYPAD_0:
+				case SWT.KEYPAD_1:
+				case SWT.KEYPAD_2:
+				case SWT.KEYPAD_3:
+				case SWT.KEYPAD_4:
+				case SWT.KEYPAD_5:
+				case SWT.KEYPAD_6:
+				case SWT.KEYPAD_7:
+				case SWT.KEYPAD_8:
+				case SWT.KEYPAD_9:
+					final int digit = e.keyCode - SWT.KEYCODE_BIT - 47;
+					behaviourEngine.addDigitToDisplay(digit);
+					return;
+				case SWT.KEYPAD_ADD:
+					engine.processOperation(CalculatorEngine.OPERATOR_PLUS);
+					return;
+				case SWT.KEYPAD_SUBTRACT:
+					engine.processOperation(CalculatorEngine.OPERATOR_MINUS);
+					return;
+				case SWT.KEYPAD_DIVIDE:
+					engine.processOperation(CalculatorEngine.OPERATOR_DIVIDE);
+					return;
+				case SWT.KEYPAD_MULTIPLY:
+					engine.processOperation(CalculatorEngine.OPERATOR_MULTIPLY);
+					return;
+				case SWT.KEYPAD_CR:
+				case SWT.KEYPAD_EQUAL:
+				case SWT.CR:
+					engine.processEquals();
+					return;
+				case SWT.BS:
+					behaviourEngine.processBackSpace();
+					return;
+				case SWT.ESC:
+					behaviourEngine.clearResult();
+					engine.cancel();
+					return;
 				}
 			}
 		};
 
-		for (final Control control : this.getChildren()) {
-			control.addKeyListener(this.keyListener);
+		for (final Control control : getChildren()) {
+			control.addKeyListener(keyListener);
 		}
-		addKeyListener(this.keyListener);
+		addKeyListener(keyListener);
 
 	}
 
 	/**
-	 * Adds the listener to the collection of listeners who will be notified
-	 * when the receiver's text is modified, by sending it one of the messages
-	 * defined in the <code>ModifyListener</code> interface.
-	 * 
+	 * Adds the listener to the collection of listeners who will be notified when
+	 * the receiver's text is modified, by sending it one of the messages defined in
+	 * the <code>ModifyListener</code> interface.
+	 *
 	 * @param listener the listener which should be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see ModifyListener
 	 * @see #removeModifyListener
 	 */
@@ -392,14 +396,14 @@ class CalculatorButtonsComposite extends Composite {
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		this.modifyListeners.add(listener);
+		modifyListeners.add(listener);
 	}
 
 	/**
 	 * Fire the modify listeners
 	 */
 	void fireModifyListeners() {
-		for (final ModifyListener listener : this.modifyListeners) {
+		for (final ModifyListener listener : modifyListeners) {
 			final Event e = new Event();
 			e.widget = this;
 			final ModifyEvent modifyEvent = new ModifyEvent(e);
@@ -411,32 +415,34 @@ class CalculatorButtonsComposite extends Composite {
 	 * @return the keyListener
 	 */
 	KeyListener getKeyListener() {
-		return this.keyListener;
+		return keyListener;
 	}
 
 	/**
 	 * @return the text
 	 */
 	Label getDisplayArea() {
-		return this.displayArea;
+		return displayArea;
 	}
 
 	/**
-	 * Removes the listener from the collection of listeners who will be
-	 * notified when the receiver's text is modified.
-	 * 
+	 * Removes the listener from the collection of listeners who will be notified
+	 * when the receiver's text is modified.
+	 *
 	 * @param listener the listener which should no longer be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
+	 *
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
 	 *                disposed</li>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the receiver</li>
 	 *                </ul>
-	 * 
+	 *
 	 * @see ModifyListener
 	 * @see #addModifyListener
 	 */
@@ -445,14 +451,22 @@ class CalculatorButtonsComposite extends Composite {
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		this.modifyListeners.remove(listener);
+		modifyListeners.remove(listener);
 	}
 
 	/**
 	 * @param text the text to set
 	 */
 	void setDisplayArea(final Label text) {
-		this.displayArea = text;
+		displayArea = text;
+	}
+
+	void setReadyToEnterNewNumber(final boolean newValue) {
+		readyToEnterNewNumber = newValue;
+	}
+
+	boolean isReadyToEnterNewNumber() {
+		return readyToEnterNewNumber;
 	}
 
 }

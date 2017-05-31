@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -37,7 +38,7 @@ public class InfiniteProgressPanel {
 	private static final String INFINITE_PANEL_KEY = "org.mihalis.opal.InfinitePanel.InfiniteProgressPanel";
 	private static final int NUMBER_OF_STEPS = 10;
 
-	private final Shell parent;
+	private final Composite parent;
 	private Shell shellHover;
 	private String text;
 	private Font textFont;
@@ -58,7 +59,7 @@ public class InfiniteProgressPanel {
 	/**
 	 * Constructs a new instance of this class given its parent.
 	 *
-	 * @param shell a shell that will be the parent of the new instance (cannot
+	 * @param composite a composite that will be the parent of the new instance (cannot
 	 *            be null)
 	 * @exception IllegalArgumentException
 	 *                <ul>
@@ -72,20 +73,21 @@ public class InfiniteProgressPanel {
 	 *                thread that created the parent</li>
 	 *                </ul>
 	 */
-	private InfiniteProgressPanel(final Shell shell) {
-		if (shell == null) {
+	private InfiniteProgressPanel(final Composite composite) {
+		if (composite == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
-		if (shell.isDisposed()) {
+		if (composite.isDisposed()) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 
-		parent = shell;
-		if (shell.getData(INFINITE_PANEL_KEY) != null) {
+		
+		if (composite.getData(INFINITE_PANEL_KEY) != null) {
 			throw new IllegalArgumentException("This shell has already an infinite panel attached on it !");
 		}
-
+		parent = composite;
+		
 		text = null;
 		textFont = null;
 		barsCount = 14;
@@ -95,7 +97,7 @@ public class InfiniteProgressPanel {
 		fadeIn = false;
 		fadeOut = false;
 		fadeOutCounter = 0;
-		shell.setData(INFINITE_PANEL_KEY, this);
+		composite.setData(INFINITE_PANEL_KEY, this);
 
 		parent.addListener(SWT.Activate, new Listener() {
 
@@ -136,7 +138,7 @@ public class InfiniteProgressPanel {
 	}
 
 	private void createShell() {
-		shellHover = new Shell(parent, SWT.APPLICATION_MODAL | SWT.NO_TRIM | SWT.ON_TOP);
+		shellHover = new Shell(parent.getShell(), SWT.APPLICATION_MODAL | SWT.NO_TRIM | SWT.ON_TOP);
 		shellHover.setLayout(new FillLayout());
 		shellHover.setAlpha(0);
 
@@ -349,7 +351,7 @@ public class InfiniteProgressPanel {
 	}
 
 	/**
-	 * Returns the infinite progress panel for the shell. If no infinite panel
+	 * Returns the infinite progress panel for the composite. If no infinite panel
 	 * has been declared, returns null.
 	 *
 	 * @param shell the shell for which we are trying to get the associated
@@ -357,25 +359,25 @@ public class InfiniteProgressPanel {
 	 * @return the progress panel associated to shell, or null if there is no
 	 *         progress panel
 	 */
-	public static InfiniteProgressPanel getInfiniteProgressPanelFor(final Shell shell) {
-		if (shell == null) {
+	public static InfiniteProgressPanel getInfiniteProgressPanelFor(final Composite composite) {
+		if (composite == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
-		if (shell.isDisposed()) {
+		if (composite.isDisposed()) {
 			SWT.error(SWT.ERROR_WIDGET_DISPOSED);
 		}
 
-		if (shell.getDisplay().isDisposed()) {
+		if (composite.getDisplay().isDisposed()) {
 			SWT.error(SWT.ERROR_DEVICE_DISPOSED);
 		}
 
 		final InfiniteProgressPanel[] temp = new InfiniteProgressPanel[1];
-		shell.getDisplay().syncExec(new Runnable() {
+		composite.getDisplay().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
-				final Object data = shell.getData(INFINITE_PANEL_KEY);
+				final Object data = composite.getData(INFINITE_PANEL_KEY);
 				if (data != null && data instanceof InfiniteProgressPanel) {
 					temp[0] = (InfiniteProgressPanel) data;
 				}
@@ -383,7 +385,7 @@ public class InfiniteProgressPanel {
 		});
 
 		if (temp[0] == null) {
-			return new InfiniteProgressPanel(shell);
+			return new InfiniteProgressPanel(composite);
 		} else {
 			return temp[0];
 		}

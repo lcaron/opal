@@ -83,12 +83,10 @@ public class ImageSelector extends Canvas {
 	 *            instance (cannot be null)
 	 * @param style the style of control to construct
 	 *
-	 * @exception IllegalArgumentException
-	 *                <ul>
+	 * @exception IllegalArgumentException <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException
-	 *                <ul>
+	 * @exception SWTException <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                </ul>
@@ -179,8 +177,7 @@ public class ImageSelector extends Canvas {
 			@Override
 			public void mouseMove(final MouseEvent e) {
 				for (final ISItem item : items) {
-					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y
-							&& e.y <= item.getLowerRightCorner().y) {
+					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y && e.y <= item.getLowerRightCorner().y) {
 						setCursor(getDisplay().getSystemCursor(SWT.CURSOR_HAND));
 						return;
 					}
@@ -196,8 +193,7 @@ public class ImageSelector extends Canvas {
 			@Override
 			public void mouseUp(final MouseEvent e) {
 				for (final ISItem item : items) {
-					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y
-							&& e.y <= item.getLowerRightCorner().y) {
+					if (item.getUpperLeftCorner() != null && item.getLowerRightCorner() != null && e.x >= item.getUpperLeftCorner().x && e.x <= item.getLowerRightCorner().x && e.y >= item.getUpperLeftCorner().y && e.y <= item.getLowerRightCorner().y) {
 						scrollAndAnimateBy(originalItems.indexOf(item) - index);
 						return;
 					}
@@ -397,6 +393,10 @@ public class ImageSelector extends Canvas {
 	 * @param gc graphical context
 	 */
 	private void drawTitle() {
+		if (index < 0 || index > (originalItems.size() - 1)) {
+			return;
+		}
+
 		final String title = originalItems.get(index).getText();
 		if (title == null || title.trim().equals("")) {
 			return;

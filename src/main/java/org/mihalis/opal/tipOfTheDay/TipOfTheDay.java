@@ -508,4 +508,13 @@ public class TipOfTheDay {
 		this.style = style;
 	}
 
+	/**
+	 * @return the shell that contains the "tip of the day" box
+	 */
+	public Shell getShell() {
+		return shell;
+	}
+	
+	
+
 }

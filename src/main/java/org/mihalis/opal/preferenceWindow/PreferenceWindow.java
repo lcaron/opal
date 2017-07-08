@@ -307,4 +307,12 @@ public class PreferenceWindow {
 		}
 	}
 
+	/**
+	 * @return the shell that contains the preferences window
+	 */
+	public Shell getShell() {
+		return shell;
+	}
+
 }
+

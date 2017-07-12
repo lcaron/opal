@@ -296,4 +296,26 @@ public class CheckBoxGroup extends Canvas implements PaintListener {
 		gc.drawRoundRectangle(2, startY + 1, rect.width - 4, rect.height - startY - 4, 2, 2);
 	}
 
+	/**
+	 * Sets the selection state of the receiver
+	 * 
+	 * @param selection the new selection state 
+	 */
+	public void setSelection(boolean selection) {
+		if (selection) {
+			activate();
+		} else {
+			deactivate();
+		}
+	}
+	
+	/**
+	 * Returns <code>true</code> if the receiver is selected,
+	 * and false otherwise
+	 * 
+	 * @return the selection state
+	 */
+	public boolean getSelection() {
+		return isActivated();
+	}
 }

@@ -1226,4 +1226,30 @@ public class MultiChoice<T> extends Composite {
 		}
 	}
 
+	
+	/**
+	 * Fill the text box. Please notice that the setted element MAY not be in the items list.<br/>
+	 * For instance, your widget contains a list of european countries. If you use setText("USA"), the text will display "USA",
+	 * but <code>getSelection()</code> will return and empty text. To retrieve "USA", you have to use the method getText();
+	 * @param textValue new text value
+	 */
+	public void setText(String textValue) {
+		checkWidget();
+		checkNullElement();
+		if (textValue == null) {
+			SWT.error(SWT.ERROR_NULL_ARGUMENT);
+		}
+		this.selection.clear();
+		text.setText(textValue);
+	}
+	
+	/**
+	 * @return the display value as text
+	 */
+	public String getText() {
+		checkWidget();
+		checkNullElement();
+		return text.getText();
+	}
+	
 }

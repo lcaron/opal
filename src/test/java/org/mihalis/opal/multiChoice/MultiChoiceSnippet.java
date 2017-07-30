@@ -96,6 +96,7 @@ public class MultiChoiceSnippet {
 		final MultiChoice<Country> mcBeans = new MultiChoice<Country>(shell, SWT.READ_ONLY);
 		mcBeans.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, true));
 		mcBeans.addAll(membersOfEuropeanUnion);
+		mcBeans.setText("Non european country");
 		addButons(mcBeans);
 
 		drawLabel(shell, "Selection listener :");

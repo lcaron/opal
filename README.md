@@ -6,8 +6,8 @@ Some widgets are new, some others are a port of existing widgets made with Swing
 
 # V1.0.7 is out
 Version 1.0.7 is ready. It contains 1 bug fixe. You can download 
-* the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.7/opal-1.0.7.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.7/opal-1.0.7.jar?raw=true)
-* the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.7/opal-1.0.7-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.7/opal-1.0.7-src.zip?raw=true)
+* the jar library at [https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7.jar?raw=true)
+* the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.7/opal-1.0.7-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7-plugin.jar?raw=true)
 
 # V1.0.6 is out

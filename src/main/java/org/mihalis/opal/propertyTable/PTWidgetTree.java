@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation 
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.propertyTable;
 
@@ -50,30 +50,30 @@ public class PTWidgetTree extends AbstractPTWidget {
 	 */
 	@Override
 	protected void buildWidget(final Composite parent) {
-		this.tree = new Tree(parent, SWT.FULL_SELECTION);
-		this.tree.setLinesVisible(true);
-		this.tree.setHeaderVisible(true);
-		this.tree.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 3, 1));
+		tree = new Tree(parent, SWT.FULL_SELECTION);
+		tree.setLinesVisible(true);
+		tree.setHeaderVisible(true);
+		tree.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 3, 1));
 
-		final TreeColumn propertyColumn = new TreeColumn(this.tree, SWT.NONE);
+		final TreeColumn propertyColumn = new TreeColumn(tree, SWT.NONE);
 		propertyColumn.setText(ResourceManager.getLabel(ResourceManager.PROPERTY));
 
-		final TreeColumn valueColumn = new TreeColumn(this.tree, SWT.NONE);
+		final TreeColumn valueColumn = new TreeColumn(tree, SWT.NONE);
 		valueColumn.setText(ResourceManager.getLabel(ResourceManager.VALUE));
 
 		fillData();
-		this.tree.addControlListener(new ControlAdapter() {
+		tree.addControlListener(new ControlAdapter() {
 
 			/**
 			 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
 			 */
 			@Override
 			public void controlResized(final ControlEvent e) {
-				final Rectangle area = PTWidgetTree.this.tree.getParent().getClientArea();
-				final Point size = PTWidgetTree.this.tree.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-				final ScrollBar vBar = PTWidgetTree.this.tree.getVerticalBar();
-				int width = area.width - PTWidgetTree.this.tree.computeTrim(0, 0, 0, 0).width - vBar.getSize().x;
-				if (size.y > area.height + PTWidgetTree.this.tree.getHeaderHeight()) {
+				final Rectangle area = tree.getParent().getClientArea();
+				final Point size = tree.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				final ScrollBar vBar = tree.getVerticalBar();
+				int width = area.width - tree.computeTrim(0, 0, 0, 0).width - vBar.getSize().x;
+				if (size.y > area.height + tree.getHeaderHeight()) {
 					// Subtract the scrollbar width from the total column width
 					// if a vertical scrollbar will be required
 					final Point vBarSize = vBar.getSize();
@@ -81,22 +81,22 @@ public class PTWidgetTree extends AbstractPTWidget {
 				}
 				propertyColumn.pack();
 				valueColumn.setWidth(width - propertyColumn.getWidth());
-				PTWidgetTree.this.tree.removeControlListener(this);
+				tree.removeControlListener(this);
 			}
 
 		});
 
-		this.tree.addSelectionListener(new SelectionAdapter() {
+		tree.addSelectionListener(new SelectionAdapter() {
 
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if (PTWidgetTree.this.tree.getSelectionCount() == 0 || PTWidgetTree.this.tree.getSelection()[0] == null) {
+				if (tree.getSelectionCount() == 0 || tree.getSelection()[0] == null) {
 					return;
 				}
-				updateDescriptionPanel(PTWidgetTree.this.tree.getSelection()[0].getData());
+				updateDescriptionPanel(tree.getSelection()[0].getData());
 			}
 
 		});
@@ -129,7 +129,7 @@ public class PTWidgetTree extends AbstractPTWidget {
 				continue;
 			}
 
-			final TreeItem root = new TreeItem(this.tree, SWT.NONE);
+			final TreeItem root = new TreeItem(tree, SWT.NONE);
 			root.setText(0, entry.getKey());
 			root.setBackground(root.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 			root.setForeground(root.getDisplay().getSystemColor(SWT.COLOR_BLACK));
@@ -172,8 +172,10 @@ public class PTWidgetTree extends AbstractPTWidget {
 	 */
 	@Override
 	public void refillData() {
-		for (final TreeItem treeItem : this.tree.getItems()) {
-			treeItem.dispose();
+		if (tree != null) {
+			for (final TreeItem treeItem : tree.getItems()) {
+				treeItem.dispose();
+			}
 		}
 		fillData();
 	}
@@ -183,7 +185,7 @@ public class PTWidgetTree extends AbstractPTWidget {
 	 */
 	@Override
 	public Composite getWidget() {
-		return this.tree;
+		return tree;
 	}
 
 }

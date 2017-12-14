@@ -4,44 +4,51 @@ Main repository for the Opal Project (SWT new widgets library)
 The goal of this project is to propose new widgets for the SWT API.
 Some widgets are new, some others are a port of existing widgets made with Swing.
 
+# V1.0.8 is out
+Version 1.0.8 is ready. It contains 1 bug fixe. You can download
+* the jar library at [https://github.com/lcaron/opal/blob/releases/V.1.0.8/opal-1.0.8.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.8/opal-1.0.8.jar?raw=true)
+* the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.8/opal-1.0.8-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.8/opal-1.0.8-src.zip?raw=true)
+* the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V.1.0.8/opal-1.0.8-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.8/opal-1.0.8-plugin.jar?raw=true)
+
+
 # V1.0.7 is out
-Version 1.0.7 is ready. It contains 1 bug fixe. You can download 
+Version 1.0.7 is ready. It contains 1 bug fixe. You can download
 * the jar library at [https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7.jar?raw=true)
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.7/opal-1.0.7-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V.1.0.7/opal-1.0.7-plugin.jar?raw=true)
 
 # V1.0.6 is out
-Version 1.0.6 is ready. It contains 2 bug fixes. You can download 
+Version 1.0.6 is ready. It contains 2 bug fixes. You can download
 * the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.6/opal-1.0.6.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.6/opal-1.0.6.jar?raw=true)
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.6/opal-1.0.6-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.6/opal-1.0.6-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.6/opal-1.0.6-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.6/opal-1.0.6-plugin.jar?raw=true)
 
 
 # V1.0.5 is out
-Version 1.0.5 is ready. It contains bug fixes and an enhancement (we can put an infinite progress panel on any composite). You can download 
+Version 1.0.5 is ready. It contains bug fixes and an enhancement (we can put an infinite progress panel on any composite). You can download
 * the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.5/opal-1.0.5.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.5/opal-1.0.5.jar?raw=true)
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.5/opal-1.0.5-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.5/opal-1.0.5-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.5/opal-1.0.5-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.5/opal-1.0.5-plugin.jar?raw=true)
 
 # V1.0.4 is out
-Version 1.0.4 is ready. It contains bug fixes. You can download 
+Version 1.0.4 is ready. It contains bug fixes. You can download
 * the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4.jar?raw=true)
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.4/opal-1.0.4-plugin.jar?raw=true)
 
 # V1.0.3 is out
-Version 1.0.3 is ready. It contains a bug fix. You can download 
+Version 1.0.3 is ready. It contains a bug fix. You can download
 * the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.3/opal-1.0.3.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.3/opal-1.0.3.jar?raw=true)
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.3/opal-1.0.3-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.3/opal-1.0.3-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.3/opal-1.0.3-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.3/opal-1.0.3-plugin.jar?raw=true)
 
 # V1.0.2 is out
-Version 1.0.2 is ready. It contains bug fixes and few enhancements. You can download 
+Version 1.0.2 is ready. It contains bug fixes and few enhancements. You can download
 * the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2.jar?raw=true)
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.2/opal-1.0.2-plugin.jar?raw=true)
 
-# Forum 
+# Forum
 Our forum is located at [https://groups.google.com/forum/#!forum/opal-project](https://groups.google.com/forum/#!forum/opal-project)
 
 # Important notice
@@ -58,8 +65,8 @@ Currently Opal contains the following widgets :
 * __Infinite progress panel__, a widget that displays an animation during long task operations
 * __Switch button__, another look for checkboxes
 * __Gradient composite__, a composite that displays a gradient in its background.
-* __Image Selector__, a fancy image selector, 
-* __Dialog box__, a trivial Task Dialog API for SWT 
+* __Image Selector__, a fancy image selector,
+* __Dialog box__, a trivial Task Dialog API for SWT
 * __Horizontal Spinner__, a horizontal spinner
 * __Panels__, 2 panels to make your forms nicer
 * __CheckBoxGroup__, a group with a checkbox. When one clicks on the checkbox, the whole content of the group is deactivated.

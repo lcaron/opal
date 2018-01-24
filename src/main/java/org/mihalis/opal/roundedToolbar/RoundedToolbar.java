@@ -134,6 +134,9 @@ public class RoundedToolbar extends Canvas {
 			public void handleEvent(final Event event) {
 				for (final RoundedToolItem item : items) {
 					if (item.getBounds().contains(event.x, event.y)) {
+						if (!item.isEnabled()) {
+							return;
+						}
 						if (!multiSelection) {
 							applyRadioBehaviour(item);
 						}

@@ -6,10 +6,12 @@ Some widgets are new, some others are a port of existing widgets made with Swing
 
 # Important Notice
 
-Most widgets of the Opal Project has been included into Eclipse Nebula ([https://www.eclipse.org/nebula/]).
+Most widgets of the Opal Project has been included into Eclipse Nebula (https://www.eclipse.org/nebula/).
 The next release (V1.0.9) will be the last one. It will fix issues #73, #74 and #75.
 
-If you want to open an issue, please fill a bug report in Eclipse Bugzilla : [https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Nebula]
+If you want to open an issue, please fill a bug report in Eclipse Bugzilla : https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Nebula
+
+Thank you for your support !
 
 
 # V1.0.8 is out

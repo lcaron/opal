@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation 
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.propertyTable;
 
@@ -48,31 +48,31 @@ class PTWidgetTable extends AbstractPTWidget {
 	 */
 	@Override
 	protected void buildWidget(final Composite parent) {
-		this.table = new Table(parent, SWT.FULL_SELECTION);
-		this.table.setLinesVisible(true);
-		this.table.setHeaderVisible(true);
-		this.table.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 3, 1));
+		table = new Table(parent, SWT.FULL_SELECTION);
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		table.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 3, 1));
 
-		final TableColumn propertyColumn = new TableColumn(this.table, SWT.NONE);
+		final TableColumn propertyColumn = new TableColumn(table, SWT.NONE);
 		propertyColumn.setText(ResourceManager.getLabel(ResourceManager.PROPERTY));
 
-		final TableColumn valueColumn = new TableColumn(this.table, SWT.NONE);
+		final TableColumn valueColumn = new TableColumn(table, SWT.NONE);
 		valueColumn.setText(ResourceManager.getLabel(ResourceManager.VALUE));
 
 		fillData();
 
-		this.table.addControlListener(new ControlAdapter() {
+		table.addControlListener(new ControlAdapter() {
 
 			/**
 			 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
 			 */
 			@Override
 			public void controlResized(final ControlEvent e) {
-				final Rectangle area = PTWidgetTable.this.table.getParent().getClientArea();
-				final Point size = PTWidgetTable.this.table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-				final ScrollBar vBar = PTWidgetTable.this.table.getVerticalBar();
-				int width = area.width - PTWidgetTable.this.table.computeTrim(0, 0, 0, 0).width - vBar.getSize().x;
-				if (size.y > area.height + PTWidgetTable.this.table.getHeaderHeight()) {
+				final Rectangle area = table.getParent().getClientArea();
+				final Point size = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				final ScrollBar vBar = table.getVerticalBar();
+				int width = area.width - table.computeTrim(0, 0, 0, 0).width - vBar.getSize().x;
+				if (size.y > area.height + table.getHeaderHeight()) {
 					// Subtract the scrollbar width from the total column width
 					// if a vertical scrollbar will be required
 					final Point vBarSize = vBar.getSize();
@@ -80,22 +80,22 @@ class PTWidgetTable extends AbstractPTWidget {
 				}
 				propertyColumn.pack();
 				valueColumn.setWidth(width - propertyColumn.getWidth());
-				PTWidgetTable.this.table.removeControlListener(this);
+				table.removeControlListener(this);
 			}
 
 		});
 
-		this.table.addSelectionListener(new SelectionAdapter() {
+		table.addSelectionListener(new SelectionAdapter() {
 
 			/**
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if (PTWidgetTable.this.table.getSelectionCount() == 0 || PTWidgetTable.this.table.getSelection()[0] == null) {
+				if (table.getSelectionCount() == 0 || table.getSelection()[0] == null) {
 					return;
 				}
-				updateDescriptionPanel(PTWidgetTable.this.table.getSelection()[0].getData());
+				updateDescriptionPanel(table.getSelection()[0].getData());
 			}
 
 		});
@@ -129,12 +129,12 @@ class PTWidgetTable extends AbstractPTWidget {
 				}
 			});
 		} else {
-			props = getParentPropertyTable().getPropertiesAsList();
+			props = new ArrayList<PTProperty>(getParentPropertyTable().getPropertiesAsList());
 		}
 
 		final List<ControlEditor> editors = new ArrayList<ControlEditor>();
 		for (final PTProperty p : props) {
-			final TableItem item = new TableItem(this.table, SWT.NONE);
+			final TableItem item = new TableItem(table, SWT.NONE);
 			item.setData(p);
 			item.setText(0, StringUtil.safeToString(p.getDisplayName()));
 			if (p.getEditor() == null) {
@@ -153,11 +153,11 @@ class PTWidgetTable extends AbstractPTWidget {
 				}
 			});
 			if (!p.isEnabled()) {
-				item.setForeground(this.table.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+				item.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_GRAY));
 			}
 		}
 
-		this.table.setData(editors);
+		table.setData(editors);
 
 	}
 
@@ -166,21 +166,28 @@ class PTWidgetTable extends AbstractPTWidget {
 	 */
 	@Override
 	public void refillData() {
-		for (final TableItem item : this.table.getItems()) {
-			item.dispose();
-		}
-
-		if (this.table.getData() != null) {
-			@SuppressWarnings("unchecked")
-			final List<ControlEditor> list = (List<ControlEditor>) this.table.getData();
-			for (final ControlEditor c : list) {
-				c.dispose();
+		try {
+			table.setRedraw(false);
+			for (final TableItem item : table.getItems()) {
+				item.dispose();
 			}
-			list.clear();
-			this.table.setData(null);
-		}
 
-		fillData();
+			if (table.getData() != null) {
+				@SuppressWarnings("unchecked")
+				final List<ControlEditor> list = (List<ControlEditor>) table.getData();
+				for (final ControlEditor c : list) {
+					c.dispose();
+				}
+				list.clear();
+				table.setData(null);
+			}
+
+			fillData();
+		} finally {
+			table.setRedraw(true);
+			table.redraw();
+			table.update();
+		}
 
 	}
 
@@ -189,7 +196,7 @@ class PTWidgetTable extends AbstractPTWidget {
 	 */
 	@Override
 	public Composite getWidget() {
-		return this.table;
+		return table;
 	}
 
 }

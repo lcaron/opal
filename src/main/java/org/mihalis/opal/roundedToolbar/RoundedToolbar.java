@@ -140,6 +140,9 @@ public class RoundedToolbar extends Canvas {
 		addListener(SWT.MouseUp, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
+				if (event.button != 1) {
+					return;
+				}
 				for (final RoundedToolItem item : items) {
 					if (item.getBounds().contains(event.x, event.y)) {
 						if (!item.isEnabled()) {

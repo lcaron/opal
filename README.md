@@ -13,14 +13,11 @@ If you want to open an issue, please fill a bug report in Eclipse Bugzilla : htt
 
 Thank you for your support !
 
-<<<<<<< HEAD
 # V1.0.9 is out
 Version 1.0.9 is ready. It contains 3 bug fixes. You can download
 * the jar library at [https://github.com/lcaron/opal/blob/releases/V1.0.9/opal-1.0.9.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.9/opal-1.0.9.jar?raw=true)
 * the source code at [https://github.com/lcaron/opal/blob/releases/V1.0.9/opal-1.0.9-src.zip?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.9/opal-1.0.9-src.zip?raw=true)
 * the OSGI bundle at [https://github.com/lcaron/opal/blob/releases/V1.0.9/opal-1.0.9-plugin.jar?raw=true](https://github.com/lcaron/opal/blob/releases/V1.0.9/opal-1.0.9-plugin.jar?raw=true)
-=======
->>>>>>> refs/remotes/origin/master
 
 # V1.0.8 is out
 Version 1.0.8 is ready. It contains 1 bug fix. You can download

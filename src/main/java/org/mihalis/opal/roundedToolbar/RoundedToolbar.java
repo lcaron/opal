@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2012 Laurent CARON. All rights reserved. 
- * This program and the accompanying materials are made available under the 
- * terms of the Eclipse Public License v1.0 which accompanies this distribution, 
+ * Copyright (c) 2012 Laurent CARON. All rights reserved.
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors: Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *******************************************************************************/
 package org.mihalis.opal.roundedToolbar;
@@ -30,11 +30,11 @@ import org.mihalis.opal.utils.AdvancedPath;
 import org.mihalis.opal.utils.SWTGraphicUtil;
 
 /**
- * Instances of this class support the layout of selectable
- * rounded tool bar items.
+ * Instances of this class support the layout of selectable rounded tool bar
+ * items.
  * <p>
- * The item children that may be added to instances of this class
- * must be of type <code>RoundedToolItem</code>.
+ * The item children that may be added to instances of this class must be of
+ * type <code>RoundedToolItem</code>.
  * </p>
  * <p>
  * <dl>
@@ -44,7 +44,8 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * <dd>(none)</dd>
  * </dl>
  *
- * @see <a href="http://www.eclipse.org/swt/snippets/#toolbar">ToolBar, ToolItem snippets</a>
+ * @see <a href="http://www.eclipse.org/swt/snippets/#toolbar">ToolBar, ToolItem
+ *      snippets</a>
  */
 public class RoundedToolbar extends Canvas {
 
@@ -54,34 +55,37 @@ public class RoundedToolbar extends Canvas {
 	private static Color START_GRADIENT_COLOR_DEFAULT = SWTGraphicUtil.getColorSafely(245, 245, 245);
 	private static Color END_GRADIENT_COLOR_DEFAULT = SWTGraphicUtil.getColorSafely(185, 185, 185);
 	static Color BORDER_COLOR = SWTGraphicUtil.getColorSafely(66, 66, 66);
-	
+
 	private Color START_GRADIENT_COLOR = START_GRADIENT_COLOR_DEFAULT;
 	private Color END_GRADIENT_COLOR = END_GRADIENT_COLOR_DEFAULT;
 
-
 	/**
-	 * Constructs a new instance of this class given its parent
-	 * and a style value describing its behavior and appearance.
+	 * Constructs a new instance of this class given its parent and a style
+	 * value describing its behavior and appearance.
 	 * <p>
-	 * The style value is either one of the style constants defined in
-	 * class <code>SWT</code> which is applicable to instances of this
-	 * class, or must be built by <em>bitwise OR</em>'ing together 
-	 * (that is, using the <code>int</code> "|" operator) two or more
-	 * of those <code>SWT</code> style constants. The class description
-	 * lists the style constants that are applicable to the class.
-	 * Style bits are also inherited from superclasses.
+	 * The style value is either one of the style constants defined in class
+	 * <code>SWT</code> which is applicable to instances of this class, or must
+	 * be built by <em>bitwise OR</em>'ing together (that is, using the
+	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
+	 * style constants. The class description lists the style constants that are
+	 * applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
 	 *
-	 * @param parent a composite control which will be the parent of the new instance (cannot be null)
+	 * @param parent a composite control which will be the parent of the new
+	 *            instance (cannot be null)
 	 * @param style the style of control to construct
 	 *
-	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
-	 *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
-	 * </ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+	 *                </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the parent</li>
+	 *                <li>ERROR_INVALID_SUBCLASS - if this class is not an
+	 *                allowed subclass</li>
+	 *                </ul>
 	 *
 	 * @see Widget#getStyle()
 	 */
@@ -93,39 +97,43 @@ public class RoundedToolbar extends Canvas {
 	}
 
 	/**
-	 * Constructs a new instance of this class given its parent,
-	 * a style value describing its behavior and appearance and colors
-	 * to specify the start and end gradient of the rounded corner
+	 * Constructs a new instance of this class given its parent, a style value
+	 * describing its behavior and appearance and colors to specify the start
+	 * and end gradient of the rounded corner
 	 * <p>
-	 * The style value is either one of the style constants defined in
-	 * class <code>SWT</code> which is applicable to instances of this
-	 * class, or must be built by <em>bitwise OR</em>'ing together 
-	 * (that is, using the <code>int</code> "|" operator) two or more
-	 * of those <code>SWT</code> style constants. The class description
-	 * lists the style constants that are applicable to the class.
-	 * Style bits are also inherited from superclasses.
+	 * The style value is either one of the style constants defined in class
+	 * <code>SWT</code> which is applicable to instances of this class, or must
+	 * be built by <em>bitwise OR</em>'ing together (that is, using the
+	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
+	 * style constants. The class description lists the style constants that are
+	 * applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
 	 *
-	 * @param parent a composite control which will be the parent of the new instance (cannot be null)
+	 * @param parent a composite control which will be the parent of the new
+	 *            instance (cannot be null)
 	 * @param style the style of control to construct
 	 *
-	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
-	 *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
-	 * </ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+	 *                </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the parent</li>
+	 *                <li>ERROR_INVALID_SUBCLASS - if this class is not an
+	 *                allowed subclass</li>
+	 *                </ul>
 	 *
 	 * @see Widget#getStyle()
 	 */
-	public RoundedToolbar(final Composite parent, final int style,Color startGradientColor,Color endGradientColor) {
+	public RoundedToolbar(final Composite parent, final int style, Color startGradientColor, Color endGradientColor) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 		items = new ArrayList<RoundedToolItem>();
 		cornerRadius = 2;
 		addListeners();
-		START_GRADIENT_COLOR=startGradientColor;
-		END_GRADIENT_COLOR=endGradientColor;
+		START_GRADIENT_COLOR = startGradientColor;
+		END_GRADIENT_COLOR = endGradientColor;
 	}
 
 	private void addListeners() {
@@ -133,7 +141,7 @@ public class RoundedToolbar extends Canvas {
 			@Override
 			public void handleEvent(final Event event) {
 				for (final RoundedToolItem item : items) {
-					if (item.getBounds().contains(event.x, event.y)) {
+					if (item.getBounds().contains(event.x, event.y) && item.isEnabled()) {
 						if (!multiSelection) {
 							applyRadioBehaviour(item);
 						}
@@ -203,23 +211,29 @@ public class RoundedToolbar extends Canvas {
 	 */
 	public int getCornerRadius() {
 		checkWidget();
-		return this.cornerRadius;
+		return cornerRadius;
 	}
 
 	/**
-	 * Returns the item at the given, zero-relative index in the
-	 * receiver. Throws an exception if the index is out of range.
+	 * Returns the item at the given, zero-relative index in the receiver.
+	 * Throws an exception if the index is out of range.
 	 *
 	 * @param index the index of the item to return
 	 * @return the item at the given index
 	 *
-	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_INVALID_RANGE - if the index is not between 0 and the number of elements in the list minus 1 (inclusive)</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_INVALID_RANGE - if the index is not between 0
+	 *                and the number of elements in the list minus 1
+	 *                (inclusive)</li>
+	 *                </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public RoundedToolItem getItem(final int index) {
 		checkWidget();
@@ -230,20 +244,23 @@ public class RoundedToolbar extends Canvas {
 	}
 
 	/**
-	 * Returns the item at the given point in the receiver
-	 * or null if no such item exists. The point is in the
-	 * coordinate system of the receiver.
+	 * Returns the item at the given point in the receiver or null if no such
+	 * item exists. The point is in the coordinate system of the receiver.
 	 *
 	 * @param point the point used to locate the item
 	 * @return the item at the given point
 	 *
-	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the point is null</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the point is null</li>
+	 *                </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public RoundedToolItem getItem(final Point point) {
 		checkWidget();
@@ -260,10 +277,13 @@ public class RoundedToolbar extends Canvas {
 	 *
 	 * @return the number of items
 	 *
-	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int getItemCount() {
 		checkWidget();
@@ -271,20 +291,22 @@ public class RoundedToolbar extends Canvas {
 	}
 
 	/**
-	 * Returns an array of <code>RoundedToolItem</code>s which are the items
-	 * in the receiver. 
+	 * Returns an array of <code>RoundedToolItem</code>s which are the items in
+	 * the receiver.
 	 * <p>
-	 * Note: This is not the actual structure used by the receiver
-	 * to maintain its list of items, so modifying the array will
-	 * not affect the receiver. 
+	 * Note: This is not the actual structure used by the receiver to maintain
+	 * its list of items, so modifying the array will not affect the receiver.
 	 * </p>
 	 *
 	 * @return the items in the receiver
 	 *
-	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public RoundedToolItem[] getItems() {
 		checkWidget();
@@ -292,22 +314,26 @@ public class RoundedToolbar extends Canvas {
 	}
 
 	/**
-	 * Searches the receiver's list starting at the first item
-	 * (index 0) until an item is found that is equal to the 
-	 * argument, and returns the index of that item. If no item
-	 * is found, returns -1.
+	 * Searches the receiver's list starting at the first item (index 0) until
+	 * an item is found that is equal to the argument, and returns the index of
+	 * that item. If no item is found, returns -1.
 	 *
 	 * @param item the search item
 	 * @return the index of the item
 	 *
-	 * @exception IllegalArgumentException <ul>
-	 *    <li>ERROR_NULL_ARGUMENT - if the tool item is null</li>
-	 *    <li>ERROR_INVALID_ARGUMENT - if the tool item has been disposed</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
+	 *                <li>ERROR_NULL_ARGUMENT - if the tool item is null</li>
+	 *                <li>ERROR_INVALID_ARGUMENT - if the tool item has been
+	 *                disposed</li>
+	 *                </ul>
+	 * @exception SWTException
+	 *                <ul>
+	 *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been
+	 *                disposed</li>
+	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+	 *                thread that created the receiver</li>
+	 *                </ul>
 	 */
 	public int indexOf(final RoundedToolItem item) {
 		checkWidget();
@@ -315,11 +341,12 @@ public class RoundedToolbar extends Canvas {
 	}
 
 	/**
-	 * @return <code>true</code> if the toolbar is in multiselection mode, <code>false</code> otherwise
+	 * @return <code>true</code> if the toolbar is in multiselection mode,
+	 *         <code>false</code> otherwise
 	 */
 	public boolean isMultiselection() {
 		checkWidget();
-		return this.multiSelection;
+		return multiSelection;
 	}
 
 	/**

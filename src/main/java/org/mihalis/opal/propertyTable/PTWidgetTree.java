@@ -11,7 +11,7 @@
 package org.mihalis.opal.propertyTable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -112,7 +112,7 @@ public class PTWidgetTree extends AbstractPTWidget {
 		if (getParentPropertyTable().sorted) {
 			data = new TreeMap<String, List<PTProperty>>();
 		} else {
-			data = new HashMap<String, List<PTProperty>>();
+			data = new LinkedHashMap<String, List<PTProperty>>();
 		}
 
 		for (final PTProperty p : getParentPropertyTable().getPropertiesAsList()) {

@@ -262,7 +262,6 @@ public class PropertyTable extends Composite {
 		sorted = false;
 		widget.refillData();
 		return this;
-
 	}
 
 	/**

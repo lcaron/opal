@@ -14,11 +14,13 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.mihalis.opal.propertyTable.editor.PTCheckboxEditor;
 import org.mihalis.opal.propertyTable.editor.PTColorEditor;
 import org.mihalis.opal.propertyTable.editor.PTComboEditor;
@@ -40,7 +42,7 @@ import org.mihalis.opal.utils.SWTGraphicUtil;
  * This snippet demonstrates the PropertyTable widget
  *
  */
-public class PropertyTableSnippet {
+public class PropertyTableProblem {
 
 	/**
 	 * @param args
@@ -54,29 +56,7 @@ public class PropertyTableSnippet {
 		shell.setText("PropertyTable snippet");
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 
-		final TabFolder tabFolder = new TabFolder(shell, SWT.BORDER);
-
-		final TabItem item1 = new TabItem(tabFolder, SWT.NONE);
-		item1.setText("First");
-		item1.setControl(buildPropertyTable(tabFolder, true, true, true));
-
-		final TabItem item2 = new TabItem(tabFolder, SWT.NONE);
-		item2.setText("Second");
-		item2.setControl(buildPropertyTable(tabFolder, false, true, false));
-
-		final TabItem item3 = new TabItem(tabFolder, SWT.NONE);
-		item3.setText("Third");
-		item3.setControl(buildPropertyTable(tabFolder, true, false, true));
-
-		final TabItem item4 = new TabItem(tabFolder, SWT.NONE);
-		item4.setText("Forth");
-		item4.setControl(buildPropertyTable(tabFolder, true, false, false));
-
-		final TabItem item5 = new TabItem(tabFolder, SWT.NONE);
-		item5.setText("Test");
-
-		final PropertyTable table = new PropertyTable(tabFolder, SWT.NONE);
-		item5.setControl(table);
+		final PropertyTable table = new PropertyTable(shell, SWT.NONE);
 
 		table.addProperty(addTestProp("1 - Category One", "prop1", "Property for One", "Test Val 1"));
 		table.addProperty(addTestProp("1 - Category One", "prop2", "For One Property", "Test Val 2"));
@@ -106,6 +86,17 @@ public class PropertyTableSnippet {
 		for (final PTProperty nextP : propertyList) {
 			System.out.println(nextP.getCategory() + " : " + nextP.getValue());
 		}
+
+		final Button btn = new Button(shell, SWT.PUSH);
+		btn.setText("Unsort");
+		btn.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				table.unsort();
+			}
+
+		});
 
 		shell.setSize(800, 600);
 		shell.open();

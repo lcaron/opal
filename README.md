@@ -4,10 +4,10 @@ Main repository for the Opal Project (SWT new widgets library)
 The goal of this project is to propose new widgets for the SWT API.
 Some widgets are new, some others are a port of existing widgets made with Swing.
 
-# Important Notice
+# Important Notice: Project closed
 
 Most widgets of the Opal Project has been included into Eclipse Nebula (https://www.eclipse.org/nebula/).
-The next release (V1.0.9) will be the last one. It will fix issues #73, #74 and #75.
+The release V1.0.9 is the last one.
 
 If you want to open an issue, please fill a bug report in Eclipse Bugzilla : https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Nebula
 
